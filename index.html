@@ -1,277 +1,871 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio | Gusthi Pangestu</title>
     
-    <!-- Boxicons untuk Ikon -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Link ke File CSS Eksternal -->
-    <link rel="stylesheet" href="style.css">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Sora', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#090910',
+                        primary: '#8750f7',
+                        secondary: '#2a1454',
+                        text: '#a0a0b0',
+                        light: '#ffffff',
+                    },
+                    backgroundImage: {
+                        'gradient-primary': 'linear-gradient(135deg, #8750f7 0%, #2a1454 100%)',
+                        'gradient-text': 'linear-gradient(to right, #8750f7, #ffffff)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles */
+        body {
+            background-color: #090910;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Glow Background */
+        .ambient-glow::before, .ambient-glow::after {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+        .ambient-glow::before { background: #8750f7; top: -100px; left: -100px; }
+        .ambient-glow::after { background: #2a1454; bottom: -100px; right: -100px; }
+
+        /* Glass Effect Class */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transform-style: preserve-3d; /* Penting untuk efek 3D Tilt */
+        }
+        
+        .glass-header {
+            background: rgba(9, 9, 16, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Text Gradient Utility */
+        .text-gradient {
+            background: linear-gradient(to right, #8750f7, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #090910; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8750f7; }
+
+        /* Blinking cursor for typewriter */
+        .typewriter::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Portfolio Overlay */
+        .portfolio-overlay {
+            background: linear-gradient(to top, #090910 0%, transparent 100%);
+        }
+
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .lightbox-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 900px;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(135, 80, 247, 0.3);
+        }
+
+        .lightbox-content, .lightbox-caption {
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+
+        @keyframes zoom {
+            from {transform:scale(0)}
+            to {transform:scale(1)}
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 30px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close-lightbox:hover,
+        .close-lightbox:focus {
+            color: #8750f7;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .lightbox-caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+        
+        /* Cursor zoom-in on portfolio images */
+        .cursor-zoom-in {
+            cursor: zoom-in;
+        }
+    </style>
 </head>
-<body>
+<body class="text-white antialiased ambient-glow selection:bg-primary selection:text-white">
 
     <!-- Header -->
-    <header class="header">
-        <a href="#" class="logo">
-            <span>Gusthi</span> Pangestu
-        </a>
+    <header class="glass-header fixed w-full top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-extrabold tracking-tighter hover:scale-105 transition-transform">
+                <span class="text-primary">Gusthi</span> Pangestu
+            </a>
 
-        <nav class="navbar">
-            <a href="#services">Services</a>
-            <a href="#skills">Skills</a>
-            <a href="#experience">Experience</a>
-            <a href="#contact" class="btn-hire">Hubungi Saya</a>
-        </nav>
+            <!-- Desktop Menu -->
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#services" class="text-gray-400 hover:text-white font-medium transition-colors hover:border-b-2 border-primary pb-1">Services</a>
+                <a href="#skills" class="text-gray-400 hover:text-white font-medium transition-colors hover:border-b-2 border-primary pb-1">Skills</a>
+                <a href="#experience" class="text-gray-400 hover:text-white font-medium transition-colors hover:border-b-2 border-primary pb-1">Experience</a>
+                <a href="#portfolio" class="text-gray-400 hover:text-white font-medium transition-colors hover:border-b-2 border-primary pb-1">Portfolio</a>
+                <a href="#contact" class="px-6 py-2 bg-gradient-primary rounded-full font-semibold shadow-[0_0_20px_rgba(135,80,247,0.4)] hover:shadow-[0_0_30px_rgba(135,80,247,0.6)] hover:-translate-y-1 transition-all duration-300 border border-white/10">
+                    Hubungi Saya
+                </a>
+            </nav>
 
-        <div class="bx bx-menu" id="menu-icon"></div>
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-2xl text-white">
+                <i class='bx bx-menu'></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden glass-card absolute w-full left-0 top-[70px] border-t border-white/10 p-6 flex-col gap-4">
+            <a href="#services" class="text-gray-300 hover:text-primary block py-2">Services</a>
+            <a href="#skills" class="text-gray-300 hover:text-primary block py-2">Skills</a>
+            <a href="#experience" class="text-gray-300 hover:text-primary block py-2">Experience</a>
+            <a href="#portfolio" class="text-gray-300 hover:text-primary block py-2">Portfolio</a>
+            <a href="#contact" class="text-primary font-bold block py-2">Hubungi Saya</a>
+        </div>
     </header>
 
-    <div class="container">
-        <!-- Hero Section -->
-        <section class="hero" id="home">
-            <div class="hero-content">
-                <div class="badge-modern"><i class='bx bx-check-circle'></i> Open for Hire</div>
-                <h1><span class="txt-gradient">LCD Operator</span> &<br>Graphic Designer</h1>
-                <p>Menyediakan jasa profesional sebagai <strong>Operator LCD (OBS Studio)</strong> untuk kelancaran event live Anda, serta layanan <strong>Junior Graphic Design</strong> untuk kebutuhan visual yang menarik.</p>
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center pt-28 pb-12 relative overflow-hidden">
+        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+            <!-- Text Content -->
+            <div data-aos="fade-right" data-aos-duration="1000">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/50 bg-primary/10 text-primary text-sm font-semibold mb-6 shadow-[0_0_15px_rgba(135,80,247,0.2)]">
+                    <i class='bx bx-check-circle'></i> Open for Hire
+                </div>
+                <!-- Updated H1 with Typewriter -->
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6 min-h-[160px] md:min-h-[auto]">
+                    I am a <br class="md:hidden"> <span class="text-gradient typewriter"></span><br>
+                    & Creative Tech Enthusiast
+                </h1>
+                <p class="text-gray-400 text-lg mb-8 leading-relaxed max-w-lg">
+                    Menyediakan jasa profesional sebagai <strong>Operator LCD (OBS Studio)</strong> untuk kelancaran event live Anda, serta layanan <strong>Junior Graphic Design</strong> untuk kebutuhan visual yang menarik.
+                </p>
                 
-                <div class="hero-btns">
-                    <a href="#contact" class="btn-primary-modern">Hubungi Sekarang</a>
-                    
-                    <!-- UPDATE: Link Sosial Media -->
-                    <div class="socials">
-                        <!-- LinkedIn -->
-                        <a href="https://www.linkedin.com/in/gusthi-pangestu-394bb42a7/overlay/about-this-profile/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3B8rosZflJSt2kKV399zZczg%3D%3D" target="_blank">
+                <div class="flex flex-wrap gap-4">
+                    <a href="#contact" class="px-8 py-3 rounded-full border border-primary text-white hover:bg-primary transition-all duration-300 shadow-[0_0_20px_rgba(135,80,247,0.3)] hover:shadow-[0_0_40px_rgba(135,80,247,0.5)]">
+                        Hubungi Sekarang
+                    </a>
+                    <div class="flex gap-3">
+                        <a href="https://www.linkedin.com/in/gusthi-pangestu-394bb42a7/" target="_blank" class="w-12 h-12 rounded-full border border-primary/50 flex items-center justify-center text-primary text-xl hover:bg-primary hover:text-white transition-all hover:-translate-y-1">
                             <i class='bx bxl-linkedin'></i>
                         </a>
-                        
-                        <!-- Instagram -->
-                        <a href="https://www.instagram.com/gusthipangestu/#" target="_blank">
+                        <a href="https://www.instagram.com/gusthipangestu/" target="_blank" class="w-12 h-12 rounded-full border border-primary/50 flex items-center justify-center text-primary text-xl hover:bg-primary hover:text-white transition-all hover:-translate-y-1">
                             <i class='bx bxl-instagram'></i>
                         </a>
-                        
-                        <!-- WhatsApp (Menyesuaikan dengan kontak bawah) -->
-                        <a href="https://wa.me/6282334015531" target="_blank">
+                        <a href="https://wa.me/6282334015531" target="_blank" class="w-12 h-12 rounded-full border border-primary/50 flex items-center justify-center text-primary text-xl hover:bg-primary hover:text-white transition-all hover:-translate-y-1">
                             <i class='bx bxl-whatsapp'></i>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <div class="hero-img">
-                <div class="img-box-modern">
-                    <!-- Menggunakan foto asli Gusthi Pangestu (2).JPG -->
-                    <img src="Gusthi Pangestu (2).JPG" alt="Gusthi Pangestu">
-                </div>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section class="services" id="services">
-            <div class="section-header center">
-                <h2>Layanan Saya</h2>
-                <p>Solusi teknis dan kreatif untuk kebutuhan acara dan branding Anda.</p>
-            </div>
-
-            <div class="services-list">
-                <div class="service-item active">
-                    <div class="service-header">
-                        <div class="icon-box">
-                            <i class='bx bx-desktop'></i>
-                        </div>
-                        <h3>Operator LCD & OBS Studio</h3>
-                        <i class='bx bx-chevron-down toggle-icon'></i>
-                    </div>
-                    <div class="service-desc">
-                        <p>Berpengalaman menangani visual acara live. Keahlian meliputi:
-                            <br>• Manajemen scene & transisi di OBS Studio.
-                            <br>• Penanganan multimedia (video playback, slide presentasi).
-                            <br>• Memastikan tampilan layar (LCD/LED) berjalan lancar.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="service-item">
-                    <div class="service-header">
-                        <div class="icon-box">
-                           <i class='bx bx-palette'></i>
-                        </div>
-                        <h3>Junior Graphic Design</h3>
-                        <i class='bx bx-chevron-down toggle-icon'></i>
-                    </div>
-                    <div class="service-desc">
-                        <p>Pembuatan desain visual yang komunikatif menggunakan <strong>Canva</strong> dan <strong>Adobe Photoshop</strong>.
-                            <br>• Desain Feed & Story Instagram.
-                            <br>• Desain Banner, Poster, & Flyer Event.
-                            <br>• Desain kebutuhan organisasi (PDD).
-                        </p>
+            <!-- Image Content -->
+            <div class="flex justify-center relative" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+                <!-- Decorative Circle Behind -->
+                <div class="absolute w-[300px] h-[300px] bg-primary/20 rounded-full blur-3xl -z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                
+                <div class="relative w-[320px] h-[400px] md:w-[380px] md:h-[480px] glass-card rounded-[2rem] p-3 rotate-6 hover:rotate-0 transition-all duration-500 animate-float group">
+                    <div class="w-full h-full rounded-[1.5rem] overflow-hidden relative">
+                        <img src="Gusthi Pangestu (2).JPG" alt="Gusthi Pangestu" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-dark/80 to-transparent"></div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Skills Section -->
-        <section class="my-skills" id="skills">
-            <div class="section-header center">
-                <h2>Tools Keahlian</h2>
-                <p>Software yang saya kuasai untuk menunjang produktivitas dan kreativitas.</p>
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-dark/50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Layanan Saya</h2>
+                <p class="text-gray-400 max-w-xl mx-auto">Solusi teknis dan kreatif untuk kebutuhan acara dan branding Anda.</p>
             </div>
-            
-            <div class="skills-wrapper-modern">
-                <!-- OBS Studio -->
-                <div class="skill-card card-obs">
-                    <div class="icon-wrapper">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/OBS_Studio_logo.png" alt="OBS Studio" class="tool-logo">
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Service 1 -->
+                <div class="glass-card p-8 rounded-3xl hover:border-primary/50 hover:bg-white/5 transition-all duration-300 group cursor-pointer" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-3xl text-primary mb-6 group-hover:scale-110 transition-transform border border-primary/20">
+                        <i class='bx bx-desktop'></i>
                     </div>
-                    <h3>OBS Studio</h3>
-                    <div class="skill-level expert">Expert</div>
+                    <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-primary transition-colors">Operator LCD & OBS</h3>
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        Manajemen visual acara live yang profesional.
+                    </p>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li class="flex items-center gap-2"><i class='bx bx-check text-primary'></i> Manajemen Scene & Transisi OBS</li>
+                        <li class="flex items-center gap-2"><i class='bx bx-check text-primary'></i> Playback Video & Presentasi</li>
+                        <li class="flex items-center gap-2"><i class='bx bx-check text-primary'></i> Setup Layar LED/Proyektor</li>
+                    </ul>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="glass-card p-8 rounded-3xl hover:border-primary/50 hover:bg-white/5 transition-all duration-300 group cursor-pointer" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center text-3xl text-pink-400 mb-6 group-hover:scale-110 transition-transform border border-pink-500/20">
+                        <i class='bx bx-palette'></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-pink-400 transition-colors">Graphic Design</h3>
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        Desain visual komunikatif untuk branding & event.
+                    </p>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li class="flex items-center gap-2"><i class='bx bx-check text-pink-400'></i> Social Media Feeds & Story</li>
+                        <li class="flex items-center gap-2"><i class='bx bx-check text-pink-400'></i> Poster, Banner & Flyer Event</li>
+                        <li class="flex items-center gap-2"><i class='bx bx-check text-pink-400'></i> Desain Kebutuhan Organisasi (PDD)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Tools Keahlian</h2>
+                <p class="text-gray-400">Software andalan untuk menunjang kreativitas.</p>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-8">
+                <!-- OBS -->
+                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-white/30 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="h-20 flex items-center justify-center mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/OBS_Studio_logo.png" alt="OBS" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">OBS Studio</h4>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-bold text-white border border-white/20">EXPERT</span>
                 </div>
 
                 <!-- Photoshop -->
-                <div class="skill-card card-ps">
-                    <div class="icon-wrapper">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Photoshop_CC_icon.png/500px-Photoshop_CC_icon.png" alt="Adobe Photoshop" class="tool-logo">
+                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(49,168,255,0.2)]" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="h-20 flex items-center justify-center mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Adobe_Photoshop_CC_icon.svg/2101px-Adobe_Photoshop_CC_icon.svg.png" alt="Photoshop" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(49,168,255,0.3)]">
                     </div>
-                    <h3>Photoshop</h3>
-                    <div class="skill-level intermediate">Intermediate</div>
+                    <h4 class="font-bold text-lg mb-2">Photoshop</h4>
+                    <span class="px-3 py-1 bg-blue-500/10 rounded-full text-xs font-bold text-blue-400 border border-blue-500/20">INTERMEDIATE</span>
                 </div>
 
                 <!-- Canva -->
-                <div class="skill-card card-canva">
-                    <div class="icon-wrapper">
-                        <img src="https://public.canva.site/logo/media/dfb96cc174513093cd6ed61489ccb750.svg" alt="Canva" class="tool-logo">
+                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-teal-400/30 hover:shadow-[0_0_30px_rgba(0,196,204,0.2)]" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="h-20 flex items-center justify-center mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg" alt="Canva" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(0,196,204,0.3)]">
                     </div>
-                    <h3>Canva</h3>
-                    <div class="skill-level advanced">Advanced</div>
+                    <h4 class="font-bold text-lg mb-2">Canva</h4>
+                    <span class="px-3 py-1 bg-teal-400/10 rounded-full text-xs font-bold text-teal-400 border border-teal-400/20">ADVANCED</span>
                 </div>
             </div>
-        </section>
-    </div>
-
-    <!-- EXPERIENCE SECTION (FULL WIDTH DARK) -->
-    <div class="experience-section-wrapper" id="experience">
-        <div class="container">
-            <section>
-                <div class="section-header center">
-                    <h2>Pengalaman Profesional</h2>
-                    <p>Rekam jejak dalam manajemen event, desain visual, dan kompetisi.</p>
-                </div>
-
-                <div class="experience-grid">
-                    <!-- Card 1 -->
-                    <div class="exp-card">
-                        <span class="exp-tag tag-design">LEAD DESIGNER</span>
-                        <span class="exp-year">2024</span>
-                        <h3>Head of Creative Design</h3>
-                        <div class="exp-event">
-                            <i class='bx bx-trophy'></i> PMCC 2024
-                        </div>
-                        <p>Bertanggung jawab penuh atas seluruh identitas visual turnamen eSports PUBG Mobile Campus Challenge (Feeds, Banner, Merchandise). Menciptakan visual yang menarik ribuan atensi mahasiswa.</p>
-                    </div>
-
-                    <!-- Card 2 -->
-                    <div class="exp-card">
-                        <span class="exp-tag tag-design">LEAD DESIGNER</span>
-                        <span class="exp-year">2024</span>
-                        <h3>Lead Visual & Branding</h3>
-                        <div class="exp-event">
-                            <i class='bx bx-calendar-event'></i> AT-FEST 2024
-                        </div>
-                        <p>Menghandle semua aset desain untuk Expo Product IT semester 5. Memastikan konsistensi branding produk teknologi mahasiswa agar terlihat profesional di mata pengunjung.</p>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="exp-card">
-                        <span class="exp-tag tag-operator">OPERATOR LCD/OBS</span>
-                        <span class="exp-year">2025</span>
-                        <h3>Main Operator Visual</h3>
-                        <div class="exp-event">
-                            <i class='bx bx-desktop'></i> PKT PKO HIMIT 2025
-                        </div>
-                        <p>Bertugas sebagai operator utama dalam Pekan Komunitas Olahraga & Teknologi. Mengelola transisi visual dan display live event tanpa kendala teknis.</p>
-                    </div>
-
-                    <!-- Card 4 -->
-                    <div class="exp-card">
-                        <span class="exp-tag tag-operator">OPERATOR LCD/OBS</span>
-                        <span class="exp-year">2025</span>
-                        <h3>Visual Operator</h3>
-                        <div class="exp-event">
-                            <i class='bx bx-slideshow'></i> MBEX & ELTAFEST 25
-                        </div>
-                        <p>Menangani kebutuhan visual untuk Minat Bakat Expo dan ajang pencarian bakat. Memastikan materi presentasi dan video tampil sempurna di layar LED.</p>
-                    </div>
-
-                    <!-- Card 5 (Highlight) -->
-                    <div class="exp-card highlight-card">
-                        <span class="exp-tag tag-judge">OFFICIAL JUDGE</span>
-                        <span class="exp-year">2025</span>
-                        <h3>Tournament Judge</h3>
-                        <div class="exp-event">
-                            <i class='bx bx-gavel'></i> PMCC 2025
-                        </div>
-                        <p>Dipercaya sebagai juri/wasit dalam turnamen PUBG Mobile. Bertugas mengawasi jalannya pertandingan, menjaga keadilan, dan memverifikasi hasil kompetisi.</p>
-                    </div>
-
-                    <!-- Card 6 -->
-                    <div class="exp-card">
-                        <span class="exp-tag tag-design">GRAPHIC DESIGNER</span>
-                        <span class="exp-year">2025</span>
-                        <h3>Staff Divisi PDD</h3>
-                        <div class="exp-event">
-                            <i class='bx bx-group'></i> ITDS INSIGHT 2025
-                        </div>
-                        <p>Memproduksi materi publikasi untuk pengenalan himpunan kepada mahasiswa baru, memastikan informasi tersampaikan dengan desain yang komunikatif.</p>
-                    </div>
-                </div>
-
-            </section>
         </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-20 bg-gradient-to-b from-dark via-[#0f0f1a] to-dark">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Pengalaman Profesional</h2>
+                <p class="text-gray-400">Rekam jejak dalam manajemen event, desain visual, dan kompetisi.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Card 1: PMCC 2024 -->
+                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-pink-500"></div>
+                    <div class="mb-4">
+                        <span class="text-xs font-extrabold tracking-widest text-pink-400 border border-pink-500/30 px-3 py-1 rounded bg-pink-500/10">LEAD DESIGNER</span>
+                        <div class="text-white/40 text-sm mt-2 font-mono">2024</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">Head of Creative Design</h3>
+                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                        <i class='bx bx-trophy text-pink-500'></i> PMCC 2024
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Bertanggung jawab penuh atas seluruh identitas visual turnamen eSports PUBG Mobile Campus Challenge (Feeds, Banner, Merchandise).
+                    </p>
+                </div>
+
+                <!-- Card 2: AT-FEST 2024 -->
+                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
+                    <div class="mb-4">
+                        <span class="text-xs font-extrabold tracking-widest text-purple-400 border border-purple-500/30 px-3 py-1 rounded bg-purple-500/10">LEAD VISUAL</span>
+                        <div class="text-white/40 text-sm mt-2 font-mono">2024</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Lead Visual & Branding</h3>
+                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                        <i class='bx bx-calendar-event text-purple-500'></i> AT-FEST 2024
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Menghandle semua aset desain untuk Expo Product IT semester 5. Memastikan konsistensi branding produk teknologi mahasiswa.
+                    </p>
+                </div>
+
+                <!-- Card 3: PKT PKO HIMIT 2025 -->
+                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                    <div class="mb-4">
+                        <span class="text-xs font-extrabold tracking-widest text-blue-400 border border-blue-500/30 px-3 py-1 rounded bg-blue-500/10">OPERATOR</span>
+                        <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Main Operator Visual</h3>
+                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                        <i class='bx bx-desktop text-blue-500'></i> PKT PKO HIMIT 2025
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Operator utama dalam Pekan Komunitas Olahraga & Teknologi. Mengelola transisi visual dan display live event tanpa kendala.
+                    </p>
+                </div>
+
+                <!-- Card 4: MBEX & ELTAFEST 25 -->
+                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="400">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
+                    <div class="mb-4">
+                        <span class="text-xs font-extrabold tracking-widest text-cyan-400 border border-cyan-500/30 px-3 py-1 rounded bg-cyan-500/10">VISUAL OP</span>
+                        <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">Visual Operator</h3>
+                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                        <i class='bx bx-slideshow text-cyan-500'></i> MBEX & ELTAFEST 25
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Menangani kebutuhan visual untuk Minat Bakat Expo. Memastikan materi presentasi dan video tampil sempurna di layar LED.
+                    </p>
+                </div>
+
+                <!-- Card 5: PMCC 2025 (Highlight) -->
+                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300 bg-gradient-to-br from-yellow-500/10 to-transparent border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.05)]" data-aos="fade-up" data-aos-delay="500">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-yellow-500"></div>
+                    <div class="mb-4">
+                        <span class="text-xs font-extrabold tracking-widest text-yellow-400 border border-yellow-500/30 px-3 py-1 rounded bg-yellow-500/10">OFFICIAL JUDGE</span>
+                        <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">Tournament Judge</h3>
+                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                        <i class='bx bx-gavel text-yellow-500'></i> PMCC 2025
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Dipercaya sebagai juri turnamen PUBG Mobile. Bertugas mengawasi jalannya pertandingan dan memverifikasi hasil kompetisi.
+                    </p>
+                </div>
+
+                <!-- Card 6: ITDS INSIGHT 2025 -->
+                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="600">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+                    <div class="mb-4">
+                        <span class="text-xs font-extrabold tracking-widest text-green-400 border border-green-500/30 px-3 py-1 rounded bg-green-500/10">GRAPHIC DESIGNER</span>
+                        <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">Staff Divisi PDD</h3>
+                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                        <i class='bx bx-group text-green-500'></i> ITDS INSIGHT 2025
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Memproduksi materi publikasi untuk pengenalan himpunan kepada mahasiswa baru dengan desain yang komunikatif.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: DOKUMENTASI & PORTOFOLIO -->
+    <section id="portfolio" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Dokumentasi & Portofolio</h2>
+                <p class="text-gray-400">Arsip proyek, kegiatan, dan sertifikasi.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Portfolio Item 1 (PMCC 25) -->
+                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-primary/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1-QmqJZTZChqBm0fgk4iX6-USG_cShkSR/view?usp=sharing', '_blank')">
+                        <img src="PMCC 25.jpg" alt="PMCC 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-2 bg-primary rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Project</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-primary text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <h3 class="text-xl font-bold text-white mb-2">PMCC (PUBG Mobile Campus Championship)</h3>
+                        <p class="text-gray-400 text-sm">Turnamen esports resmi PUBG Mobile yang khusus diadakan untuk mahasiswa di berbagai universitas</p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 2 (Pekan Komunitas) -->
+                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-orange-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1rNj0Le1Jzp-OYU7A9Ux24t9CYZiFozpN/view?usp=sharing', '_blank')">
+                        <img src="PKT_PKO.jpg" alt="PKT_PKO 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-2 bg-orange-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Project</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-orange-500 text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Pekan Komunitas HIMIT</h3>
+                        <p class="text-gray-400 text-sm">Kegiatan Pekan Komunitas Teknologi dan Olahraga yang diselenggarakan HIMIT PENS berupa pengenalan komunitas yang ada dalam HIMIT PENS kepada MABA angkatan 25</p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 3 (MBEX 25) -->
+                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-green-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="300">
+                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1OKMkOQr7FddyFEBEYDz4OF5losfGFkDa/view?usp=sharing', '_blank')">
+                        <img src="MBEX.jpeg" alt="MBEX 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-2 bg-green-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Project</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-green-500 text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <h3 class="text-xl font-bold text-white mb-2">MBEX (Minat Bakat Expo)</h3>
+                        <p class="text-gray-400 text-sm">Kegiatan Expo yang diselenggarakan oleh LMB PENS berupa pengenalan UKM (Unit Kegiatan Mahasiswa) / komunitas yang ada dalam PENS kepada MABA angkatan 25.</p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 4 (LMB CERDAS) -->
+                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="400">
+                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1gHjP3fNh-2S6GzjfX_oTua_qzr00-qti/view?usp=sharing', '_blank')">
+                        <img src="LMB CERDAS.jpg" alt="LMB CERDAS 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Read More</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-blue-500 text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <h3 class="text-xl font-bold text-white mb-2">LMB CERDAS - Pelatihan Desain</h3>
+                        <p class="text-gray-400 text-sm">Kegiatan Pelatihan Desain yang diselenggarakan oleh LMB PENS berupa pembelajaran terkait pembuatan desain mulai dari teori hingga penerapannya menggunakan tools canva.</p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 5 (ITDS INSIGHT) -->
+                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="500">
+                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1kPYqJBSTgJ9f2VeY4TG9jv3u5ww2plOl/view?usp=sharing', '_blank')">
+                        <img src="ITDS 25.jpeg" alt="ITDS INSIGHT 2025" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Project</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-yellow-500 text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <h3 class="text-xl font-bold text-white mb-2">ITDS INSIGHT</h3>
+                        <p class="text-gray-400 text-sm">Kegiatan pengenalan Program Studi IT PENS yang diselenggarakan oleh HIMIT PENS berupa pengenalan terkait mata kuliah dan etika mulai dari teori hingga penerapannya dalam kehidupan perkuliahan.</p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 6 (AT-FEST) -->
+                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-purple-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="600">
+                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/12oaz7el6e-keFgExyp82fOKJNck7EknD/view?usp=sharing', '_blank')">
+                        <img src="AT-FEST.jpg" alt="AT-FEST Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer">
+                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-2 bg-purple-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Activity</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-purple-500 text-xs font-bold tracking-wider mb-2">TAHUN 2024</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Agile Teknik Festival</h3>
+                        <p class="text-gray-400 text-sm">Kegiatan Expo yang diselenggarakan oleh PENS berupa pengenalan produk mahasiswa IT yang ada dalam PENS kepada khalayak umum.</p></p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 7 (ELTAFEST) -->
+                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="700">
+                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/19h-oqBWUwa55C-4IY2WkvmbIP7C32uJW/view?usp=sharing', '_blank')">
+                        <img src="ELTAFEST 25.jpg" alt="ELTAFEST 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Read More</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-blue-500 text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <h3 class="text-xl font-bold text-white mb-2">ELTAFEST 25</h3>
+                        <p class="text-gray-400 text-sm">Kegiatan Perlombaan yang diselenggarakan oleh LMB PENS berupa perlombaan dalam berbagai bidang dengan berkolaborasi bersama dengan UKM yang ada dalam PENS.</p></p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item 5 (ITDS INSIGHT) -->
+                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="500">
+                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/149uR1dk8NmumY9SUYefpqdmedj-ANDIz/view?usp=sharing', '_blank')">
+                        <img src="STAFF MUDA LMB.jpg" alt="SM MEDFO 24" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Project</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-yellow-500 text-xs font-bold tracking-wider mb-2">TAHUN 2024 - 2025</div>
+                        <h3 class="text-xl font-bold text-white mb-2">Staff Muda LMB</h3>
+                        <p class="text-gray-400 text-sm">Sewaktu Menjadi Staff Muda dalam departemen MEDFO LMB PENS tahun periode 2024 - 2025 kenangan bersama Staff Ahli.</p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+        <div id="caption" class="lightbox-caption"></div>
     </div>
 
-    <div class="container">
-        <!-- Contact Section -->
-        <section class="contact" id="contact">
-            <div class="contact-card">
-                <h2>Siap Kolaborasi?</h2>
-                <p>Diskusikan kebutuhan Operator LCD atau Desain Grafis untuk acara Anda.</p>
+    <!-- Contact Section -->
+    <section id="contact" class="py-24">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto glass-card rounded-[3rem] p-10 md:p-16 text-center border-white/10 relative overflow-hidden" data-aos="zoom-in">
+                <!-- Decorative Glows -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
                 
-                <div class="contact-buttons-vertical">
-                    <a href="mailto:gusthipangestu1906@gmail.com" class="contact-btn-wide">
-                        <div class="btn-icon">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-primary to-white">Siap Kolaborasi?</h2>
+                <p class="text-gray-300 text-lg mb-12">Diskusikan kebutuhan Operator LCD atau Desain Grafis untuk sukseskan acara Anda.</p>
+                
+                <div class="flex flex-col md:flex-row justify-center gap-6">
+                    <a href="mailto:gusthipangestu1906@gmail.com" class="group flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-primary/20 hover:border-primary/50 transition-all duration-300 text-left min-w-[280px]">
+                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-2xl text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                             <i class='bx bxs-envelope'></i>
                         </div>
-                        <div class="btn-text">
-                            <span>Email Me</span>
-                            <small>gusthipangestu1906@gmail.com</small>
+                        <div>
+                            <div class="text-sm text-gray-400">Email Me</div>
+                            <div class="font-bold text-white text-sm md:text-base">gusthipangestu...</div>
                         </div>
                     </a>
-                    <a href="https://wa.me/6282334015531" class="contact-btn-wide">
-                        <div class="btn-icon">
-                            <i class='bx bxs-phone'></i>
+
+                    <a href="https://wa.me/6282334015531" class="group flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-green-500/20 hover:border-green-500/50 transition-all duration-300 text-left min-w-[280px]">
+                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-2xl text-green-500 group-hover:bg-green-500 group-hover:text-white transition-colors">
+                            <i class='bx bxl-whatsapp'></i>
                         </div>
-                        <div class="btn-text">
-                            <span>WhatsApp</span>
-                            <small>+62 823-3401-5531</small>
+                        <div>
+                            <div class="text-sm text-gray-400">WhatsApp</div>
+                            <div class="font-bold text-white">+62 823-3401-5531</div>
                         </div>
                     </a>
                 </div>
 
-                <div class="contact-footer-info">
-                    <p class="location"><i class='bx bxs-map'></i> Surabaya, Indonesia</p>
-                    <p class="copyright">© 2025 Gusthi Pangestu. All rights reserved.</p>
+                <div class="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
+                    <div class="flex items-center gap-2 mb-4 md:mb-0">
+                        <i class='bx bxs-map text-primary'></i> Surabaya, Indonesia
+                    </div>
+                    <div>© 2025 Gusthi Pangestu. All rights reserved.</div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 
     <!-- Scripts -->
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <!-- Link ke File JS Eksternal -->
-    <script src="script.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        /* =========================================
+           1. INITIALIZATION & UTILS
+           ========================================= */
+
+        // Inisialisasi AOS (Animate On Scroll)
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                once: true,
+                offset: 100,
+                duration: 800,
+                easing: 'ease-out-cubic',
+            });
+        }
+
+        // Mobile Menu Logic
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        if (btn && menu) {
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+                menu.classList.toggle('flex');
+                
+                // Animasi icon menu
+                const icon = btn.querySelector('i');
+                if(menu.classList.contains('hidden')) {
+                    icon.classList.remove('bx-x');
+                    icon.classList.add('bx-menu');
+                } else {
+                    icon.classList.remove('bx-menu');
+                    icon.classList.add('bx-x');
+                }
+            });
+        }
+
+        // Close menu when clicking link
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (menu) {
+                    menu.classList.add('hidden');
+                    menu.classList.remove('flex');
+                    const icon = btn.querySelector('i');
+                    if(icon) {
+                        icon.classList.remove('bx-x');
+                        icon.classList.add('bx-menu');
+                    }
+                }
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        /* =========================================
+           2. DYNAMIC NAVBAR SCROLL
+           ========================================= */
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('shadow-lg');
+                header.style.background = 'rgba(9, 9, 16, 0.95)';
+                header.style.padding = '10px 0';
+            } else {
+                header.classList.remove('shadow-lg');
+                header.style.background = 'rgba(9, 9, 16, 0.8)';
+                header.style.padding = '16px 0'; 
+            }
+        });
+
+        /* =========================================
+           3. TYPEWRITER EFFECT (Efek Mengetik)
+           ========================================= */
+        const typeWriterElement = document.querySelector('.typewriter');
+        const words = ["LCD Operator", "Graphic Designer", "Visual Judge", "Tech Enthusiast"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeSpeed = 100;
+
+        function typeEffect() {
+            if (!typeWriterElement) return;
+
+            const currentWord = words[wordIndex];
+            
+            if (isDeleting) {
+                typeWriterElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+                typeSpeed = 50; 
+            } else {
+                typeWriterElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+                typeSpeed = 100;
+            }
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                isDeleting = true;
+                typeSpeed = 2000;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeEffect, typeSpeed);
+        }
+
+        document.addEventListener('DOMContentLoaded', typeEffect);
+
+        /* =========================================
+           4. 3D TILT EFFECT ON CARDS (Efek Miring 3D)
+           ========================================= */
+        const cards = document.querySelectorAll('.glass-card');
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -5;
+                const rotateY = ((x - centerX) / centerX) * 5;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+                card.style.transition = 'transform 0.5s ease';
+            });
+            
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'none';
+            });
+        });
+
+        /* =========================================
+           5. MOUSE GLOW FOLLOWER (Cahaya Kursor)
+           ========================================= */
+        if (!document.querySelector('.mouse-glow')) {
+            const glow = document.createElement('div');
+            glow.classList.add('mouse-glow');
+            document.body.appendChild(glow);
+
+            glow.style.position = 'fixed';
+            glow.style.width = '300px';
+            glow.style.height = '300px';
+            glow.style.background = 'radial-gradient(circle, rgba(135, 80, 247, 0.15) 0%, rgba(135, 80, 247, 0) 70%)';
+            glow.style.borderRadius = '50%';
+            glow.style.pointerEvents = 'none'; 
+            glow.style.zIndex = '9999';
+            glow.style.transform = 'translate(-50%, -50%)';
+            glow.style.transition = 'opacity 0.3s ease';
+            glow.style.mixBlendMode = 'screen';
+            
+            if(window.innerWidth < 768) {
+                glow.style.display = 'none';
+            }
+
+            let mouseX = 0;
+            let mouseY = 0;
+            let glowX = 0;
+            let glowY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                glow.style.opacity = '1';
+            });
+
+            document.addEventListener('mouseleave', () => {
+                glow.style.opacity = '0';
+            });
+
+            function animateGlow() {
+                glowX += (mouseX - glowX) * 0.1;
+                glowY += (mouseY - glowY) * 0.1;
+                
+                glow.style.left = `${glowX}px`;
+                glow.style.top = `${glowY}px`;
+                
+                requestAnimationFrame(animateGlow);
+            }
+            animateGlow();
+        }
+
+        /* =========================================
+           6. LIGHTBOX FUNCTIONALITY
+           ========================================= */
+        function openLightbox(imgSrc, captionText) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const caption = document.getElementById('caption');
+            
+            lightbox.style.display = 'block';
+            lightboxImg.src = imgSrc;
+            caption.innerHTML = captionText;
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        // Close lightbox when clicking outside the image
+        window.onclick = function(event) {
+            const lightbox = document.getElementById('lightbox');
+            if (event.target == lightbox) {
+                lightbox.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>
