@@ -33,8 +33,19 @@
                         light: '#ffffff',
                     },
                     backgroundImage: {
-                        'gradient-primary': 'linear-gradient(135deg, #8750f7 0%, #2a1454 100%)',
+                        'gradient-primary': 'linear-gradient(135deg, #8750f7 0%, #a855f7 100%)',
                         'gradient-text': 'linear-gradient(to right, #8750f7, #ffffff)',
+                        'gradient-button': 'linear-gradient(to right, #8750f7, #d946ef)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
                     }
                 }
             }
@@ -45,10 +56,69 @@
         /* Custom Styles */
         body {
             background-color: #090910;
-            overflow-x: hidden;
+            overflow-x: hidden; 
         }
 
-        /* Ambient Glow Background */
+        /* --- LOADING SCREEN STYLES --- */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #090910;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+
+        .loader-content {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .loader-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(135, 80, 247, 0.2) 0%, rgba(9, 9, 16, 0) 70%);
+            z-index: -1;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.8); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.8); }
+        }
+
+        .progress-container {
+            width: relative;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #8750f7, #a855f7);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(135, 80, 247, 0.8);
+            transition: width 0.1s linear;
+        }
+
+        /* Ambient Glow */
         .ambient-glow::before, .ambient-glow::after {
             content: '';
             position: fixed;
@@ -57,62 +127,46 @@
             border-radius: 50%;
             filter: blur(120px);
             z-index: -1;
-            opacity: 0.2;
+            opacity: 0.15;
             pointer-events: none;
         }
         .ambient-glow::before { background: #8750f7; top: -100px; left: -100px; }
         .ambient-glow::after { background: #2a1454; bottom: -100px; right: -100px; }
 
-        /* Glass Effect Class */
+        /* Glass Effect */
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transform-style: preserve-3d; /* Penting untuk efek 3D Tilt */
+            transform-style: preserve-3d;
         }
         
         .glass-header {
-            background: rgba(9, 9, 16, 0.8);
+            background: rgba(9, 9, 16, 0.6);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Floating Animation */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-        .animate-float {
-            animation: float 4s ease-in-out infinite;
-        }
-
-        /* Text Gradient Utility */
         .text-gradient {
             background: linear-gradient(to right, #8750f7, #ffffff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Custom Scrollbar */
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #090910; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 5px; }
         ::-webkit-scrollbar-thumb:hover { background: #8750f7; }
 
-        /* Blinking cursor for typewriter */
+        /* Typewriter Cursor */
         .typewriter::after {
             content: '|';
             animation: blink 1s step-end infinite;
         }
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* Portfolio Overlay */
-        .portfolio-overlay {
-            background: linear-gradient(to top, #090910 0%, transparent 100%);
-        }
-
-        /* Lightbox Styles */
+        /* Lightbox */
         .lightbox {
             display: none;
             position: fixed;
@@ -126,7 +180,6 @@
             background-color: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(5px);
         }
-
         .lightbox-content {
             margin: auto;
             display: block;
@@ -134,18 +187,9 @@
             max-width: 900px;
             border-radius: 8px;
             box-shadow: 0 0 50px rgba(135, 80, 247, 0.3);
+            animation: zoom 0.6s;
         }
-
-        .lightbox-content, .lightbox-caption {
-            animation-name: zoom;
-            animation-duration: 0.6s;
-        }
-
-        @keyframes zoom {
-            from {transform:scale(0)}
-            to {transform:scale(1)}
-        }
-
+        @keyframes zoom { from {transform:scale(0)} to {transform:scale(1)} }
         .close-lightbox {
             position: absolute;
             top: 30px;
@@ -153,17 +197,8 @@
             color: #f1f1f1;
             font-size: 40px;
             font-weight: bold;
-            transition: 0.3s;
             cursor: pointer;
         }
-
-        .close-lightbox:hover,
-        .close-lightbox:focus {
-            color: #8750f7;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
         .lightbox-caption {
             margin: auto;
             display: block;
@@ -172,33 +207,63 @@
             text-align: center;
             color: #ccc;
             padding: 10px 0;
-            height: 150px;
         }
-        
-        /* Cursor zoom-in on portfolio images */
-        .cursor-zoom-in {
-            cursor: zoom-in;
+        .cursor-zoom-in { cursor: zoom-in; }
+
+        /* Floating Chat Button */
+        .floating-chat {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #8750f7, #d946ef);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 10px 30px rgba(135, 80, 247, 0.5);
+            cursor: pointer;
+            z-index: 90;
+            transition: all 0.3s ease;
+        }
+        .floating-chat:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 15px 40px rgba(135, 80, 247, 0.7);
         }
     </style>
 </head>
 <body class="text-white antialiased ambient-glow selection:bg-primary selection:text-white">
 
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen">
+        <div class="loader-glow"></div>
+        <div class="loader-content">
+            <h1 class="text-2xl font-bold tracking-widest text-white mb-1">Welcome to Celestiq</h1>
+            <h2 class="text-2xl font-bold tracking-widest text-white mb-5">Where Vision Meets Reality</h2>
+            <p class="text-xs text-gray-400 mb-6 uppercase tracking-[0.2em] animate-pulse">Loading Portfolio...</p>
+            <div class="progress-container">
+                <div class="progress-bar-fill" id="progress-bar"></div>
+            </div>
+            <div class="mt-2 text-sm font-mono text-primary font-bold" id="loading-percentage">0%</div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="glass-header fixed w-full top-0 z-50 transition-all duration-300">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-extrabold tracking-tighter hover:scale-105 transition-transform">
-                <span class="text-primary">Gusthi</span> Pangestu
+        <div class="container mx-auto px-6 py-5 flex justify-between items-center">
+            <a href="#" class="text-2xl font-extrabold tracking-tighter hover:text-primary transition-colors">
+                Celestiq 
             </a>
 
             <!-- Desktop Menu -->
-            <nav class="hidden md:flex items-center gap-8">
-                <a href="#services" class="text-gray-400 hover:text-white font-medium transition-colors hover:border-b-2 border-primary pb-1">Services</a>
-                <a href="#skills" class="text-gray-400 hover:text-white font-medium transition-colors hover:border-b-2 border-primary pb-1">Skills</a>
-                <a href="#experience" class="text-gray-400 hover:text-white font-medium transition-colors hover:border-b-2 border-primary pb-1">Experience</a>
-                <a href="#portfolio" class="text-gray-400 hover:text-white font-medium transition-colors hover:border-b-2 border-primary pb-1">Portfolio</a>
-                <a href="#contact" class="px-6 py-2 bg-gradient-primary rounded-full font-semibold shadow-[0_0_20px_rgba(135,80,247,0.4)] hover:shadow-[0_0_30px_rgba(135,80,247,0.6)] hover:-translate-y-1 transition-all duration-300 border border-white/10">
-                    Hubungi Saya
-                </a>
+            <nav class="hidden md:flex items-center gap-10">
+                <a href="#home" class="text-gray-400 hover:text-white text-sm font-medium transition-colors">Home</a>
+                <a href="#services" class="text-gray-400 hover:text-white text-sm font-medium transition-colors">Services</a>
+                <a href="#experience" class="text-gray-400 hover:text-white text-sm font-medium transition-colors">Projects</a>
+                <a href="#contact" class="text-gray-400 hover:text-white text-sm font-medium transition-colors">Contact</a>
             </nav>
 
             <!-- Mobile Menu Button -->
@@ -209,16 +274,53 @@
 
         <!-- Mobile Menu Dropdown -->
         <div id="mobile-menu" class="hidden md:hidden glass-card absolute w-full left-0 top-[70px] border-t border-white/10 p-6 flex-col gap-4">
+            <a href="#home" class="text-gray-300 hover:text-primary block py-2">Home</a>
             <a href="#services" class="text-gray-300 hover:text-primary block py-2">Services</a>
-            <a href="#skills" class="text-gray-300 hover:text-primary block py-2">Skills</a>
-            <a href="#experience" class="text-gray-300 hover:text-primary block py-2">Experience</a>
-            <a href="#portfolio" class="text-gray-300 hover:text-primary block py-2">Portfolio</a>
-            <a href="#contact" class="text-primary font-bold block py-2">Hubungi Saya</a>
+            <a href="#experience" class="text-gray-300 hover:text-primary block py-2">Projects</a>
+            <a href="#contact" class="text-primary font-bold block py-2">Contact</a>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="min-h-screen flex items-center pt-28 pb-12 relative overflow-hidden">
+    <!-- NEW DASHBOARD HERO SECTION -->
+    <section id="home" class="min-h-screen flex flex-col justify-center items-center pt-32 pb-20 relative overflow-hidden text-center px-4">
+
+        <!-- Hero Content -->
+        <div class="max-w-4xl mx-auto z-10" data-aos="fade-up" data-aos-delay="200">
+            <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">
+                Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#8750f7] to-[#d946ef]">Gusthi Pangestu</span> — <br class="hidden md:block">
+                <span class="typewriter text-white"></span>
+            </h1>
+            
+            <p class="text-gray-400 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
+                Creative LCD Operator & Graphic Designer crafting modern visual experiences for events and robust digital branding assets.
+            </p>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+                <!-- Hire Me Button -->
+                <a href="#contact" class="group relative px-8 py-3 bg-gradient-button rounded-full text-white font-semibold shadow-[0_0_20px_rgba(135,80,247,0.4)] hover:shadow-[0_0_40px_rgba(135,80,247,0.6)] hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    <span class="relative z-10 flex items-center gap-2">
+                        Hire Me <i class='bx bx-paper-plane'></i>
+                    </span>
+                    <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                </a>
+
+                <!-- Download CV Button -->
+                <a href="CV _Gusthi Pangestu1.docx" download class="group px-8 py-3 rounded-full border border-white/10 bg-white/5 text-white font-semibold hover:bg-white/10 hover:border-white/30 transition-all duration-300 flex items-center gap-2">
+                    <i class='bx bx-download text-primary group-hover:text-white transition-colors'></i> Download CV
+                </a>
+
+                <!-- View My Work Link -->
+                <a href="#portfolio" class="text-gray-400 hover:text-white font-medium flex items-center gap-2 group transition-colors">
+                    View My Work 
+                    <i class='bx bx-right-arrow-alt transform group-hover:translate-x-1 transition-transform'></i>
+                </a>
+            </div>
+        </div>
+
+    </section>
+
+        <section id="home" class="min-h-screen flex items-center pt-28 pb-12 relative overflow-hidden">
         <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
             <!-- Text Content -->
             <div data-aos="fade-right" data-aos-duration="1000">
@@ -321,7 +423,7 @@
 
             <div class="flex flex-wrap justify-center gap-8">
                 <!-- OBS -->
-                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-white/30 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]" data-aos="zoom-in" data-aos-delay="100">
+                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-white/30 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] cursor-pointer" data-aos="zoom-in" data-aos-delay="100">
                     <div class="h-20 flex items-center justify-center mb-4">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/OBS_Studio_logo.png" alt="OBS" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
                     </div>
@@ -330,7 +432,7 @@
                 </div>
 
                 <!-- Photoshop -->
-                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(49,168,255,0.2)]" data-aos="zoom-in" data-aos-delay="200">
+                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(49,168,255,0.2)] cursor-pointer" data-aos="zoom-in" data-aos-delay="200">
                     <div class="h-20 flex items-center justify-center mb-4">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Adobe_Photoshop_CC_icon.svg/2101px-Adobe_Photoshop_CC_icon.svg.png" alt="Photoshop" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(49,168,255,0.3)]">
                     </div>
@@ -339,12 +441,21 @@
                 </div>
 
                 <!-- Canva -->
-                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-teal-400/30 hover:shadow-[0_0_30px_rgba(0,196,204,0.2)]" data-aos="zoom-in" data-aos-delay="300">
+                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-teal-400/30 hover:shadow-[0_0_30px_rgba(0,196,204,0.2)] cursor-pointer" data-aos="zoom-in" data-aos-delay="300">
                     <div class="h-20 flex items-center justify-center mb-4">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg" alt="Canva" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(0,196,204,0.3)]">
+                        <img src="https://public.canva.site/logo/media/dfb96cc174513093cd6ed61489ccb750.svg" alt="Canva" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(0,196,204,0.3)]">
                     </div>
                     <h4 class="font-bold text-lg mb-2">Canva</h4>
                     <span class="px-3 py-1 bg-teal-400/10 rounded-full text-xs font-bold text-teal-400 border border-teal-400/20">ADVANCED</span>
+                </div>
+
+                <!-- Figma -->
+                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(0,196,204,0.2)] cursor-pointer" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="h-20 flex items-center justify-center mb-4">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Figma-logo.svg/1365px-Figma-logo.svg.png" alt="Figma" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(0,196,204,0.3)]">
+                    </div>
+                    <h4 class="font-bold text-lg mb-2">Figma</h4>
+                    <span class="px-3 py-1 bg-blue-400/10 rounded-full text-xs font-bold text-blue-400 border border-teal-400/20">INTERMEDIATE</span>
                 </div>
             </div>
         </div>
@@ -360,99 +471,111 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
-                <!-- Card 1: PMCC 2024 -->
-                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+                <!-- Card 1: Graphic Design -->
+                <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="100"
+                onclick="window.open('https://drive.google.com/file/d/1y5FKSstmr-1QXDR27IvHFAtXN7EJYMT1/view?usp=sharing', '_blank')">
+
                     <div class="absolute top-0 left-0 w-1 h-full bg-pink-500"></div>
                     <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-pink-400 border border-pink-500/30 px-3 py-1 rounded bg-pink-500/10">LEAD DESIGNER</span>
-                        <div class="text-white/40 text-sm mt-2 font-mono">2024</div>
+                        <span class="text-xs font-extrabold tracking-widest text-pink-400 border border-pink-500/30 px-3 py-1 rounded bg-pink-500/10">EVENT</span>
+                        <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">Head of Creative Design</h3>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">Creative Design</h3>
                     <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-trophy text-pink-500'></i> PMCC 2024
+                        <i class='bx bx-palette text-pink-500'></i>ITDS INSIGHT
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        Bertanggung jawab penuh atas seluruh identitas visual turnamen eSports PUBG Mobile Campus Challenge (Feeds, Banner, Merchandise).
+                        Bertanggung jawab penuh atas seluruh desain identitas visual termasuk poster, banner, dan materi promosi digital untuk berbagai event.
                     </p>
                 </div>
 
-                <!-- Card 2: AT-FEST 2024 -->
-                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
-                    <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-purple-400 border border-purple-500/30 px-3 py-1 rounded bg-purple-500/10">LEAD VISUAL</span>
-                        <div class="text-white/40 text-sm mt-2 font-mono">2024</div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Lead Visual & Branding</h3>
-                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-calendar-event text-purple-500'></i> AT-FEST 2024
-                    </div>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Menghandle semua aset desain untuk Expo Product IT semester 5. Memastikan konsistensi branding produk teknologi mahasiswa.
-                    </p>
-                </div>
+                <!-- Card 2: Operator -->
+                <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="200"
+                onclick="window.open('https://drive.google.com/file/d/1vMd_H_86MA1UlcCUCp6tGD4pj3zrEinW/view?usp=sharing', '_blank')">
 
-                <!-- Card 3: PKT PKO HIMIT 2025 -->
-                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
                     <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
                     <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-blue-400 border border-blue-500/30 px-3 py-1 rounded bg-blue-500/10">OPERATOR</span>
+                        <span class="text-xs font-extrabold tracking-widest text-blue-400 border border-blue-500/30 px-3 py-1 rounded bg-blue-500/10">EVENT</span>
                         <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
                     </div>
                     <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Main Operator Visual</h3>
                     <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-desktop text-blue-500'></i> PKT PKO HIMIT 2025
+                        <i class='bx bx-desktop text-blue-500'></i> MBEX 
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        Operator utama dalam Pekan Komunitas Olahraga & Teknologi. Mengelola transisi visual dan display live event tanpa kendala.
+                        Operator utama dalam acara Minat Bakat Expo 2025 bertugas dalam mengelola transisi visual dan display menggunakan OBS.
                     </p>
                 </div>
 
                 <!-- Card 4: MBEX & ELTAFEST 25 -->
-                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="400">
+                <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="300"
+                onclick="window.open('https://drive.google.com/file/d/1u_-iThTyTgBw9qpLs0gszMngMwOY1PoL/view?usp=sharing', '_blank')">
+
                     <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
                     <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-cyan-400 border border-cyan-500/30 px-3 py-1 rounded bg-cyan-500/10">VISUAL OP</span>
+                        <span class="text-xs font-extrabold tracking-widest text-cyan-400 border border-cyan-500/30 px-3 py-1 rounded bg-cyan-500/10">TRAINING</span>
                         <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">Visual Operator</h3>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">UI/UX Design</h3>
                     <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-slideshow text-cyan-500'></i> MBEX & ELTAFEST 25
+                        <i class='bx bx-group text-cyan-500'></i> Held by Figma Camp Indonesia 
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        Menangani kebutuhan visual untuk Minat Bakat Expo. Memastikan materi presentasi dan video tampil sempurna di layar LED.
+                        Mempelajari semua dasar teori dalam membuat desain UI/UX beserta penerapannya menggunakan figma.
                     </p>
                 </div>
 
                 <!-- Card 5: PMCC 2025 (Highlight) -->
-                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300 bg-gradient-to-br from-yellow-500/10 to-transparent border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.05)]" data-aos="fade-up" data-aos-delay="500">
+                <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 bg-gradient-to-br from-yellow-500/10 to-transparent border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.05)]" data-aos="fade-up" data-aos-delay="400" 
+                onclick="window.open('https://drive.google.com/file/d/1DyDMbzZCr8E16ssPqOUQh27T0AaQqbEH/view?usp=sharing', '_blank')">
+
                     <div class="absolute top-0 left-0 w-1 h-full bg-yellow-500"></div>
                     <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-yellow-400 border border-yellow-500/30 px-3 py-1 rounded bg-yellow-500/10">OFFICIAL JUDGE</span>
-                        <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
+                        <span class="text-xs font-extrabold tracking-widest text-yellow-400 border border-yellow-500/30 px-3 py-1 rounded bg-yellow-500/10">TRAINING</span>
+                        <div class="text-white/40 text-sm mt-2 font-mono">2023</div>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">Tournament Judge</h3>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">Digital Graphic Designer</h3>
                     <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-gavel text-yellow-500'></i> PMCC 2025
+                        <i class='bx bx-group text-yellow-500'></i> Held by Telkom DigiUp 
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        Dipercaya sebagai juri turnamen PUBG Mobile. Bertugas mengawasi jalannya pertandingan dan memverifikasi hasil kompetisi.
+                        Mempelajari semua dasar teori Graphic Design beserta penerapannya menggunakan Photoshop.
                     </p>
                 </div>
 
                 <!-- Card 6: ITDS INSIGHT 2025 -->
-                <div class="glass-card p-8 rounded-3xl relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="600">
+                <div class="glass-card p-8 rounded-3xl cursor-pointer relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="500" 
+                onclick="window.open('https://drive.google.com/file/d/1XcVWDfpAJrFAKw2PtIUp1b5AbYDa4Jvn/view?usp=sharing', '_blank')">
+
                     <div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
                     <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-green-400 border border-green-500/30 px-3 py-1 rounded bg-green-500/10">GRAPHIC DESIGNER</span>
-                        <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
+                        <span class="text-xs font-extrabold tracking-widest text-green-400 border border-green-500/30 px-3 py-1 rounded bg-green-500/10">CERTIFICATION</span>
+                        <div class="text-white/40 text-sm mt-2 font-mono">2023</div>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">Staff Divisi PDD</h3>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">Junior Graphic Designer</h3>
                     <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-group text-green-500'></i> ITDS INSIGHT 2025
+                        <i class='bx bx-group text-green-500'></i> Held by Telkom DigiUp with BNSP
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        Memproduksi materi publikasi untuk pengenalan himpunan kepada mahasiswa baru dengan desain yang komunikatif.
+                        Sertifikasi bersama dengan BNSP setelah menyelesaikan kelas Digital Graphic Designer menggunakan Photoshop.
+                    </p>
+                </div>
+
+                 <!-- Card 2: Operator -->
+                <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="600"
+                onclick="window.open('https://drive.google.com/file/d/1DFj3axbjBR0Yj-K-8YCmIYTzadP2aB26/view?usp=sharing', '_blank')">
+
+                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                    <div class="mb-4">
+                        <span class="text-xs font-extrabold tracking-widest text-blue-400 border border-blue-500/30 px-3 py-1 rounded bg-blue-500/10">ONLINE COURSE</span>
+                        <div class="text-white/40 text-sm mt-2 font-mono">2024</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Intro to Graphic Design </h3>
+                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                        <i class='bx bx-group text-blue-500'></i> With Great Learning Academy
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Mempelajari dasar-dasar Graphic Design beserta penerapannya dalam Photoshop.
                     </p>
                 </div>
 
@@ -475,13 +598,14 @@
                     <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1-QmqJZTZChqBm0fgk4iX6-USG_cShkSR/view?usp=sharing', '_blank')">
                         <img src="PMCC 25.jpg" alt="PMCC 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                         <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-primary rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Project</span>
+                            <span class="px-6 py-2 bg-primary rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
                         </div>
                     </div>
                     <div class="p-6">
-                        <div class="text-primary text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <div class="text-primary text-xs font-bold tracking-wider mb-2">AS JUDGE OF</div>
                         <h3 class="text-xl font-bold text-white mb-2">PMCC (PUBG Mobile Campus Championship)</h3>
-                        <p class="text-gray-400 text-sm">Turnamen esports resmi PUBG Mobile yang khusus diadakan untuk mahasiswa di berbagai universitas</p>
+                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
+                        <p class="text-gray-400 text-sm">Panitia kegiatan turnamen esports resmi PUBG Mobile yang khusus diadakan untuk mahasiswa di berbagai universitas</p>
                     </div>
                 </div>
 
@@ -490,13 +614,14 @@
                     <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1rNj0Le1Jzp-OYU7A9Ux24t9CYZiFozpN/view?usp=sharing', '_blank')">
                         <img src="PKT_PKO.jpg" alt="PKT_PKO 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                         <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-orange-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Project</span>
+                            <span class="px-6 py-2 bg-orange-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
                         </div>
                     </div>
                     <div class="p-6">
-                        <div class="text-orange-500 text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <div class="text-orange-500 text-xs font-bold tracking-wider mb-2">AS PDD & OPERATOR OF</div>
                         <h3 class="text-xl font-bold text-white mb-2">Pekan Komunitas HIMIT</h3>
-                        <p class="text-gray-400 text-sm">Kegiatan Pekan Komunitas Teknologi dan Olahraga yang diselenggarakan HIMIT PENS berupa pengenalan komunitas yang ada dalam HIMIT PENS kepada MABA angkatan 25</p>
+                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
+                        <p class="text-gray-400 text-sm">Panitia Kegiatan Pekan Komunitas Teknologi dan Olahraga yang diselenggarakan HIMIT PENS berupa pengenalan komunitas yang ada dalam HIMIT PENS kepada MABA angkatan 25</p>
                     </div>
                 </div>
 
@@ -505,12 +630,13 @@
                     <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1OKMkOQr7FddyFEBEYDz4OF5losfGFkDa/view?usp=sharing', '_blank')">
                         <img src="MBEX.jpeg" alt="MBEX 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                         <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-green-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Project</span>
+                            <span class="px-6 py-2 bg-green-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
                         </div>
                     </div>
                     <div class="p-6">
-                        <div class="text-green-500 text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <div class="text-green-500 text-xs font-bold tracking-wider mb-2">AS PDD & OPERATOR OF</div>
                         <h3 class="text-xl font-bold text-white mb-2">MBEX (Minat Bakat Expo)</h3>
+                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
                         <p class="text-gray-400 text-sm">Kegiatan Expo yang diselenggarakan oleh LMB PENS berupa pengenalan UKM (Unit Kegiatan Mahasiswa) / komunitas yang ada dalam PENS kepada MABA angkatan 25.</p>
                     </div>
                 </div>
@@ -520,12 +646,13 @@
                     <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1gHjP3fNh-2S6GzjfX_oTua_qzr00-qti/view?usp=sharing', '_blank')">
                         <img src="LMB CERDAS.jpg" alt="LMB CERDAS 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                         <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Read More</span>
+                            <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
                         </div>
                     </div>
                     <div class="p-6">
-                        <div class="text-blue-500 text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <div class="text-blue-500 text-xs font-bold tracking-wider mb-2">AS PENANGGUNG JAWAB OF</div>
                         <h3 class="text-xl font-bold text-white mb-2">LMB CERDAS - Pelatihan Desain</h3>
+                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
                         <p class="text-gray-400 text-sm">Kegiatan Pelatihan Desain yang diselenggarakan oleh LMB PENS berupa pembelajaran terkait pembuatan desain mulai dari teori hingga penerapannya menggunakan tools canva.</p>
                     </div>
                 </div>
@@ -535,12 +662,13 @@
                     <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1kPYqJBSTgJ9f2VeY4TG9jv3u5ww2plOl/view?usp=sharing', '_blank')">
                         <img src="ITDS 25.jpeg" alt="ITDS INSIGHT 2025" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                         <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Project</span>
+                            <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
                         </div>
                     </div>
                     <div class="p-6">
-                        <div class="text-yellow-500 text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <div class="text-yellow-500 text-xs font-bold tracking-wider mb-2">AS PDD OF</div>
                         <h3 class="text-xl font-bold text-white mb-2">ITDS INSIGHT</h3>
+                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
                         <p class="text-gray-400 text-sm">Kegiatan pengenalan Program Studi IT PENS yang diselenggarakan oleh HIMIT PENS berupa pengenalan terkait mata kuliah dan etika mulai dari teori hingga penerapannya dalam kehidupan perkuliahan.</p>
                     </div>
                 </div>
@@ -550,12 +678,13 @@
                     <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/12oaz7el6e-keFgExyp82fOKJNck7EknD/view?usp=sharing', '_blank')">
                         <img src="AT-FEST.jpg" alt="AT-FEST Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer">
                         <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-purple-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Activity</span>
+                            <span class="px-6 py-2 bg-purple-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
                         </div>
                     </div>
                     <div class="p-6">
-                        <div class="text-purple-500 text-xs font-bold tracking-wider mb-2">TAHUN 2024</div>
+                        <div class="text-purple-500 text-xs font-bold tracking-wider mb-2">AS PDD OF</div>
                         <h3 class="text-xl font-bold text-white mb-2">Agile Teknik Festival</h3>
+                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
                         <p class="text-gray-400 text-sm">Kegiatan Expo yang diselenggarakan oleh PENS berupa pengenalan produk mahasiswa IT yang ada dalam PENS kepada khalayak umum.</p></p>
                     </div>
                 </div>
@@ -565,27 +694,29 @@
                     <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/19h-oqBWUwa55C-4IY2WkvmbIP7C32uJW/view?usp=sharing', '_blank')">
                         <img src="ELTAFEST 25.jpg" alt="ELTAFEST 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                         <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Read More</span>
+                            <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
                         </div>
                     </div>
                     <div class="p-6">
-                        <div class="text-blue-500 text-xs font-bold tracking-wider mb-2">TAHUN 2025</div>
+                        <div class="text-blue-500 text-xs font-bold tracking-wider mb-2">AS OPERATOR OF</div>
                         <h3 class="text-xl font-bold text-white mb-2">ELTAFEST 25</h3>
+                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
                         <p class="text-gray-400 text-sm">Kegiatan Perlombaan yang diselenggarakan oleh LMB PENS berupa perlombaan dalam berbagai bidang dengan berkolaborasi bersama dengan UKM yang ada dalam PENS.</p></p>
                     </div>
                 </div>
 
                 <!-- Portfolio Item 5 (ITDS INSIGHT) -->
-                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="500">
+                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="800">
                     <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/149uR1dk8NmumY9SUYefpqdmedj-ANDIz/view?usp=sharing', '_blank')">
                         <img src="STAFF MUDA LMB.jpg" alt="SM MEDFO 24" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                         <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Project</span>
+                            <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
                         </div>
                     </div>
                     <div class="p-6">
-                        <div class="text-yellow-500 text-xs font-bold tracking-wider mb-2">TAHUN 2024 - 2025</div>
-                        <h3 class="text-xl font-bold text-white mb-2">Staff Muda LMB</h3>
+                        <div class="text-yellow-500 text-xs font-bold tracking-wider mb-2">AS STAFF OF</div>
+                        <h3 class="text-xl font-bold text-white mb-2">LMB (Lembaga Minat Bakat)</h3>
+                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
                         <p class="text-gray-400 text-sm">Sewaktu Menjadi Staff Muda dalam departemen MEDFO LMB PENS tahun periode 2024 - 2025 kenangan bersama Staff Ahli.</p>
                     </div>
                 </div>
@@ -643,6 +774,11 @@
             </div>
         </div>
     </section>
+
+    <!-- Floating Chat Button -->
+    <div class="floating-chat" onclick="window.open('https://wa.me/6282334015531', '_blank')">
+        <i class='bx bx-message-rounded-dots'></i>
+    </div>
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -727,7 +863,7 @@
            3. TYPEWRITER EFFECT (Efek Mengetik)
            ========================================= */
         const typeWriterElement = document.querySelector('.typewriter');
-        const words = ["LCD Operator", "Graphic Designer", "Visual Judge", "Tech Enthusiast"];
+        const words = ["LCD Operator", "Graphic Designer"];
         let wordIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
@@ -866,6 +1002,30 @@
                 lightbox.style.display = "none";
             }
         }
+
+        /* =========================================
+           7. LOADING SCREEN ANIMATION
+           ========================================= */
+        // Runs immediately
+        const loadingScreen = document.getElementById('loading-screen');
+        const progressBar = document.getElementById('progress-bar');
+        const percentageText = document.getElementById('loading-percentage');
+
+        let width = 0;
+        const interval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(interval);
+                // Finish loading
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.visibility = 'hidden';
+                // Allow scroll
+                document.body.style.overflow = 'auto';
+            } else {
+                width++;
+                progressBar.style.width = width + '%';
+                percentageText.innerText = width + '%';
+            }
+        }, 20); // Adjust speed here (lower is faster)
     </script>
 </body>
 </html>
