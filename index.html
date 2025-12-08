@@ -37,9 +37,11 @@
                         'gradient-text': 'linear-gradient(to right, #8750f7, #ffffff)',
                         'gradient-button': 'linear-gradient(to right, #8750f7, #d946ef)',
                     },
-                    animation: {
+                     animation: {
                         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 7s ease-in-out 1s infinite',
+                        'float-fast': 'float 5s ease-in-out infinite',
                     },
                     keyframes: {
                         float: {
@@ -57,65 +59,131 @@
         body {
             background-color: #090910;
             overflow-x: hidden; 
+            /* Subtle Grid Background for Tech Feel */
+            background-image: linear-gradient(rgba(135, 80, 247, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(135, 80, 247, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
-
-        /* --- LOADING SCREEN STYLES --- */
+        /* --- SANGAR LOADING SCREEN STYLES --- */
         #loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #090910;
+            background-color: #050505;
             z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .loader-content {
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        .loader-glow {
+        /* Scanline Effect */
+        .scanlines {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(135, 80, 247, 0.2) 0%, rgba(9, 9, 16, 0) 70%);
-            z-index: -1;
-            animation: pulse-glow 2s infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.6;
         }
 
-        @keyframes pulse-glow {
-            0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.8); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-            100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.8); }
-        }
-
-        .progress-container {
-            width: relative;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            margin-top: 20px;
-            overflow: hidden;
+        /* Glitch Effect Text */
+        .glitch {
             position: relative;
+            color: white;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #050505;
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 #00ffff;
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 #ff00ff;
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(14px, 9999px, 126px, 0); }
+            20% { clip: rect(82px, 9999px, 35px, 0); }
+            40% { clip: rect(2px, 9999px, 86px, 0); }
+            60% { clip: rect(109px, 9999px, 60px, 0); }
+            80% { clip: rect(48px, 9999px, 94px, 0); }
+            100% { clip: rect(138px, 9999px, 20px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(66px, 9999px, 19px, 0); }
+            20% { clip: rect(117px, 9999px, 7px, 0); }
+            40% { clip: rect(96px, 9999px, 126px, 0); }
+            60% { clip: rect(12px, 9999px, 59px, 0); }
+            80% { clip: rect(74px, 9999px, 81px, 0); }
+            100% { clip: rect(43px, 9999px, 2px, 0); }
+        }
+
+        /* Tech Rings */
+        .tech-ring {
+            border: 1px solid rgba(135, 80, 247, 0.3);
+            border-top: 1px solid #8750f7;
+            border-bottom: 1px solid #8750f7;
+            box-shadow: 0 0 15px rgba(135, 80, 247, 0.2);
         }
 
         .progress-bar-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #8750f7, #a855f7);
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(135, 80, 247, 0.8);
+            background: #8750f7;
+            position: relative;
+            box-shadow: 0 0 20px rgba(135, 80, 247, 0.8);
             transition: width 0.1s linear;
+        }
+        
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            opacity: 0.5;
+        }
+
+          /* Floating Widget Specific Style - FIXED: Changed Green Border/Shadow to Purple to match theme */
+        .floating-widget {
+            position: absolute;
+            background: rgba(15, 15, 20, 0.8); /* Slightly lighter dark */
+            border: 1px solid rgba(135, 80, 247, 0.3); /* Purple Border */
+            border-radius: 16px;
+            padding: 12px 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px -10px rgba(135, 80, 247, 0.15); /* Purple Shadow */
+            z-index: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            pointer-events: none;
+            transition: all 0.3s ease;
         }
 
         /* Ambient Glow */
@@ -233,136 +301,225 @@
             transform: scale(1.1) rotate(10deg);
             box-shadow: 0 15px 40px rgba(135, 80, 247, 0.7);
         }
+
+        /* Button Styles */
+        .btn-pill-primary {
+            background: linear-gradient(135deg, #8750f7, #d946ef);
+            color: white;
+            border-radius: 9999px;
+            padding: 12px 32px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 20px rgba(135, 80, 247, 0.4);
+        }
+        .btn-pill-primary:hover {
+            box-shadow: 0 0 30px rgba(135, 80, 247, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-pill-outline {
+            background-color: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 9999px;
+            padding: 12px 32px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-pill-outline:hover {
+            border-color: #8750f7;
+            color: #8750f7;
+            background: rgba(135, 80, 247, 0.05);
+        }
     </style>
 </head>
 <body class="text-white antialiased ambient-glow selection:bg-primary selection:text-white">
 
-    <!-- LOADING SCREEN -->
+    <!-- SANGAR LOADING SCREEN -->
     <div id="loading-screen">
-        <div class="loader-glow"></div>
-        <div class="loader-content">
-            <h1 class="text-2xl font-bold tracking-widest text-white mb-1">Welcome to Celestiq</h1>
-            <h2 class="text-2xl font-bold tracking-widest text-white mb-5">Where Vision Meets Reality</h2>
-            <p class="text-xs text-gray-400 mb-6 uppercase tracking-[0.2em] animate-pulse">Loading Portfolio...</p>
-            <div class="progress-container">
-                <div class="progress-bar-fill" id="progress-bar"></div>
-            </div>
-            <div class="mt-2 text-sm font-mono text-primary font-bold" id="loading-percentage">0%</div>
+        <div class="scanlines"></div>
+        
+        <!-- Center HUD -->
+        <div class="relative mb-12 flex items-center justify-center">
+            <!-- Outer Rotating Rings -->
+            <div class="absolute w-80 h-80 rounded-full border border-gray-800 animate-[spin_10s_linear_infinite]"></div>
+            <div class="absolute w-72 h-72 rounded-full border border-t-primary/50 border-r-transparent border-b-primary/50 border-l-transparent animate-[spin_4s_linear_infinite] tech-ring"></div>
+            <div class="absolute w-64 h-64 rounded-full border border-t-transparent border-r-primary border-b-transparent border-l-primary animate-[spin_6s_linear_infinite_reverse] opacity-60"></div>
+            
+            <!-- Glow Center -->
+            <div class="absolute w-40 h-40 bg-primary/10 rounded-full blur-2xl animate-pulse"></div>
+            
+            <!-- Glitch Logo -->
+            <h1 class="text-5xl md:text-6xl font-black tracking-widest text-white glitch relative z-20" data-text="CELESTIQ">
+                CELESTIQ
+            </h1>
+        </div>
+
+        <!-- Terminal Status Text -->
+        <div class="w-80 font-mono text-xs text-primary mb-2 flex justify-between uppercase">
+            <span id="loader-status">> INITIALIZING KERNEL...</span>
+            <span id="loading-percentage">0%</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-80 h-2 bg-gray-900 rounded-none border border-white/20 relative overflow-hidden">
+            <div class="progress-bar-fill" id="progress-bar"></div>
+        </div>
+        
+        <!-- Random decorative code -->
+        <div class="absolute bottom-10 left-10 text-[10px] text-gray-600 font-mono hidden md:block opacity-50">
+            <div>sys.boot_sequence(0x4A)</div>
+            <div>load_module: visual_core</div>
+            <div>check_integrity: OK</div>
+        </div>
+        <div class="absolute bottom-10 right-10 text-[10px] text-gray-600 font-mono hidden md:block opacity-50 text-right">
+            <div>mem_alloc: 1024MB</div>
+            <div>render_engine: V8.0</div>
+            <div>status: ONLINE</div>
         </div>
     </div>
 
     <!-- Header -->
-    <header class="glass-header fixed w-full top-0 z-50 transition-all duration-300">
-        <div class="container mx-auto px-6 py-5 flex justify-between items-center">
-            <a href="#" class="text-2xl font-extrabold tracking-tighter hover:text-primary transition-colors">
-                Celestiq 
+     <header class="glass-header fixed w-full top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-black font-bold text-xl group-hover:rotate-45 transition-transform">C</div>
+                <span class="text-xl font-bold tracking-tight hover:text-primary transition-colors">Celestiq</span>
             </a>
 
-            <!-- Desktop Menu -->
-            <nav class="hidden md:flex items-center gap-10">
+            <nav class="hidden md:flex items-center gap-8 bg-white/5 px-8 py-3 rounded-full border border-white/5 backdrop-blur-md">
                 <a href="#home" class="text-gray-400 hover:text-white text-sm font-medium transition-colors">Home</a>
+                <a href="#about" class="text-gray-400 hover:text-white text-sm font-medium transition-colors">About</a> 
                 <a href="#services" class="text-gray-400 hover:text-white text-sm font-medium transition-colors">Services</a>
-                <a href="#experience" class="text-gray-400 hover:text-white text-sm font-medium transition-colors">Projects</a>
-                <a href="#contact" class="text-gray-400 hover:text-white text-sm font-medium transition-colors">Contact</a>
+                <a href="#portfolio" class="text-gray-400 hover:text-white text-sm font-medium transition-colors">Portfolio</a>
             </nav>
 
-            <!-- Mobile Menu Button -->
-            <button id="mobile-menu-btn" class="md:hidden text-2xl text-white">
-                <i class='bx bx-menu'></i>
-            </button>
+            <div class="flex items-center gap-4">
+                <a href="#contact" class="hidden md:inline-block px-5 py-2 text-sm font-semibold text-primary border border-primary/30 rounded-full hover:bg-primary hover:text-black transition-all">Let's Talk</a>
+                <button id="mobile-menu-btn" class="md:hidden text-2xl text-white">
+                    <i class='bx bx-menu'></i>
+                </button>
+            </div>
         </div>
 
-        <!-- Mobile Menu Dropdown -->
         <div id="mobile-menu" class="hidden md:hidden glass-card absolute w-full left-0 top-[70px] border-t border-white/10 p-6 flex-col gap-4">
             <a href="#home" class="text-gray-300 hover:text-primary block py-2">Home</a>
+            <a href="#about" class="text-gray-300 hover:text-primary block py-2">About</a>
             <a href="#services" class="text-gray-300 hover:text-primary block py-2">Services</a>
-            <a href="#experience" class="text-gray-300 hover:text-primary block py-2">Projects</a>
+            <a href="#portfolio" class="text-gray-300 hover:text-primary block py-2">Projects</a>
             <a href="#contact" class="text-primary font-bold block py-2">Contact</a>
         </div>
     </header>
 
-    <!-- NEW DASHBOARD HERO SECTION -->
-    <section id="home" class="min-h-screen flex flex-col justify-center items-center pt-32 pb-20 relative overflow-hidden text-center px-4">
+    <section id="home" class="min-h-screen flex flex-col justify-center items-center pt-20 relative overflow-hidden text-center px-4">
 
-        <!-- Hero Content -->
-        <div class="max-w-4xl mx-auto z-10" data-aos="fade-up" data-aos-delay="200">
-            <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">
-                Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#8750f7] to-[#d946ef]">Gusthi Pangestu</span> — <br class="hidden md:block">
-                <span class="typewriter text-white"></span>
+        <!-- Background Glow Center -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <!-- Floating Elements (Adjusted colors to match Purple/Cyberpunk theme) -->
+        <div class="hidden lg:block">
+            <!-- Widget 1: Projects (Changed Green to Cyan/Teal to blend better) -->
+            <div class="floating-widget animate-float top-[30%] left-[10%]">
+                <div class="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-400"><i class='bx bx-check-circle text-xl'></i></div>
+                <div class="text-left">
+                    <div class="text-[10px] text-gray-400 uppercase tracking-wider">Projects Completed</div>
+                    <div class="text-sm font-bold text-white">15+ Events Succesfull</div>
+                </div>
+            </div>
+
+            <!-- Widget 2: Role (Blue matches well) -->
+            <div class="floating-widget animate-float-delayed top-[35%] right-[12%]">
+                <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400"><i class='bx bx-desktop text-xl'></i></div>
+                <div class="text-left">
+                    <div class="text-[10px] text-gray-400 uppercase tracking-wider">Current Role</div>
+                    <div class="text-sm font-bold text-white">LCD Operator</div>
+                </div>
+            </div>
+
+            <!-- Widget 3: Experience (Purple matches primary) -->
+            <div class="floating-widget animate-float-fast bottom-[20%] left-[15%]">
+                <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400"><i class='bx bx-star text-xl'></i></div>
+                <div class="text-left">
+                    <div class="text-[10px] text-gray-400 uppercase tracking-wider">Experience</div>
+                    <div class="text-sm font-bold text-white">2+ Years Active</div>
+                </div>
+            </div>
+            
+            <!-- Widget 4: Proficiency (Primary color) -->
+            <div class="floating-widget animate-float bottom-[25%] right-[15%]">
+                <div class="text-left w-full">
+                    <div class="flex justify-between mb-1 gap-8">
+                        <span class="text-[10px] text-gray-400">Skill Proficiency</span>
+                        <span class="text-[10px] text-primary">95%</span>
+                    </div>
+                    <div class="w-32 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-primary w-[95%]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-4xl mx-auto z-10 relative" data-aos="fade-up" data-aos-delay="200">
+            <div class="inline-block px-4 py-1.5 mb-6 border border-primary/30 rounded-full bg-primary/5 text-primary text-xs font-bold tracking-widest uppercase shadow-[0_0_20px_rgba(135,80,247,0.2)]">
+                Open for Collaboration
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-6">
+                Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-white">Gusthi Pangestu</span>
+                <br>
+                <span class="typewriter text-white text-3xl md:text-5xl mt-2 block"></span>
             </h1>
             
             <p class="text-gray-400 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
                 Creative LCD Operator & Graphic Designer crafting modern visual experiences for events and robust digital branding assets.
             </p>
             
-            <!-- Action Buttons -->
-            <div class="flex flex-col md:flex-row items-center justify-center gap-6">
-                <!-- Hire Me Button -->
-                <a href="#contact" class="group relative px-8 py-3 bg-gradient-button rounded-full text-white font-semibold shadow-[0_0_20px_rgba(135,80,247,0.4)] hover:shadow-[0_0_40px_rgba(135,80,247,0.6)] hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                    <span class="relative z-10 flex items-center gap-2">
-                        Hire Me <i class='bx bx-paper-plane'></i>
-                    </span>
-                    <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <a href="#contact" class="btn-pill-primary">
+                    Start a Project <i class='bx bx-right-arrow-alt'></i>
                 </a>
 
-                <!-- Download CV Button -->
-                <a href="CV _Gusthi Pangestu1.docx" download class="group px-8 py-3 rounded-full border border-white/10 bg-white/5 text-white font-semibold hover:bg-white/10 hover:border-white/30 transition-all duration-300 flex items-center gap-2">
-                    <i class='bx bx-download text-primary group-hover:text-white transition-colors'></i> Download CV
-                </a>
-
-                <!-- View My Work Link -->
-                <a href="#portfolio" class="text-gray-400 hover:text-white font-medium flex items-center gap-2 group transition-colors">
-                    View My Work 
-                    <i class='bx bx-right-arrow-alt transform group-hover:translate-x-1 transition-transform'></i>
+                <a href="CV _Gusthi Pangestu1.docx" download class="btn-pill-outline">
+                   <i class='bx bx-download'></i> Download CV
                 </a>
             </div>
         </div>
-
     </section>
 
-        <section id="home" class="min-h-screen flex items-center pt-28 pb-12 relative overflow-hidden">
-        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-            <!-- Text Content -->
-            <div data-aos="fade-right" data-aos-duration="1000">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/50 bg-primary/10 text-primary text-sm font-semibold mb-6 shadow-[0_0_15px_rgba(135,80,247,0.2)]">
-                    <i class='bx bx-check-circle'></i> Open for Hire
-                </div>
-                <!-- Updated H1 with Typewriter -->
-                <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6 min-h-[160px] md:min-h-[auto]">
-                    I am a <br class="md:hidden"> <span class="text-gradient typewriter"></span><br>
-                    & Creative Tech Enthusiast
-                </h1>
-                <p class="text-gray-400 text-lg mb-8 leading-relaxed max-w-lg">
-                    Menyediakan jasa profesional sebagai <strong>Operator LCD (OBS Studio)</strong> untuk kelancaran event live Anda, serta layanan <strong>Junior Graphic Design</strong> untuk kebutuhan visual yang menarik.
-                </p>
-                
-                <div class="flex flex-wrap gap-4">
-                    <a href="#contact" class="px-8 py-3 rounded-full border border-primary text-white hover:bg-primary transition-all duration-300 shadow-[0_0_20px_rgba(135,80,247,0.3)] hover:shadow-[0_0_40px_rgba(135,80,247,0.5)]">
-                        Hubungi Sekarang
-                    </a>
-                    <div class="flex gap-3">
-                        <a href="https://www.linkedin.com/in/gusthi-pangestu-394bb42a7/" target="_blank" class="w-12 h-12 rounded-full border border-primary/50 flex items-center justify-center text-primary text-xl hover:bg-primary hover:text-white transition-all hover:-translate-y-1">
-                            <i class='bx bxl-linkedin'></i>
-                        </a>
-                        <a href="https://www.instagram.com/gusthipangestu/" target="_blank" class="w-12 h-12 rounded-full border border-primary/50 flex items-center justify-center text-primary text-xl hover:bg-primary hover:text-white transition-all hover:-translate-y-1">
-                            <i class='bx bxl-instagram'></i>
-                        </a>
-                        <a href="https://wa.me/6282334015531" target="_blank" class="w-12 h-12 rounded-full border border-primary/50 flex items-center justify-center text-primary text-xl hover:bg-primary hover:text-white transition-all hover:-translate-y-1">
-                            <i class='bx bxl-whatsapp'></i>
-                        </a>
+    <section id="about" class="py-20">
+        <div class="container mx-auto px-6">
+            <!-- Content -->
+            <div class="glass-card p-8 md:p-12 rounded-3xl border border-white/5 relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <!-- Image/Visual -->
+                    <div class="relative order-2 md:order-1">
+                        <div class="rounded-2xl overflow-hidden h-80 md:h-96 w-full relative group shadow-[0_0_30px_rgba(135,80,247,0.2)]">
+                            <!-- Foto Formal Jas -->
+                            <img src="Gusthi Pangestu (2).JPG" alt="Gusthi Pangestu Formal" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-purple/80 to-transparent"></div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                    
+                    <!-- Text -->
+                    <div class="order-1 md:order-2">
+                        <div class="inline-block px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-bold mb-4">WHO I AM</div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">Mahasiswa PENS & <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-white">Kreator Visual Berdedikasi</span></h3>
+                        <div class="grid grid-cols-3 gap-4 border-t border-white/10 pt-6"></div>
 
-            <!-- Image Content -->
-            <div class="flex justify-center relative" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
-                <!-- Decorative Circle Behind -->
-                <div class="absolute w-[300px] h-[300px] bg-primary/20 rounded-full blur-3xl -z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
-                
-                <div class="relative w-[320px] h-[400px] md:w-[380px] md:h-[480px] glass-card rounded-[2rem] p-3 rotate-6 hover:rotate-0 transition-all duration-500 animate-float group">
-                    <div class="w-full h-full rounded-[1.5rem] overflow-hidden relative">
-                        <img src="Gusthi Pangestu (2).JPG" alt="Gusthi Pangestu" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-dark/80 to-transparent"></div>
+                        <p class="text-gray-400 leading-relaxed mb-6 text-sm md:text-base">
+                            Halo! Saya <span class="text-white font-semibold">Gusthi Pangestu</span>, mahasiswa Teknik Informatika di Politeknik Elektronika Negeri Surabaya (PENS). 
+                            Saya memiliki ketertarikan mendalam pada dunia <span class="text-primary">Programming</span> dan <span class="text-primary">Desain Grafis</span>.
+                        </p>
+                        <p class="text-gray-400 leading-relaxed mb-8 text-sm md:text-base">
+                            Berpengalaman dalam optimasi performa website dan pembuatan konten visual untuk berbagai event kampus dan organisasi. 
+                            Saya berkomitmen untuk selalu memberikan hasil terbaik, memiliki kemampuan komunikasi yang kuat, serta mampu bekerja secara mandiri maupun dalam tim.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -370,7 +527,7 @@
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="py-20 bg-dark/50">
+    <section id="services" class="py-20 relative">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16" data-aos="fade-up">
                 <h2 class="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Layanan Saya</h2>
@@ -462,7 +619,7 @@
     </section>
 
     <!-- Experience Section -->
-    <section id="experience" class="py-20 bg-gradient-to-b from-dark via-[#0f0f1a] to-dark">
+    <section id="experience" class="py-20 relative">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16" data-aos="fade-up">
                 <h2 class="text-3xl md:text-5xl font-bold mb-4">Pengalaman Profesional</h2>
@@ -863,7 +1020,7 @@
            3. TYPEWRITER EFFECT (Efek Mengetik)
            ========================================= */
         const typeWriterElement = document.querySelector('.typewriter');
-        const words = ["LCD Operator", "Graphic Designer"];
+        const words = ["LCD Operator", "Graphic Designer", "Tech Enthusiast", "UI/UX Developer"];
         let wordIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
@@ -979,53 +1136,51 @@
         }
 
         /* =========================================
-           6. LIGHTBOX FUNCTIONALITY
+           6. SANGAR LOADING SCREEN LOGIC
            ========================================= */
-        function openLightbox(imgSrc, captionText) {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            const caption = document.getElementById('caption');
-            
-            lightbox.style.display = 'block';
-            lightboxImg.src = imgSrc;
-            caption.innerHTML = captionText;
-        }
-
-        function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
-        }
-
-        // Close lightbox when clicking outside the image
-        window.onclick = function(event) {
-            const lightbox = document.getElementById('lightbox');
-            if (event.target == lightbox) {
-                lightbox.style.display = "none";
-            }
-        }
-
-        /* =========================================
-           7. LOADING SCREEN ANIMATION
-           ========================================= */
-        // Runs immediately
         const loadingScreen = document.getElementById('loading-screen');
         const progressBar = document.getElementById('progress-bar');
         const percentageText = document.getElementById('loading-percentage');
+        const statusText = document.getElementById('loader-status');
+
+        const loadingStatuses = [
+            "> INITIALIZING KERNEL...",
+            "> LOADING ASSETS...",
+            "> COMPILING SHADERS...",
+            "> ESTABLISHING CONNECTION...",
+            "> DECRYPTING DATA...",
+            "> ACCESS GRANTED"
+        ];
 
         let width = 0;
         const interval = setInterval(() => {
             if (width >= 100) {
                 clearInterval(interval);
-                // Finish loading
-                loadingScreen.style.opacity = '0';
-                loadingScreen.style.visibility = 'hidden';
-                // Allow scroll
-                document.body.style.overflow = 'auto';
+                
+                // Final Status
+                if(statusText) statusText.innerText = "> SYSTEM READY";
+                if(percentageText) percentageText.innerText = "100%";
+                
+                // Fade Out
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    loadingScreen.style.visibility = 'hidden';
+                    document.body.style.overflow = 'auto';
+                }, 500);
+
             } else {
                 width++;
-                progressBar.style.width = width + '%';
-                percentageText.innerText = width + '%';
+                if(progressBar) progressBar.style.width = width + '%';
+                if(percentageText) percentageText.innerText = width + '%';
+
+                // Change text based on width
+                if (width < 30) statusText.innerText = loadingStatuses[0];
+                else if (width < 50) statusText.innerText = loadingStatuses[1];
+                else if (width < 70) statusText.innerText = loadingStatuses[2];
+                else if (width < 90) statusText.innerText = loadingStatuses[4];
+                else statusText.innerText = loadingStatuses[5];
             }
-        }, 20); // Adjust speed here (lower is faster)
+        }, 30); // Speed of loading
     </script>
 </body>
 </html>
