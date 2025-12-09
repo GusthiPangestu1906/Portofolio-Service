@@ -14,6 +14,9 @@
     <!-- AOS Animation Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
+    <!-- Swiper CSS (Untuk Carousel) - Changed to unpkg for better compatibility -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@11/swiper-bundle.min.css" />
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -337,6 +340,48 @@
             color: #8750f7;
             background: rgba(135, 80, 247, 0.05);
         }
+
+        /* --- SWIPER CUSTOM STYLES --- */
+        .swiper {
+            width: 100%;
+            padding-bottom: 50px !important; /* Space for pagination */
+            padding-top: 20px;
+        }
+        
+        .swiper-slide {
+            height: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .swiper-pagination-bullet {
+            background: white;
+            opacity: 0.3;
+            width: 10px;
+            height: 10px;
+            transition: all 0.3s;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: #8750f7; /* Primary Color */
+            opacity: 1;
+            width: 20px; /* Stretch effect */
+            border-radius: 5px;
+        }
+
+        .swiper-button-next, .swiper-button-prev {
+            color: #8750f7;
+            background: rgba(0,0,0,0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            backdrop-filter: blur(5px);
+        }
+        
+        .swiper-button-next:after, .swiper-button-prev:after {
+            font-size: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="text-white antialiased ambient-glow selection:bg-primary selection:text-white">
@@ -501,7 +546,7 @@
                     <div class="relative order-2 md:order-1">
                         <div class="rounded-2xl overflow-hidden h-80 md:h-96 w-full relative group shadow-[0_0_30px_rgba(135,80,247,0.2)]">
                             <!-- Foto Formal Jas -->
-                            <img src="Gusthi Pangestu (2).JPG" alt="Gusthi Pangestu Formal" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110">
+                            <img src="Gusthi Pangestu (2).JPG" onerror="this.src='https://placehold.co/600x800/2a1454/ffffff?text=Photo+Unavailable'" alt="Gusthi Pangestu Formal" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-purple/80 to-transparent"></div>
                         </div>
                     </div>
@@ -618,7 +663,7 @@
         </div>
     </section>
 
-    <!-- Experience Section -->
+    <!-- Experience Section (NOW CAROUSEL/SLIDER) -->
     <section id="experience" class="py-20 relative">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16" data-aos="fade-up">
@@ -626,121 +671,134 @@
                 <p class="text-gray-400">Rekam jejak dalam manajemen event, desain visual, dan kompetisi.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <!-- Card 1: Graphic Design -->
-                <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="100"
-                onclick="window.open('https://drive.google.com/file/d/1y5FKSstmr-1QXDR27IvHFAtXN7EJYMT1/view?usp=sharing', '_blank')">
+            <!-- Swiper Container for Experience -->
+            <div class="swiper experienceSwiper" data-aos="fade-up" data-aos-delay="200">
+                <div class="swiper-wrapper">
+                    
+                    <!-- Card 1: Creative Design -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full"
+                        onclick="window.open('https://drive.google.com/file/d/1y5FKSstmr-1QXDR27IvHFAtXN7EJYMT1/view?usp=sharing', '_blank')">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-pink-500"></div>
+                            <div class="mb-4">
+                                <span class="text-xs font-extrabold tracking-widest text-pink-400 border border-pink-500/30 px-3 py-1 rounded bg-pink-500/10">EVENT</span>
+                                <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">Creative Design</h3>
+                            <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                                <i class='bx bx-palette text-pink-500'></i>ITDS INSIGHT
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Bertanggung jawab penuh atas seluruh desain identitas visual termasuk poster, banner, dan materi promosi digital untuk berbagai event.
+                            </p>
+                        </div>
+                    </div>
 
-                    <div class="absolute top-0 left-0 w-1 h-full bg-pink-500"></div>
-                    <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-pink-400 border border-pink-500/30 px-3 py-1 rounded bg-pink-500/10">EVENT</span>
-                        <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
+                    <!-- Card 2: Operator -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full"
+                        onclick="window.open('https://drive.google.com/file/d/1vMd_H_86MA1UlcCUCp6tGD4pj3zrEinW/view?usp=sharing', '_blank')">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                            <div class="mb-4">
+                                <span class="text-xs font-extrabold tracking-widest text-blue-400 border border-blue-500/30 px-3 py-1 rounded bg-blue-500/10">EVENT</span>
+                                <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Main Operator Visual</h3>
+                            <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                                <i class='bx bx-desktop text-blue-500'></i> MBEX 
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Operator utama dalam acara Minat Bakat Expo 2025 bertugas dalam mengelola transisi visual dan display menggunakan OBS.
+                            </p>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">Creative Design</h3>
-                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-palette text-pink-500'></i>ITDS INSIGHT
+
+                    <!-- Card 3: UI/UX Design -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full"
+                        onclick="window.open('https://drive.google.com/file/d/1u_-iThTyTgBw9qpLs0gszMngMwOY1PoL/view?usp=sharing', '_blank')">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
+                            <div class="mb-4">
+                                <span class="text-xs font-extrabold tracking-widest text-cyan-400 border border-cyan-500/30 px-3 py-1 rounded bg-cyan-500/10">TRAINING</span>
+                                <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">UI/UX Design</h3>
+                            <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                                <i class='bx bx-group text-cyan-500'></i> Held by Figma Camp Indonesia 
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Mempelajari semua dasar teori dalam membuat desain UI/UX beserta penerapannya menggunakan figma.
+                            </p>
+                        </div>
                     </div>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Bertanggung jawab penuh atas seluruh desain identitas visual termasuk poster, banner, dan materi promosi digital untuk berbagai event.
-                    </p>
+
+                    <!-- Card 4: Digital Graphic Designer -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 bg-gradient-to-br from-yellow-500/10 to-transparent border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.05)] w-full h-full" 
+                        onclick="window.open('https://drive.google.com/file/d/1DyDMbzZCr8E16ssPqOUQh27T0AaQqbEH/view?usp=sharing', '_blank')">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-yellow-500"></div>
+                            <div class="mb-4">
+                                <span class="text-xs font-extrabold tracking-widest text-yellow-400 border border-yellow-500/30 px-3 py-1 rounded bg-yellow-500/10">TRAINING</span>
+                                <div class="text-white/40 text-sm mt-2 font-mono">2023</div>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">Digital Graphic Designer</h3>
+                            <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                                <i class='bx bx-group text-yellow-500'></i> Held by Telkom DigiUp 
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Mempelajari semua dasar teori Graphic Design beserta penerapannya menggunakan Photoshop.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Junior Graphic Designer -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card p-8 rounded-3xl cursor-pointer relative overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full" 
+                        onclick="window.open('https://drive.google.com/file/d/1XcVWDfpAJrFAKw2PtIUp1b5AbYDa4Jvn/view?usp=sharing', '_blank')">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+                            <div class="mb-4">
+                                <span class="text-xs font-extrabold tracking-widest text-green-400 border border-green-500/30 px-3 py-1 rounded bg-green-500/10">CERTIFICATION</span>
+                                <div class="text-white/40 text-sm mt-2 font-mono">2023</div>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">Junior Graphic Designer</h3>
+                            <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                                <i class='bx bx-group text-green-500'></i> Held by Telkom DigiUp with BNSP
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Sertifikasi bersama dengan BNSP setelah menyelesaikan kelas Digital Graphic Designer menggunakan Photoshop.
+                            </p>
+                        </div>
+                    </div>
+
+                     <!-- Card 6: Intro to Graphic Design -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full"
+                        onclick="window.open('https://drive.google.com/file/d/1DFj3axbjBR0Yj-K-8YCmIYTzadP2aB26/view?usp=sharing', '_blank')">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                            <div class="mb-4">
+                                <span class="text-xs font-extrabold tracking-widest text-blue-400 border border-blue-500/30 px-3 py-1 rounded bg-blue-500/10">ONLINE COURSE</span>
+                                <div class="text-white/40 text-sm mt-2 font-mono">2024</div>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Intro to Graphic Design </h3>
+                            <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
+                                <i class='bx bx-group text-blue-500'></i> With Great Learning Academy
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                Mempelajari dasar-dasar Graphic Design beserta penerapannya dalam Photoshop.
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
-
-                <!-- Card 2: Operator -->
-                <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="200"
-                onclick="window.open('https://drive.google.com/file/d/1vMd_H_86MA1UlcCUCp6tGD4pj3zrEinW/view?usp=sharing', '_blank')">
-
-                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                    <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-blue-400 border border-blue-500/30 px-3 py-1 rounded bg-blue-500/10">EVENT</span>
-                        <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Main Operator Visual</h3>
-                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-desktop text-blue-500'></i> MBEX 
-                    </div>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Operator utama dalam acara Minat Bakat Expo 2025 bertugas dalam mengelola transisi visual dan display menggunakan OBS.
-                    </p>
-                </div>
-
-                <!-- Card 4: MBEX & ELTAFEST 25 -->
-                <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="300"
-                onclick="window.open('https://drive.google.com/file/d/1u_-iThTyTgBw9qpLs0gszMngMwOY1PoL/view?usp=sharing', '_blank')">
-
-                    <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
-                    <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-cyan-400 border border-cyan-500/30 px-3 py-1 rounded bg-cyan-500/10">TRAINING</span>
-                        <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">UI/UX Design</h3>
-                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-group text-cyan-500'></i> Held by Figma Camp Indonesia 
-                    </div>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Mempelajari semua dasar teori dalam membuat desain UI/UX beserta penerapannya menggunakan figma.
-                    </p>
-                </div>
-
-                <!-- Card 5: PMCC 2025 (Highlight) -->
-                <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 bg-gradient-to-br from-yellow-500/10 to-transparent border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.05)]" data-aos="fade-up" data-aos-delay="400" 
-                onclick="window.open('https://drive.google.com/file/d/1DyDMbzZCr8E16ssPqOUQh27T0AaQqbEH/view?usp=sharing', '_blank')">
-
-                    <div class="absolute top-0 left-0 w-1 h-full bg-yellow-500"></div>
-                    <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-yellow-400 border border-yellow-500/30 px-3 py-1 rounded bg-yellow-500/10">TRAINING</span>
-                        <div class="text-white/40 text-sm mt-2 font-mono">2023</div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">Digital Graphic Designer</h3>
-                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-group text-yellow-500'></i> Held by Telkom DigiUp 
-                    </div>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Mempelajari semua dasar teori Graphic Design beserta penerapannya menggunakan Photoshop.
-                    </p>
-                </div>
-
-                <!-- Card 6: ITDS INSIGHT 2025 -->
-                <div class="glass-card p-8 rounded-3xl cursor-pointer relative overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="500" 
-                onclick="window.open('https://drive.google.com/file/d/1XcVWDfpAJrFAKw2PtIUp1b5AbYDa4Jvn/view?usp=sharing', '_blank')">
-
-                    <div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
-                    <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-green-400 border border-green-500/30 px-3 py-1 rounded bg-green-500/10">CERTIFICATION</span>
-                        <div class="text-white/40 text-sm mt-2 font-mono">2023</div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">Junior Graphic Designer</h3>
-                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-group text-green-500'></i> Held by Telkom DigiUp with BNSP
-                    </div>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Sertifikasi bersama dengan BNSP setelah menyelesaikan kelas Digital Graphic Designer menggunakan Photoshop.
-                    </p>
-                </div>
-
-                 <!-- Card 2: Operator -->
-                <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300" data-aos="fade-up" data-aos-delay="600"
-                onclick="window.open('https://drive.google.com/file/d/1DFj3axbjBR0Yj-K-8YCmIYTzadP2aB26/view?usp=sharing', '_blank')">
-
-                    <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                    <div class="mb-4">
-                        <span class="text-xs font-extrabold tracking-widest text-blue-400 border border-blue-500/30 px-3 py-1 rounded bg-blue-500/10">ONLINE COURSE</span>
-                        <div class="text-white/40 text-sm mt-2 font-mono">2024</div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Intro to Graphic Design </h3>
-                    <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
-                        <i class='bx bx-group text-blue-500'></i> With Great Learning Academy
-                    </div>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Mempelajari dasar-dasar Graphic Design beserta penerapannya dalam Photoshop.
-                    </p>
-                </div>
-
+                <div class="swiper-pagination"></div>
+                <!-- Navigation Buttons -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
             </div>
         </div>
     </section>
 
-    <!-- NEW SECTION: DOKUMENTASI & PORTOFOLIO -->
+    <!-- NEW SECTION: DOKUMENTASI & PORTOFOLIO (NOW CAROUSEL/SLIDER) -->
     <section id="portfolio" class="py-20 relative">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16" data-aos="fade-up">
@@ -748,137 +806,159 @@
                 <p class="text-gray-400">Arsip proyek, kegiatan, dan sertifikasi.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <!-- Portfolio Item 1 (PMCC 25) -->
-                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-primary/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="100">
-                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1-QmqJZTZChqBm0fgk4iX6-USG_cShkSR/view?usp=sharing', '_blank')">
-                        <img src="PMCC 25.jpg" alt="PMCC 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
-                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-primary rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+            <!-- Swiper Container -->
+            <div class="swiper portfolioSwiper" data-aos="fade-up" data-aos-delay="200">
+                <div class="swiper-wrapper">
+                    
+                    <!-- Portfolio Item 1 (PMCC 25) -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-primary/50 transition-all duration-500 w-full flex flex-col h-full">
+                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/1-QmqJZTZChqBm0fgk4iX6-USG_cShkSR/view?usp=sharing', '_blank')">
+                                <img src="PMCC 25.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="PMCC 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                                <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <span class="px-6 py-2 bg-primary rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <div class="text-primary text-xs font-bold tracking-wider mb-2">AS JUDGE OF</div>
+                                <h3 class="text-xl font-bold text-white mb-2">PMCC (PUBG Mobile Campus Championship)</h3>
+                                <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
+                                <p class="text-gray-400 text-sm">Panitia kegiatan turnamen esports resmi PUBG Mobile yang khusus diadakan untuk mahasiswa di berbagai universitas</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="text-primary text-xs font-bold tracking-wider mb-2">AS JUDGE OF</div>
-                        <h3 class="text-xl font-bold text-white mb-2">PMCC (PUBG Mobile Campus Championship)</h3>
-                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
-                        <p class="text-gray-400 text-sm">Panitia kegiatan turnamen esports resmi PUBG Mobile yang khusus diadakan untuk mahasiswa di berbagai universitas</p>
-                    </div>
-                </div>
 
-                <!-- Portfolio Item 2 (Pekan Komunitas) -->
-                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-orange-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="200">
-                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1rNj0Le1Jzp-OYU7A9Ux24t9CYZiFozpN/view?usp=sharing', '_blank')">
-                        <img src="PKT_PKO.jpg" alt="PKT_PKO 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
-                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-orange-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                    <!-- Portfolio Item 2 (Pekan Komunitas) -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-orange-500/50 transition-all duration-500 w-full flex flex-col h-full">
+                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/1rNj0Le1Jzp-OYU7A9Ux24t9CYZiFozpN/view?usp=sharing', '_blank')">
+                                <img src="PKT_PKO.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="PKT_PKO 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                                <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <span class="px-6 py-2 bg-orange-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <div class="text-orange-500 text-xs font-bold tracking-wider mb-2">AS PDD & OPERATOR OF</div>
+                                <h3 class="text-xl font-bold text-white mb-2">Pekan Komunitas HIMIT</h3>
+                                <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
+                                <p class="text-gray-400 text-sm">Panitia Kegiatan Pekan Komunitas Teknologi dan Olahraga yang diselenggarakan HIMIT PENS berupa pengenalan komunitas yang ada dalam HIMIT PENS kepada MABA angkatan 25</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="text-orange-500 text-xs font-bold tracking-wider mb-2">AS PDD & OPERATOR OF</div>
-                        <h3 class="text-xl font-bold text-white mb-2">Pekan Komunitas HIMIT</h3>
-                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
-                        <p class="text-gray-400 text-sm">Panitia Kegiatan Pekan Komunitas Teknologi dan Olahraga yang diselenggarakan HIMIT PENS berupa pengenalan komunitas yang ada dalam HIMIT PENS kepada MABA angkatan 25</p>
-                    </div>
-                </div>
 
-                <!-- Portfolio Item 3 (MBEX 25) -->
-                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-green-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="300">
-                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1OKMkOQr7FddyFEBEYDz4OF5losfGFkDa/view?usp=sharing', '_blank')">
-                        <img src="MBEX.jpeg" alt="MBEX 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
-                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-green-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                    <!-- Portfolio Item 3 (MBEX 25) -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-green-500/50 transition-all duration-500 w-full flex flex-col h-full">
+                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/1OKMkOQr7FddyFEBEYDz4OF5losfGFkDa/view?usp=sharing', '_blank')">
+                                <img src="MBEX.jpeg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="MBEX 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                                <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <span class="px-6 py-2 bg-green-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <div class="text-green-500 text-xs font-bold tracking-wider mb-2">AS PDD & OPERATOR OF</div>
+                                <h3 class="text-xl font-bold text-white mb-2">MBEX (Minat Bakat Expo)</h3>
+                                <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
+                                <p class="text-gray-400 text-sm">Kegiatan Expo yang diselenggarakan oleh LMB PENS berupa pengenalan UKM (Unit Kegiatan Mahasiswa) / komunitas yang ada dalam PENS kepada MABA angkatan 25.</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="text-green-500 text-xs font-bold tracking-wider mb-2">AS PDD & OPERATOR OF</div>
-                        <h3 class="text-xl font-bold text-white mb-2">MBEX (Minat Bakat Expo)</h3>
-                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
-                        <p class="text-gray-400 text-sm">Kegiatan Expo yang diselenggarakan oleh LMB PENS berupa pengenalan UKM (Unit Kegiatan Mahasiswa) / komunitas yang ada dalam PENS kepada MABA angkatan 25.</p>
-                    </div>
-                </div>
 
-                <!-- Portfolio Item 4 (LMB CERDAS) -->
-                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="400">
-                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1gHjP3fNh-2S6GzjfX_oTua_qzr00-qti/view?usp=sharing', '_blank')">
-                        <img src="LMB CERDAS.jpg" alt="LMB CERDAS 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
-                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                    <!-- Portfolio Item 4 (LMB CERDAS) -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500 w-full flex flex-col h-full">
+                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/1gHjP3fNh-2S6GzjfX_oTua_qzr00-qti/view?usp=sharing', '_blank')">
+                                <img src="LMB CERDAS.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="LMB CERDAS 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                                <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <div class="text-blue-500 text-xs font-bold tracking-wider mb-2">AS PENANGGUNG JAWAB OF</div>
+                                <h3 class="text-xl font-bold text-white mb-2">LMB CERDAS - Pelatihan Desain</h3>
+                                <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
+                                <p class="text-gray-400 text-sm">Kegiatan Pelatihan Desain yang diselenggarakan oleh LMB PENS berupa pembelajaran terkait pembuatan desain mulai dari teori hingga penerapannya menggunakan tools canva.</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="text-blue-500 text-xs font-bold tracking-wider mb-2">AS PENANGGUNG JAWAB OF</div>
-                        <h3 class="text-xl font-bold text-white mb-2">LMB CERDAS - Pelatihan Desain</h3>
-                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
-                        <p class="text-gray-400 text-sm">Kegiatan Pelatihan Desain yang diselenggarakan oleh LMB PENS berupa pembelajaran terkait pembuatan desain mulai dari teori hingga penerapannya menggunakan tools canva.</p>
-                    </div>
-                </div>
 
-                <!-- Portfolio Item 5 (ITDS INSIGHT) -->
-                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="500">
-                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/1kPYqJBSTgJ9f2VeY4TG9jv3u5ww2plOl/view?usp=sharing', '_blank')">
-                        <img src="ITDS 25.jpeg" alt="ITDS INSIGHT 2025" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
-                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                    <!-- Portfolio Item 5 (ITDS INSIGHT) -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500 w-full flex flex-col h-full">
+                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/1kPYqJBSTgJ9f2VeY4TG9jv3u5ww2plOl/view?usp=sharing', '_blank')">
+                                <img src="ITDS 25.jpeg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="ITDS INSIGHT 2025" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                                <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <div class="text-yellow-500 text-xs font-bold tracking-wider mb-2">AS PDD OF</div>
+                                <h3 class="text-xl font-bold text-white mb-2">ITDS INSIGHT</h3>
+                                <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
+                                <p class="text-gray-400 text-sm">Kegiatan pengenalan Program Studi IT PENS yang diselenggarakan oleh HIMIT PENS berupa pengenalan terkait mata kuliah dan etika mulai dari teori hingga penerapannya dalam kehidupan perkuliahan.</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="text-yellow-500 text-xs font-bold tracking-wider mb-2">AS PDD OF</div>
-                        <h3 class="text-xl font-bold text-white mb-2">ITDS INSIGHT</h3>
-                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
-                        <p class="text-gray-400 text-sm">Kegiatan pengenalan Program Studi IT PENS yang diselenggarakan oleh HIMIT PENS berupa pengenalan terkait mata kuliah dan etika mulai dari teori hingga penerapannya dalam kehidupan perkuliahan.</p>
-                    </div>
-                </div>
 
-                <!-- Portfolio Item 6 (AT-FEST) -->
-                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-purple-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="600">
-                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/12oaz7el6e-keFgExyp82fOKJNck7EknD/view?usp=sharing', '_blank')">
-                        <img src="AT-FEST.jpg" alt="AT-FEST Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer">
-                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-purple-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                    <!-- Portfolio Item 6 (AT-FEST) -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-purple-500/50 transition-all duration-500 w-full flex flex-col h-full">
+                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/12oaz7el6e-keFgExyp82fOKJNck7EknD/view?usp=sharing', '_blank')">
+                                <img src="AT-FEST.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="AT-FEST Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer">
+                                <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <span class="px-6 py-2 bg-purple-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <div class="text-purple-500 text-xs font-bold tracking-wider mb-2">AS PDD OF</div>
+                                <h3 class="text-xl font-bold text-white mb-2">Agile Teknik Festival</h3>
+                                <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
+                                <p class="text-gray-400 text-sm">Kegiatan Expo yang diselenggarakan oleh PENS berupa pengenalan produk mahasiswa IT yang ada dalam PENS kepada khalayak umum.</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="text-purple-500 text-xs font-bold tracking-wider mb-2">AS PDD OF</div>
-                        <h3 class="text-xl font-bold text-white mb-2">Agile Teknik Festival</h3>
-                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
-                        <p class="text-gray-400 text-sm">Kegiatan Expo yang diselenggarakan oleh PENS berupa pengenalan produk mahasiswa IT yang ada dalam PENS kepada khalayak umum.</p></p>
-                    </div>
-                </div>
 
-                <!-- Portfolio Item 7 (ELTAFEST) -->
-                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="700">
-                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/19h-oqBWUwa55C-4IY2WkvmbIP7C32uJW/view?usp=sharing', '_blank')">
-                        <img src="ELTAFEST 25.jpg" alt="ELTAFEST 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
-                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                    <!-- Portfolio Item 7 (ELTAFEST) -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500 w-full flex flex-col h-full">
+                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/19h-oqBWUwa55C-4IY2WkvmbIP7C32uJW/view?usp=sharing', '_blank')">
+                                <img src="ELTAFEST 25.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="ELTAFEST 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                                <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <div class="text-blue-500 text-xs font-bold tracking-wider mb-2">AS OPERATOR OF</div>
+                                <h3 class="text-xl font-bold text-white mb-2">ELTAFEST 25</h3>
+                                <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
+                                <p class="text-gray-400 text-sm">Kegiatan Perlombaan yang diselenggarakan oleh LMB PENS berupa perlombaan dalam berbagai bidang dengan berkolaborasi bersama dengan UKM yang ada dalam PENS.</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="text-blue-500 text-xs font-bold tracking-wider mb-2">AS OPERATOR OF</div>
-                        <h3 class="text-xl font-bold text-white mb-2">ELTAFEST 25</h3>
-                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
-                        <p class="text-gray-400 text-sm">Kegiatan Perlombaan yang diselenggarakan oleh LMB PENS berupa perlombaan dalam berbagai bidang dengan berkolaborasi bersama dengan UKM yang ada dalam PENS.</p></p>
-                    </div>
-                </div>
 
-                <!-- Portfolio Item 5 (ITDS INSIGHT) -->
-                <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500" data-aos="fade-up" data-aos-delay="800">
-                    <div class="h-64 overflow-hidden relative" onclick="window.open('https://drive.google.com/file/d/149uR1dk8NmumY9SUYefpqdmedj-ANDIz/view?usp=sharing', '_blank')">
-                        <img src="STAFF MUDA LMB.jpg" alt="SM MEDFO 24" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
-                        <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                    <!-- Portfolio Item 8 (STAFF MUDA) -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500 w-full flex flex-col h-full">
+                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/149uR1dk8NmumY9SUYefpqdmedj-ANDIz/view?usp=sharing', '_blank')">
+                                <img src="STAFF MUDA LMB.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="SM MEDFO 24" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                                <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <div class="text-yellow-500 text-xs font-bold tracking-wider mb-2">AS STAFF OF</div>
+                                <h3 class="text-xl font-bold text-white mb-2">LMB (Lembaga Minat Bakat)</h3>
+                                <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
+                                <p class="text-gray-400 text-sm">Sewaktu Menjadi Staff Muda dalam departemen MEDFO LMB PENS tahun periode 2024 - 2025 kenangan bersama Staff Ahli.</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="text-yellow-500 text-xs font-bold tracking-wider mb-2">AS STAFF OF</div>
-                        <h3 class="text-xl font-bold text-white mb-2">LMB (Lembaga Minat Bakat)</h3>
-                        <div class="flex items-center gap-2 text-sm text-gray-300 mb-2 border-b border-white/10"></div>
-                        <p class="text-gray-400 text-sm">Sewaktu Menjadi Staff Muda dalam departemen MEDFO LMB PENS tahun periode 2024 - 2025 kenangan bersama Staff Ahli.</p>
-                    </div>
+
                 </div>
-
-
+                <div class="swiper-pagination"></div>
+                <!-- Navigation Buttons -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
             </div>
         </div>
     </section>
@@ -939,20 +1019,98 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script> <!-- Swiper JS - Changed to unpkg -->
+
     <script>
         /* =========================================
            1. INITIALIZATION & UTILS
            ========================================= */
 
         // Inisialisasi AOS (Animate On Scroll)
-        if (typeof AOS !== 'undefined') {
-            AOS.init({
-                once: true,
-                offset: 100,
-                duration: 800,
-                easing: 'ease-out-cubic',
-            });
-        }
+        window.addEventListener('load', function() {
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    once: true,
+                    offset: 100,
+                    duration: 800,
+                    easing: 'ease-out-cubic',
+                });
+            }
+
+            // --- SWIPER INITIALIZATION ---
+            if (typeof Swiper !== 'undefined') {
+                // Portfolio Carousel
+                var portfolioSwiper = new Swiper(".portfolioSwiper", {
+                    slidesPerView: 1, // Default Mobile
+                    spaceBetween: 30,
+                    loop: true, // Infinite loop
+                    grabCursor: true,
+                    autoplay: {
+                        delay: 3500,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev",
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 1,
+                            spaceBetween: 20,
+                        },
+                        768: {
+                            slidesPerView: 2,
+                            spaceBetween: 30,
+                        },
+                        1024: {
+                            slidesPerView: 3,
+                            spaceBetween: 30,
+                        },
+                    },
+                });
+
+                // Experience Carousel (NEW)
+                var experienceSwiper = new Swiper(".experienceSwiper", {
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    loop: true,
+                    grabCursor: true,
+                    autoplay: {
+                        delay: 4500, // Sedikit berbeda agar tidak berbarengan
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: ".swiper-pagination",
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev",
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 1,
+                            spaceBetween: 20,
+                        },
+                        768: {
+                            slidesPerView: 2,
+                            spaceBetween: 30,
+                        },
+                        1024: {
+                            slidesPerView: 3,
+                            spaceBetween: 30,
+                        },
+                    },
+                });
+
+            } else {
+                console.error("Swiper JS is not loaded yet.");
+            }
+        });
 
         // Mobile Menu Logic
         const btn = document.getElementById('mobile-menu-btn');
