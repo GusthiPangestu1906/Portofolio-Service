@@ -355,20 +355,20 @@
         }
 
         .swiper-pagination-bullet {
-            background: white;
-            opacity: 0.3;
+            background: #4b5563;
+            opacity: 0.5;
             width: 10px;
             height: 10px;
-            transition: all 0.3s;
         }
 
         .swiper-pagination-bullet-active {
-            background: #8750f7; /* Primary Color */
+            background: #06b6d4; /* Warna cyan */
             opacity: 1;
-            width: 20px; /* Stretch effect */
-            border-radius: 5px;
+            box-shadow: 0 0 10px #06b6d4;
+            width: 25px; /* Jadi lonjong saat aktif */
+            border-radius: 999px;
+            transition: all 0.3s ease;
         }
-
         .swiper-button-next, .swiper-button-prev {
             color: #8750f7;
             background: rgba(0,0,0,0.5);
@@ -616,49 +616,125 @@
     </section>
 
     <!-- Skills Section -->
-    <section id="skills" class="py-20 relative">
+    <section id="skills" class="py-24 relative overflow-hidden">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16" data-aos="fade-up">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Tools Keahlian</h2>
-                <p class="text-gray-400">Software andalan untuk menunjang kreativitas.</p>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Tools</h2>
+                <p class="text-gray-400">Rekam jejak dalam manajemen event, desain visual, dan kompetisi.</p>
             </div>
 
-            <div class="flex flex-wrap justify-center gap-8">
-                <!-- OBS -->
-                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-white/30 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] cursor-pointer" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="h-20 flex items-center justify-center mb-4">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/OBS_Studio_logo.png" alt="OBS" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
-                    </div>
-                    <h4 class="font-bold text-lg mb-2">OBS Studio</h4>
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-bold text-white border border-white/20">EXPERT</span>
-                </div>
+            <!-- Swiper Container -->
+            <div class="swiper skillsSwiper !pb-14" data-aos="zoom-in-up" data-aos-delay="100">
+                <div class="swiper-wrapper">
 
-                <!-- Photoshop -->
-                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(49,168,255,0.2)] cursor-pointer" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="h-20 flex items-center justify-center mb-4">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Adobe_Photoshop_CC_icon.svg/2101px-Adobe_Photoshop_CC_icon.svg.png" alt="Photoshop" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(49,168,255,0.3)]">
+                    <!-- CARD 1: OBS -->
+                    <div class="swiper-slide h-auto px-2">
+                        <div class="group relative w-full max-w-[240px] mx-auto">
+                            <!-- Neon Glow Effect Behind (visible by default) -->
+                            <div class="absolute -inset-0.5 bg-gradient-to-r from-gray-600 to-gray-400 rounded-2xl opacity-80 group-hover:from-cyan-400 group-hover:to-blue-600 blur transition duration-500"></div>
+                            
+                            <!-- Card Content -->
+                            <div class="relative h-full bg-[#121212] border border-white/10 p-8 rounded-2xl flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:-translate-y-1">
+                                
+                                <!-- Icon Wrapper with Glow (base glow enabled) -->
+                                <div class="h-24 w-24 mb-6 rounded-full bg-white/10 shadow-[0_0_16px_rgba(255,255,255,0.05)] flex items-center justify-center group-hover:bg-white/10 transition-colors duration-300 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/13/OBS_Studio_logo.png" alt="OBS" class="h-14 w-14 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-110">
+                                </div>
+                                
+                                <h4 class="font-bold text-xl text-white mb-3 tracking-wide">OBS Studio</h4>
+                                
+                                <!-- Badge -->
+                                <div class="px-4 py-1.5 rounded-full bg-gray-800 border border-gray-600 group-hover:border-cyan-500/50 group-hover:bg-cyan-900/20 transition-all duration-300">
+                                    <span class="text-xs font-bold text-gray-300 group-hover:text-cyan-400 tracking-wider">EXPERT</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h4 class="font-bold text-lg mb-2">Photoshop</h4>
-                    <span class="px-3 py-1 bg-blue-500/10 rounded-full text-xs font-bold text-blue-400 border border-blue-500/20">INTERMEDIATE</span>
-                </div>
 
-                <!-- Canva -->
-                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-teal-400/30 hover:shadow-[0_0_30px_rgba(0,196,204,0.2)] cursor-pointer" data-aos="zoom-in" data-aos-delay="300">
-                    <div class="h-20 flex items-center justify-center mb-4">
-                        <img src="https://public.canva.site/logo/media/dfb96cc174513093cd6ed61489ccb750.svg" alt="Canva" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(0,196,204,0.3)]">
+                    <!-- CARD 2: Photoshop -->
+                    <div class="swiper-slide h-auto px-2">
+                        <div class="group relative w-full max-w-[240px] mx-auto">
+                            <div class="absolute -inset-0.5 bg-gradient-to-r from-gray-600 to-gray-400 rounded-2xl opacity-80 group-hover:from-blue-500 group-hover:to-indigo-600 blur transition duration-500"></div>
+                            
+                            <div class="relative h-full bg-[#121212] border border-white/10 p-8 rounded-2xl flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:-translate-y-1">
+                                
+                                <div class="h-24 w-24 mb-6 rounded-full bg-white/10 shadow-[0_0_16px_rgba(59,130,246,0.04)] flex items-center justify-center group-hover:bg-blue-500/10 transition-colors duration-300 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Adobe_Photoshop_CC_icon.svg/2101px-Adobe_Photoshop_CC_icon.svg.png" alt="Photoshop" class="h-14 w-14 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-110">
+                                </div>
+                                
+                                <h4 class="font-bold text-xl text-white mb-3 tracking-wide">Photoshop</h4>
+                                
+                                <div class="px-4 py-1.5 rounded-full bg-gray-800 border border-gray-600 group-hover:border-blue-500/50 group-hover:bg-blue-900/20 transition-all duration-300">
+                                    <span class="text-xs font-bold text-gray-300 group-hover:text-blue-400 tracking-wider">INTERMEDIATE</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h4 class="font-bold text-lg mb-2">Canva</h4>
-                    <span class="px-3 py-1 bg-teal-400/10 rounded-full text-xs font-bold text-teal-400 border border-teal-400/20">ADVANCED</span>
-                </div>
 
-                <!-- Figma -->
-                <div class="glass-card w-48 p-6 rounded-2xl flex flex-col items-center justify-center text-center hover:-translate-y-2 transition-transform duration-300 border-white/5 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(0,196,204,0.2)] cursor-pointer" data-aos="zoom-in" data-aos-delay="400">
-                    <div class="h-20 flex items-center justify-center mb-4">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Figma-logo.svg/1365px-Figma-logo.svg.png" alt="Figma" class="h-16 object-contain drop-shadow-[0_0_10px_rgba(0,196,204,0.3)]">
+                    <!-- CARD 3: Canva -->
+                    <div class="swiper-slide h-auto px-2">
+                        <div class="group relative w-full max-w-[240px] mx-auto">
+                            <div class="absolute -inset-0.5 bg-gradient-to-r from-gray-600 to-gray-400 rounded-2xl opacity-80 group-hover:from-teal-400 group-hover:to-cyan-400 blur transition duration-500"></div>
+                            
+                            <div class="relative h-full bg-[#121212] border border-white/10 p-8 rounded-2xl flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:-translate-y-1">
+                                
+                                <div class="h-24 w-24 mb-6 rounded-full bg-white/10 shadow-[0_0_16px_rgba(45,212,191,0.04)] flex items-center justify-center group-hover:bg-teal-500/10 transition-colors duration-300 group-hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]">
+                                    <img src="https://public.canva.site/logo/media/dfb96cc174513093cd6ed61489ccb750.svg" alt="Canva" class="h-14 w-14 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-110">
+                                </div>
+                                
+                                <h4 class="font-bold text-xl text-white mb-3 tracking-wide">Canva</h4>
+                                
+                                <div class="px-4 py-1.5 rounded-full bg-gray-800 border border-gray-600 group-hover:border-teal-500/50 group-hover:bg-teal-900/20 transition-all duration-300">
+                                    <span class="text-xs font-bold text-gray-300 group-hover:text-teal-400 tracking-wider">ADVANCED</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h4 class="font-bold text-lg mb-2">Figma</h4>
-                    <span class="px-3 py-1 bg-blue-400/10 rounded-full text-xs font-bold text-blue-400 border border-teal-400/20">INTERMEDIATE</span>
+
+                    <!-- CARD 4: Figma -->
+                    <div class="swiper-slide h-auto px-2">
+                        <div class="group relative w-full max-w-[240px] mx-auto">
+                            <div class="absolute -inset-0.5 bg-gradient-to-r from-gray-600 to-gray-400 rounded-2xl opacity-80 group-hover:from-purple-500 group-hover:to-pink-500 blur transition duration-500"></div>
+                            
+                            <div class="relative h-full bg-[#121212] border border-white/10 p-8 rounded-2xl flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:-translate-y-1">
+                                
+                                <div class="h-24 w-24 mb-6 rounded-full bg-white/10 shadow-[0_0_16px_rgba(168,85,247,0.04)] flex items-center justify-center group-hover:bg-purple-500/10 transition-colors duration-300 group-hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Figma-logo.svg/1365px-Figma-logo.svg.png" alt="Figma" class="h-14 w-14 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-110">
+                                </div>
+                                
+                                <h4 class="font-bold text-xl text-white mb-3 tracking-wide">Figma</h4>
+                                
+                                <div class="px-4 py-1.5 rounded-full bg-gray-800 border border-gray-600 group-hover:border-purple-500/50 group-hover:bg-purple-900/20 transition-all duration-300">
+                                    <span class="text-xs font-bold text-gray-300 group-hover:text-purple-400 tracking-wider">INTERMEDIATE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide h-auto px-2">
+                        <div class="group relative w-full max-w-[240px] mx-auto">
+                            <div class="absolute -inset-0.5 bg-gradient-to-r from-gray-600 to-gray-400 rounded-2xl opacity-80 group-hover:from-purple-500 group-hover:to-pink-500 blur transition duration-500"></div>
+                            
+                            <div class="relative h-full bg-[#121212] border border-white/10 p-8 rounded-2xl flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:-translate-y-1">
+                                
+                                <div class="h-24 w-24 mb-6 rounded-full bg-white/10 shadow-[0_0_16px_rgba(168,85,247,0.04)] flex items-center justify-center group-hover:bg-purple-500/10 transition-colors duration-300 group-hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Docker-svgrepo-com.svg/2048px-Docker-svgrepo-com.svg.png" alt="Figma" class="h-14 w-14 object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-110">
+                                </div>
+                                
+                                <h4 class="font-bold text-xl text-white mb-3 tracking-wide">Docker</h4>
+                                
+                                <div class="px-4 py-1.5 rounded-full bg-gray-800 border border-gray-600 group-hover:border-purple-500/50 group-hover:bg-purple-900/20 transition-all duration-300">
+                                    <span class="text-xs font-bold text-gray-300 group-hover:text-purple-400 tracking-wider">INTERMEDIATE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
+                
+                <!-- Custom Pagination -->
+                <div class="swiper-pagination !bottom-0"></div>
             </div>
         </div>
     </section>
@@ -791,9 +867,6 @@
 
                 </div>
                 <div class="swiper-pagination"></div>
-                <!-- Navigation Buttons -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
             </div>
         </div>
     </section>
@@ -1072,6 +1145,78 @@
                         },
                     },
                 });
+
+                var swiper = new Swiper('.skillsSwiper', {
+                    effect: 'coverflow',
+                    grabCursor: true,
+                    centeredSlides: true,
+                    slidesPerView: 'auto',
+                    loop: true,
+                    spaceBetween: 24,
+                    coverflowEffect: {
+                        rotate: 0,
+                        stretch: 0,
+                        depth: 140,
+                        modifier: 1.1,
+                        slideShadows: false,
+                    },
+                    autoplay: {
+                        delay: 2800,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.skillsSwiper .swiper-pagination',
+                        clickable: true,
+                        dynamicBullets: true,
+                    },
+                    // responsive slide sizing handled via injected CSS below
+                });
+
+                // Inject styles to emulate the centered large-card carousel
+                (function(){
+                    var css = `
+                    .skillsSwiper { padding-bottom: 2.5rem; }
+                    .skillsSwiper .swiper-slide { width: 260px !important; }
+                    @media (min-width: 640px) { .skillsSwiper .swiper-slide { width: 300px !important; } }
+                    @media (min-width: 1024px) { .skillsSwiper .swiper-slide { width: 340px !important; } }
+
+                    .skillsSwiper .swiper-slide .group { border-radius: 1rem; overflow: hidden; }
+                    .skillsSwiper .swiper-slide { opacity: 0.7; transform-origin: center center; transition: transform 300ms ease, opacity 300ms ease; }
+                    .skillsSwiper .swiper-slide-active { transform: scale(1.06) translateY(-10px) !important; opacity: 1; z-index: 50; }
+                    .skillsSwiper .swiper-slide-next, .skillsSwiper .swiper-slide-prev { opacity: 0.9; }
+                    .skillsSwiper .swiper-pagination { bottom: 0.5rem; }
+
+                    /* Active slide glow: make center card glow automatically */
+                    .skillsSwiper .swiper-slide-active .group > .-inset-0.5 {
+                        opacity: 1 !important;
+                        filter: blur(14px);
+                        transition: opacity 300ms ease, filter 300ms ease;
+                    }
+
+                    .skillsSwiper .swiper-slide-active .group {
+                        box-shadow: 0 20px 50px rgba(135,80,247,0.14), 0 0 40px rgba(99,102,241,0.06) inset;
+                        border: 1px solid rgba(135,80,247,0.08);
+                        transition: box-shadow 300ms ease, border-color 300ms ease, transform 300ms ease;
+                    }
+
+                    .skillsSwiper .swiper-slide-active .group .h-24.w-24 {
+                        box-shadow: 0 0 30px rgba(135,80,247,0.32), 0 6px 20px rgba(0,0,0,0.25);
+                        transform: translateZ(0) scale(1.02);
+                        transition: box-shadow 300ms ease, transform 300ms ease;
+                    }
+
+                    /* Slightly boost icon brightness on active */
+                    .skillsSwiper .swiper-slide-active .group img {
+                        filter: none !important;
+                        transform: scale(1.08);
+                        transition: transform 300ms ease, filter 300ms ease;
+                    }
+
+                    `;
+                    var style = document.createElement('style');
+                    style.appendChild(document.createTextNode(css));
+                    document.head.appendChild(style);
+                })();
 
                 // Experience Carousel (NEW)
                 var experienceSwiper = new Swiper(".experienceSwiper", {
