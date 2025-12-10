@@ -212,6 +212,41 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             transform-style: preserve-3d;
         }
+        /* Clickable card affordances */
+        .glass-card[role="link"] {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            position: relative;
+        }
+        .glass-card[role="link"]::after {
+            content: '🔗';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.03);
+            font-size: 18px;
+            opacity: 0;
+            transform: translateY(-6px) scale(0.96);
+            transition: all 0.16s ease;
+            pointer-events: none;
+        }
+        .glass-card[role="link"]:hover::after,
+        .glass-card[role="link"]:focus::after {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .glass-card[role="link"]:focus {
+            outline: 3px solid rgba(135,80,247,0.28);
+            outline-offset: 6px;
+        }
         
         .glass-header {
             background: rgba(9, 9, 16, 0.6);
@@ -1041,41 +1076,44 @@
         </div>
     </section>
 
-    <!-- Experience Section (NOW CAROUSEL/SLIDER) -->
-    <section id="experience" class="py-20 pt-32 relative">
+ <section id="experience" class="py-20 pt-32 relative">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16" data-aos="fade-up">
                 <h2 class="text-3xl md:text-5xl font-bold mb-4">Pengalaman Profesional</h2>
                 <p class="text-gray-400">Rekam jejak dalam manajemen event, desain visual, dan kompetisi.</p>
             </div>
 
-            <!-- Swiper Container for Experience -->
             <div class="swiper experienceSwiper" data-aos="fade-up" data-aos-delay="200">
                 <div class="swiper-wrapper">
                     
-                    <!-- Card 1: Creative Design -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full"
+                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full relative"
                         onclick="window.open('https://drive.google.com/file/d/1y5FKSstmr-1QXDR27IvHFAtXN7EJYMT1/view?usp=sharing', '_blank')">
                             <div class="absolute top-0 left-0 w-1 h-full bg-pink-500"></div>
+                            
                             <div class="mb-4">
                                 <span class="text-xs font-extrabold tracking-widest text-pink-400 border border-pink-500/30 px-3 py-1 rounded bg-pink-500/10">EVENT</span>
                                 <div class="text-white/40 text-sm mt-2 font-mono">2025</div>
                             </div>
+                            
                             <h3 class="text-xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">Creative Design</h3>
                             <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
                                 <i class='bx bx-palette text-pink-500'></i>ITDS INSIGHT
                             </div>
-                            <p class="text-gray-400 text-sm leading-relaxed">
-                                Bertanggung jawab penuh atas seluruh desain identitas visual termasuk poster, banner, dan materi promosi digital untuk berbagai event.
+                            
+                            <p class="text-gray-400 text-sm leading-relaxed mb-8">
+                                Bertanggung jawab penuh atas seluruh desain identitas visual termasuk poster, banner, dan materi promosi digital.
                             </p>
+
+                            <div class="absolute bottom-6 right-6 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-pink-500 group-hover:border-pink-500 group-hover:shadow-[0_0_15px_rgba(236,72,153,0.5)] transition-all duration-300">
+                                <i class='bx bx-right-arrow-alt text-2xl text-gray-500 group-hover:text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-300'></i>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Card 2: Operator -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full"
-                        onclick="window.open('https://drive.google.com/file/d/1vMd_H_86MA1UlcCUCp6tGD4pj3zrEinW/view?usp=sharing', '_blank')">
+                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full relative"
+                       onclick="window.open('https://drive.google.com/file/d/1vMd_H_86MA1UlcCUCp6tGD4pj3zrEinW/view?usp=sharing', '_blank')">
                             <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
                             <div class="mb-4">
                                 <span class="text-xs font-extrabold tracking-widest text-blue-400 border border-blue-500/30 px-3 py-1 rounded bg-blue-500/10">EVENT</span>
@@ -1085,15 +1123,18 @@
                             <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
                                 <i class='bx bx-desktop text-blue-500'></i> MBEX 
                             </div>
-                            <p class="text-gray-400 text-sm leading-relaxed">
+                            <p class="text-gray-400 text-sm leading-relaxed mb-8">
                                 Operator utama dalam acara Minat Bakat Expo 2025 bertugas dalam mengelola transisi visual dan display menggunakan OBS.
                             </p>
+
+                            <div class="absolute bottom-6 right-6 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-blue-500 group-hover:border-blue-500 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-300">
+                                <i class='bx bx-right-arrow-alt text-2xl text-gray-500 group-hover:text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-300'></i>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Card 3: UI/UX Design -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full"
+                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full relative"
                         onclick="window.open('https://drive.google.com/file/d/1u_-iThTyTgBw9qpLs0gszMngMwOY1PoL/view?usp=sharing', '_blank')">
                             <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
                             <div class="mb-4">
@@ -1104,15 +1145,18 @@
                             <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
                                 <i class='bx bx-group text-cyan-500'></i> Held by Figma Camp Indonesia 
                             </div>
-                            <p class="text-gray-400 text-sm leading-relaxed">
+                            <p class="text-gray-400 text-sm leading-relaxed mb-8">
                                 Mempelajari semua dasar teori dalam membuat desain UI/UX beserta penerapannya menggunakan figma.
                             </p>
+
+                            <div class="absolute bottom-6 right-6 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-cyan-500 group-hover:border-cyan-500 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all duration-300">
+                                <i class='bx bx-right-arrow-alt text-2xl text-gray-500 group-hover:text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-300'></i>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Card 4: Digital Graphic Designer -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 bg-gradient-to-br from-yellow-500/10 to-transparent border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.05)] w-full h-full" 
+                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 bg-gradient-to-br from-yellow-500/10 to-transparent border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.05)] w-full h-full relative" 
                         onclick="window.open('https://drive.google.com/file/d/1DyDMbzZCr8E16ssPqOUQh27T0AaQqbEH/view?usp=sharing', '_blank')">
                             <div class="absolute top-0 left-0 w-1 h-full bg-yellow-500"></div>
                             <div class="mb-4">
@@ -1123,13 +1167,16 @@
                             <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
                                 <i class='bx bx-group text-yellow-500'></i> Held by Telkom DigiUp 
                             </div>
-                            <p class="text-gray-400 text-sm leading-relaxed">
+                            <p class="text-gray-400 text-sm leading-relaxed mb-8">
                                 Mempelajari semua dasar teori Graphic Design beserta penerapannya menggunakan Photoshop.
                             </p>
+
+                            <div class="absolute bottom-6 right-6 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-yellow-500 group-hover:border-yellow-500 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(234,179,8,0.5)] transition-all duration-300">
+                                <i class='bx bx-right-arrow-alt text-2xl text-gray-500 group-hover:text-black transform -rotate-45 group-hover:rotate-0 transition-transform duration-300'></i>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Card 5: Junior Graphic Designer -->
                     <div class="swiper-slide h-auto">
                         <div class="glass-card p-8 rounded-3xl cursor-pointer relative overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full" 
                         onclick="window.open('https://drive.google.com/file/d/1XcVWDfpAJrFAKw2PtIUp1b5AbYDa4Jvn/view?usp=sharing', '_blank')">
@@ -1142,15 +1189,18 @@
                             <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
                                 <i class='bx bx-group text-green-500'></i> Held by Telkom DigiUp with BNSP
                             </div>
-                            <p class="text-gray-400 text-sm leading-relaxed">
+                            <p class="text-gray-400 text-sm leading-relaxed mb-8">
                                 Sertifikasi bersama dengan BNSP setelah menyelesaikan kelas Digital Graphic Designer menggunakan Photoshop.
                             </p>
+
+                            <div class="absolute bottom-6 right-6 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-green-500 group-hover:border-green-500 group-hover:shadow-[0_0_15px_rgba(34,197,94,0.5)] transition-all duration-300">
+                                <i class='bx bx-right-arrow-alt text-2xl text-gray-500 group-hover:text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-300'></i>
+                            </div>
                         </div>
                     </div>
 
-                     <!-- Card 6: Intro to Graphic Design -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full"
+                        <div class="glass-card p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full relative"
                         onclick="window.open('https://drive.google.com/file/d/1DFj3axbjBR0Yj-K-8YCmIYTzadP2aB26/view?usp=sharing', '_blank')">
                             <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
                             <div class="mb-4">
@@ -1161,9 +1211,13 @@
                             <div class="flex items-center gap-2 text-sm text-gray-300 mb-4 border-b border-white/10 pb-4">
                                 <i class='bx bx-group text-blue-500'></i> With Great Learning Academy
                             </div>
-                            <p class="text-gray-400 text-sm leading-relaxed">
+                            <p class="text-gray-400 text-sm leading-relaxed mb-8">
                                 Mempelajari dasar-dasar Graphic Design beserta penerapannya dalam Photoshop.
                             </p>
+
+                            <div class="absolute bottom-6 right-6 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-blue-500 group-hover:border-blue-500 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-300">
+                                <i class='bx bx-right-arrow-alt text-2xl text-gray-500 group-hover:text-white transform -rotate-45 group-hover:rotate-0 transition-transform duration-300'></i>
+                            </div>
                         </div>
                     </div>
 
@@ -1188,7 +1242,7 @@
                     <!-- Portfolio Item 1 (PMCC 25) -->
                     <div class="swiper-slide h-auto">
                         <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-primary/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/1-QmqJZTZChqBm0fgk4iX6-USG_cShkSR/view?usp=sharing', '_blank')">
+                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/1-QmqJZTZChqBm0fgk4iX6-USG_cShkSR/view?usp=sharing" role="link" tabindex="0" aria-label="Open PMCC detail in new tab" onclick="window.open('https://drive.google.com/file/d/1-QmqJZTZChqBm0fgk4iX6-USG_cShkSR/view?usp=sharing', '_blank')">
                                 <img src="PMCC 25.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="PMCC 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                     <span class="px-6 py-2 bg-primary rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
@@ -1206,7 +1260,7 @@
                     <!-- Portfolio Item 2 (Pekan Komunitas) -->
                     <div class="swiper-slide h-auto">
                         <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-orange-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/1rNj0Le1Jzp-OYU7A9Ux24t9CYZiFozpN/view?usp=sharing', '_blank')">
+                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/1rNj0Le1Jzp-OYU7A9Ux24t9CYZiFozpN/view?usp=sharing" role="link" tabindex="0" aria-label="Open Pekan Komunitas detail in new tab" onclick="window.open('https://drive.google.com/file/d/1rNj0Le1Jzp-OYU7A9Ux24t9CYZiFozpN/view?usp=sharing', '_blank')">
                                 <img src="PKT_PKO.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="PKT_PKO 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                     <span class="px-6 py-2 bg-orange-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
@@ -1224,7 +1278,7 @@
                     <!-- Portfolio Item 3 (MBEX 25) -->
                     <div class="swiper-slide h-auto">
                         <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-green-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/1OKMkOQr7FddyFEBEYDz4OF5losfGFkDa/view?usp=sharing', '_blank')">
+                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/1OKMkOQr7FddyFEBEYDz4OF5losfGFkDa/view?usp=sharing" role="link" tabindex="0" aria-label="Open MBEX detail in new tab" onclick="window.open('https://drive.google.com/file/d/1OKMkOQr7FddyFEBEYDz4OF5losfGFkDa/view?usp=sharing', '_blank')">
                                 <img src="MBEX.jpeg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="MBEX 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                     <span class="px-6 py-2 bg-green-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
@@ -1242,7 +1296,7 @@
                     <!-- Portfolio Item 4 (LMB CERDAS) -->
                     <div class="swiper-slide h-auto">
                         <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/1gHjP3fNh-2S6GzjfX_oTua_qzr00-qti/view?usp=sharing', '_blank')">
+                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/1gHjP3fNh-2S6GzjfX_oTua_qzr00-qti/view?usp=sharing" role="link" tabindex="0" aria-label="Open LMB CERDAS detail in new tab" onclick="window.open('https://drive.google.com/file/d/1gHjP3fNh-2S6GzjfX_oTua_qzr00-qti/view?usp=sharing', '_blank')">
                                 <img src="LMB CERDAS.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="LMB CERDAS 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                     <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
@@ -1260,7 +1314,7 @@
                     <!-- Portfolio Item 5 (ITDS INSIGHT) -->
                     <div class="swiper-slide h-auto">
                         <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/1kPYqJBSTgJ9f2VeY4TG9jv3u5ww2plOl/view?usp=sharing', '_blank')">
+                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/1kPYqJBSTgJ9f2VeY4TG9jv3u5ww2plOl/view?usp=sharing" role="link" tabindex="0" aria-label="Open ITDS INSIGHT detail in new tab" onclick="window.open('https://drive.google.com/file/d/1kPYqJBSTgJ9f2VeY4TG9jv3u5ww2plOl/view?usp=sharing', '_blank')">
                                 <img src="ITDS 25.jpeg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="ITDS INSIGHT 2025" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                     <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
@@ -1278,7 +1332,7 @@
                     <!-- Portfolio Item 6 (AT-FEST) -->
                     <div class="swiper-slide h-auto">
                         <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-purple-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/12oaz7el6e-keFgExyp82fOKJNck7EknD/view?usp=sharing', '_blank')">
+                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/12oaz7el6e-keFgExyp82fOKJNck7EknD/view?usp=sharing" role="link" tabindex="0" aria-label="Open AT-FEST detail in new tab" onclick="window.open('https://drive.google.com/file/d/12oaz7el6e-keFgExyp82fOKJNck7EknD/view?usp=sharing', '_blank')">
                                 <img src="AT-FEST.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="AT-FEST Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                     <span class="px-6 py-2 bg-purple-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
@@ -1296,7 +1350,7 @@
                     <!-- Portfolio Item 7 (ELTAFEST) -->
                     <div class="swiper-slide h-auto">
                         <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/19h-oqBWUwa55C-4IY2WkvmbIP7C32uJW/view?usp=sharing', '_blank')">
+                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/19h-oqBWUwa55C-4IY2WkvmbIP7C32uJW/view?usp=sharing" role="link" tabindex="0" aria-label="Open ELTAFEST detail in new tab" onclick="window.open('https://drive.google.com/file/d/19h-oqBWUwa55C-4IY2WkvmbIP7C32uJW/view?usp=sharing', '_blank')">
                                 <img src="ELTAFEST 25.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="ELTAFEST 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                     <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
@@ -1314,7 +1368,7 @@
                     <!-- Portfolio Item 8 (STAFF MUDA) -->
                     <div class="swiper-slide h-auto">
                         <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" onclick="window.open('https://drive.google.com/file/d/149uR1dk8NmumY9SUYefpqdmedj-ANDIz/view?usp=sharing', '_blank')">
+                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/149uR1dk8NmumY9SUYefpqdmedj-ANDIz/view?usp=sharing" role="link" tabindex="0" aria-label="Open STAFF MUDA detail in new tab" onclick="window.open('https://drive.google.com/file/d/149uR1dk8NmumY9SUYefpqdmedj-ANDIz/view?usp=sharing', '_blank')">
                                 <img src="STAFF MUDA LMB.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="SM MEDFO 24" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                     <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
@@ -1332,7 +1386,6 @@
                 </div>
                 <div class="swiper-pagination"></div>
                 <!-- Navigation Buttons -->
-                <div class="swiper-button-prev"></div>
             </div>
         </div>
     </section>
