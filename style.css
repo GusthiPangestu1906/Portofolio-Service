@@ -666,3 +666,75 @@ body {
     from { transform: rotate(0deg); }
     to { transform: rotate(90deg); }
 }
+
+/* =========================================
+   ANIMASI SELESAI LOADING (GATE OPEN & ZOOM OUT)
+   ========================================= */
+
+/* State saat loading selesai */
+.loading-finished {
+    pointer-events: none; /* Agar bisa klik elemen di belakangnya */
+}
+
+/* 1. Animasi Konten Tengah (Logo & Text) */
+.loading-finished .relative.mb-12, 
+.loading-finished .w-80,
+.loading-finished .text-\[10px\] {
+    transform: scale(3); /* Zoom in drastis seolah menembus layar */
+    opacity: 0;
+    transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.5s ease;
+}
+
+/* 2. Efek Layar Terbelah (Split Screen) */
+/* Kita manfaatkan pseudo-element untuk membuat 'pintu' hitam */
+#loading-screen::before,
+#loading-screen::after {
+    content: '';
+    position: fixed;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background-color: #050505;
+    z-index: -1; /* Di belakang konten loading, tapi di depan web utama */
+    transition: transform 1s cubic-bezier(0.8, 0, 0.2, 1) 0.4s; /* Delay dikit biar zoom selesai dulu */
+}
+
+#loading-screen::before {
+    top: 0;
+    /* REVISI: Menghapus border-bottom (garis tengah) */
+    border-bottom: none; 
+    box-shadow: none;
+}
+
+#loading-screen::after {
+    bottom: 0;
+    /* REVISI: Menghapus border-top (garis tengah) */
+    border-top: none; 
+    box-shadow: none;
+}
+
+/* Saat kelas .loading-finished ditambahkan via JS */
+.loading-finished::before {
+    transform: translateY(-100%); /* Geser ke atas */
+}
+
+.loading-finished::after {
+    transform: translateY(100%); /* Geser ke bawah */
+}
+
+/* Sembunyikan background asli agar tidak menutupi efek split */
+.loading-finished.bg-transparent {
+    background-color: transparent !important;
+    transition: background-color 0.1s ease 0.4s;
+}
+
+#cursor-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Klik tembus ke elemen di bawahnya */
+    z-index: 9999; /* Paling atas */
+    opacity: 0.8;
+}

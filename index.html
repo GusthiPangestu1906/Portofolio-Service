@@ -62,6 +62,7 @@
 </head>
 
 <body class="text-white antialiased ambient-glow selection:bg-primary selection:text-white">
+    <canvas id="cursor-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-[60] mix-blend-screen"></canvas>
 
     <!-- SANGAR LOADING SCREEN -->
     <div id="loading-screen">
@@ -251,14 +252,7 @@
                                             <span class="text-gray-300 text-sm md:text-base">Expert <strong>Operator OBS Studio</strong> untuk live production & visual jockey.</span>
                                         </li>
                                     </ul>
-                                    
-                                    <!-- Social Media (Instagram Focus) -->
-                                    <div class="flex flex-wrap gap-3 md:gap-4">
-                                        <a href="https://instagram.com/gusthipangestu" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-full border border-pink-500/30 bg-pink-500/10 hover:bg-pink-500 hover:text-white transition-all duration-300 group">
-                                            <i class='bx bxl-instagram text-xl'></i>
-                                            <span class="text-sm font-medium">Instagram Portfolio</span>
-                                        </a>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -298,17 +292,6 @@
                                         </li>
                                     </ul>
                                     
-                                    <!-- Social Media (LinkedIn Focus) -->
-                                    <div class="flex flex-wrap gap-3 md:gap-4">
-                                        <a href="https://linkedin.com/in/gusthipangestu" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 hover:bg-blue-600 hover:text-white transition-all duration-300 group">
-                                            <i class='bx bxl-linkedin text-xl'></i>
-                                            <span class="text-sm font-medium">LinkedIn Profile</span>
-                                        </a>
-                                        <a href="https://github.com" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white hover:text-black transition-all duration-300 group">
-                                            <i class='bx bxl-github text-xl'></i>
-                                            <span class="text-sm font-medium">GitHub</span>
-                                        </a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -322,7 +305,7 @@
         </div>
     </section>
 
-    <!-- Services Section -->
+    <!-- Services Section (Updated to Carousel) -->
     <section id="services" class="py-20 pt-32 relative">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16" data-aos="fade-up">
@@ -330,38 +313,49 @@
                 <p class="text-gray-400 max-w-xl mx-auto">Solusi teknis dan kreatif untuk kebutuhan acara dan branding Anda.</p>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Service 1 -->
-                <div class="glass-card p-8 rounded-3xl hover:border-primary/50 hover:bg-white/5 transition-all duration-300 group cursor-pointer" data-aos="fade-up" data-aos-delay="100">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-3xl text-primary mb-6 group-hover:scale-110 transition-transform border border-primary/20">
-                        <i class='bx bx-desktop'></i>
+            <!-- Swiper Services Container -->
+            <div class="swiper servicesSwiper pb-12" data-aos="fade-up" data-aos-delay="100">
+                <div class="swiper-wrapper">
+                    
+                    <!-- Service 1: Operator LCD & OBS -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card p-8 rounded-3xl hover:border-primary/50 hover:bg-white/5 transition-all duration-300 group cursor-pointer h-full flex flex-col">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-3xl text-primary mb-6 group-hover:scale-110 transition-transform border border-primary/20">
+                                <i class='bx bx-desktop'></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-primary transition-colors">Operator LCD & OBS</h3>
+                            <p class="text-gray-400 leading-relaxed mb-4 flex-grow">
+                                Manajemen visual acara live yang profesional untuk kelancaran presentasi dan multimedia.
+                            </p>
+                            <ul class="space-y-2 text-gray-400 text-sm mt-auto">
+                                <li class="flex items-center gap-2"><i class='bx bx-check text-primary'></i> Manajemen Scene & Transisi OBS</li>
+                                <li class="flex items-center gap-2"><i class='bx bx-check text-primary'></i> Playback Video & Presentasi</li>
+                                <li class="flex items-center gap-2"><i class='bx bx-check text-primary'></i> Setup Layar LED/Proyektor</li>
+                            </ul>
+                        </div>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-primary transition-colors">Operator LCD & OBS</h3>
-                    <p class="text-gray-400 leading-relaxed mb-4">
-                        Manajemen visual acara live yang profesional.
-                    </p>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li class="flex items-center gap-2"><i class='bx bx-check text-primary'></i> Manajemen Scene & Transisi OBS</li>
-                        <li class="flex items-center gap-2"><i class='bx bx-check text-primary'></i> Playback Video & Presentasi</li>
-                        <li class="flex items-center gap-2"><i class='bx bx-check text-primary'></i> Setup Layar LED/Proyektor</li>
-                    </ul>
-                </div>
 
-                <!-- Service 2 -->
-                <div class="glass-card p-8 rounded-3xl hover:border-primary/50 hover:bg-white/5 transition-all duration-300 group cursor-pointer" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center text-3xl text-pink-400 mb-6 group-hover:scale-110 transition-transform border border-pink-500/20">
-                        <i class='bx bx-palette'></i>
+                    <!-- Service 2: Graphic Design -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card p-8 rounded-3xl hover:border-primary/50 hover:bg-white/5 transition-all duration-300 group cursor-pointer h-full flex flex-col">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center text-3xl text-pink-400 mb-6 group-hover:scale-110 transition-transform border border-pink-500/20">
+                                <i class='bx bx-palette'></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-pink-400 transition-colors">Graphic Design</h3>
+                            <p class="text-gray-400 leading-relaxed mb-4 flex-grow">
+                                Desain visual komunikatif untuk memperkuat branding acara dan organisasi Anda.
+                            </p>
+                            <ul class="space-y-2 text-gray-400 text-sm mt-auto">
+                                <li class="flex items-center gap-2"><i class='bx bx-check text-pink-400'></i> Social Media Feeds & Story</li>
+                                <li class="flex items-center gap-2"><i class='bx bx-check text-pink-400'></i> Poster, Banner & Flyer Event</li>
+                                <li class="flex items-center gap-2"><i class='bx bx-check text-pink-400'></i> Desain Kebutuhan Organisasi (PDD)</li>
+                            </ul>
+                        </div>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-pink-400 transition-colors">Graphic Design</h3>
-                    <p class="text-gray-400 leading-relaxed mb-4">
-                        Desain visual komunikatif untuk branding & event.
-                    </p>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li class="flex items-center gap-2"><i class='bx bx-check text-pink-400'></i> Social Media Feeds & Story</li>
-                        <li class="flex items-center gap-2"><i class='bx bx-check text-pink-400'></i> Poster, Banner & Flyer Event</li>
-                        <li class="flex items-center gap-2"><i class='bx bx-check text-pink-400'></i> Desain Kebutuhan Organisasi (PDD)</li>
-                    </ul>
+
                 </div>
+                <!-- Pagination Dots -->
+                <div class="swiper-pagination !bottom-0"></div>
             </div>
         </div>
     </section>

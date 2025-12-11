@@ -155,6 +155,59 @@ window.addEventListener('load', function() {
             },
         });
 
+        // --- SERVICES CAROUSEL (NEW) ---
+        var servicesSwiper = new Swiper(".servicesSwiper", {
+            slidesPerView: 1, // Mobile: 1 kartu
+            spaceBetween: 30,
+            loop: true,
+            grabCursor: true,
+            effect: 'coverflow', // Mengaktifkan efek 3D Coverflow
+            coverflowEffect: {
+                rotate: 50,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+            },
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+                dynamicBullets: true,
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2, // Tablet & Desktop: 2 kartu berdampingan
+                    spaceBetween: 30,
+                    effect: 'slide', // Kembali ke slide biasa di layar besar agar rapi (opsional, bisa tetap coverflow jika mau)
+                },
+            },
+        });
+
+        // --- ABOUT ME CAROUSEL (NEW) ---
+        var aboutSwiper = new Swiper(".aboutSwiper", {
+            slidesPerView: 1,
+            spaceBetween: 50,
+            loop: true,
+            speed: 800, // Transisi halus
+            effect: 'fade', // Efek fade supaya elegan (ganti 'slide' jika ingin geser)
+            fadeEffect: {
+                crossFade: true
+            },
+            autoplay: {
+                delay: 5000, // Ganti slide setiap 5 detik
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+                dynamicBullets: true,
+            },
+        });
+
     } else {
         console.error("Swiper JS is not loaded yet.");
     }
@@ -358,10 +411,7 @@ if (!document.querySelector('.mouse-glow')) {
 const loadingScreen = document.getElementById('loading-screen');
 const percentageText = document.getElementById('loading-percentage');
 const statusText = document.getElementById('loader-status');
-
-// --- PERBAIKAN: Tambahkan baris ini ---
 const progressBar = document.getElementById('progress-bar'); 
-// --------------------------------------
 
 const loadingStatuses = [
     "> INITIALIZING KERNEL...",
@@ -374,7 +424,6 @@ const loadingStatuses = [
 
 let width = 0;
 
-// Pastikan elemen ada sebelum dijalankan (tambahkan progressBar ke pengecekan)
 if (loadingScreen && percentageText && progressBar) {
     const interval = setInterval(() => {
         if (width >= 100) {
@@ -384,49 +433,211 @@ if (loadingScreen && percentageText && progressBar) {
             if(statusText) statusText.innerText = "> SYSTEM READY";
             if(percentageText) percentageText.innerText = "100%";
             
-            // Fade Out
+            // --- EFEK BARU: Trigger Animasi CSS ---
             setTimeout(() => {
-                loadingScreen.style.opacity = '0';
-                loadingScreen.style.visibility = 'hidden';
+                // Tambahkan kelas untuk memicu animasi di CSS
+                loadingScreen.classList.add('loading-finished');
+                
+                // Ubah background jadi transparan agar efek split terlihat
+                loadingScreen.classList.add('bg-transparent'); 
+            }, 300); // Delay sedikit setelah 100%
+
+            // Hapus elemen dari DOM setelah animasi selesai
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
                 document.body.style.overflow = 'auto';
-            }, 500);
+                
+                // Opsional: Trigger animasi elemen home muncul (jika pakai AOS)
+                if(typeof AOS !== 'undefined') AOS.refresh();
+            }, 1800); // Waktu total animasi (1.8 detik cukup aman)
 
         } else {
             width++;
-            
-            // --- PERBAIKAN: Update lebar progress bar ---
             progressBar.style.width = width + '%';
-            // ------------------------------------------
-            
             if(percentageText) percentageText.innerText = width + '%';
 
-            // Change text based on width
-            if (width < 30 && statusText) statusText.innerText = loadingStatuses[0];
-            else if (width < 50 && statusText) statusText.innerText = loadingStatuses[1];
-            else if (width < 70 && statusText) statusText.innerText = loadingStatuses[2];
-            else if (width < 90 && statusText) statusText.innerText = loadingStatuses[4];
-            else if (statusText) statusText.innerText = loadingStatuses[5];
+            // Randomize status text for hacker feel
+            if (width % 15 === 0 && width < 90) {
+                 const randIdx = Math.floor(Math.random() * (loadingStatuses.length - 1));
+                 if(statusText) statusText.innerText = loadingStatuses[randIdx];
+            } else if (width === 95) {
+                 if(statusText) statusText.innerText = loadingStatuses[5]; // Access Granted
+            }
         }
-    }, 30); // Speed of loading
+    }, 25); // Kecepatan loading (makin kecil makin ngebut)
 }
 
-// --- ABOUT ME CAROUSEL (NEW) ---
-        var aboutSwiper = new Swiper(".aboutSwiper", {
-            slidesPerView: 1,
-            spaceBetween: 50,
-            loop: true,
-            speed: 800, // Transisi halus
-            effect: 'fade', // Efek fade supaya elegan (ganti 'slide' jika ingin geser)
-            fadeEffect: {
-                crossFade: true
-            },
-            autoplay: {
-                delay: 5000, // Ganti slide setiap 5 detik
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-                dynamicBullets: true,
-            },
+/* =========================================
+   WEBGL FLUID CURSOR TRAIL (MOBILE FRIENDLY)
+   ========================================= */
+const canvas = document.getElementById('cursor-canvas');
+const gl = canvas.getContext('webgl');
+
+// Deteksi Mobile
+const isMobile = window.innerWidth <= 768;
+
+// Jalankan jika WebGL didukung
+if (gl) {
+    
+    let mouse = { x: 0, y: 0 };
+    let points = [];
+    // Kurangi jumlah partikel di mobile agar performa aman
+    const maxPoints = isMobile ? 25 : 50; 
+
+    // Resize canvas
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Shader Program (Vertex & Fragment)
+    // Sederhana: Membuat titik-titik yang memudar
+    const vsSource = `
+        attribute vec2 a_position;
+        attribute float a_size;
+        attribute vec4 a_color;
+        varying vec4 v_color;
+        void main() {
+            gl_Position = vec4(a_position, 0.0, 1.0);
+            gl_PointSize = a_size;
+            v_color = a_color;
+        }
+    `;
+
+    const fsSource = `
+        precision mediump float;
+        varying vec4 v_color;
+        void main() {
+            // Membuat titik bulat
+            vec2 coord = gl_PointCoord - vec2(0.5);
+            if(length(coord) > 0.5) discard;
+            gl_FragColor = v_color;
+        }
+    `;
+
+    // Compile Shader Function
+    function createShader(gl, type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.error(gl.getShaderInfoLog(shader));
+            gl.deleteShader(shader);
+            return null;
+        }
+        return shader;
+    }
+
+    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
+    const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+    const program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    // Get Attribute Locations
+    const positionLoc = gl.getAttribLocation(program, "a_position");
+    const sizeLoc = gl.getAttribLocation(program, "a_size");
+    const colorLoc = gl.getAttribLocation(program, "a_color");
+
+    // Track Mouse & Touch
+    function updateCoordinates(clientX, clientY) {
+        // Konversi koordinat ke Clip Space (-1 s/d 1)
+        const x = (clientX / canvas.width) * 2 - 1;
+        const y = -((clientY / canvas.height) * 2 - 1); // WebGL Y is flipped
+        mouse = { x, y };
+        
+        // Tambah titik baru ke trail
+        points.push({
+            x: x, 
+            y: y, 
+            age: 0,
+            r: Math.random(), // Warna acak untuk efek glitchy
+            g: 0.5,
+            b: 1.0 
         });
+    }
+
+    // Mouse Events (Desktop)
+    window.addEventListener('mousemove', e => {
+        updateCoordinates(e.clientX, e.clientY);
+    });
+
+    // Touch Events (Mobile)
+    window.addEventListener('touchmove', e => {
+        // Prevent default scroll kadang perlu, tapi bisa ganggu UX.
+        // Disini kita hanya ambil koordinat touch pertama.
+        if(e.touches.length > 0) {
+            updateCoordinates(e.touches[0].clientX, e.touches[0].clientY);
+        }
+    }, { passive: true });
+
+    // Animation Loop
+    function render() {
+        // Clear Canvas (Transparent)
+        gl.clearColor(0, 0, 0, 0); 
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        // Update Points
+        // Hapus point tua
+        if (points.length > maxPoints) points.shift();
+        
+        // Siapkan Arrays untuk Buffer
+        const positions = [];
+        const sizes = [];
+        const colors = [];
+
+        points.forEach((p, i) => {
+            p.age += 0.02; // Umur bertambah
+            const life = 1.0 - p.age; // Opacity berkurang
+
+            if (life > 0) {
+                positions.push(p.x, p.y);
+                sizes.push(30.0 * life); // Ukuran mengecil
+                // Warna: Ungu/Biru Neon (r, g, b, alpha)
+                colors.push(0.5, 0.2, 1.0, life); 
+            }
+        });
+
+        // Filter point yang sudah mati
+        points = points.filter(p => p.age < 1.0);
+
+        // --- Drawing ---
+        if (positions.length > 0) {
+            // Buffer Positions
+            const posBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+            gl.enableVertexAttribArray(positionLoc);
+            gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
+
+            // Buffer Sizes
+            const sizeBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, sizeBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(sizes), gl.STATIC_DRAW);
+            gl.enableVertexAttribArray(sizeLoc);
+            gl.vertexAttribPointer(sizeLoc, 1, gl.FLOAT, false, 0, 0);
+
+            // Buffer Colors
+            const colorBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+            gl.enableVertexAttribArray(colorLoc);
+            gl.vertexAttribPointer(colorLoc, 4, gl.FLOAT, false, 0, 0);
+
+            // Draw Arrays (Points)
+            // Enable blending untuk transparansi yang halus
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+            
+            gl.drawArrays(gl.POINTS, 0, positions.length / 2);
+        }
+
+        requestAnimationFrame(render);
+    }
+    render();
+}
