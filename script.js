@@ -353,12 +353,15 @@ if (!document.querySelector('.mouse-glow')) {
 }
 
 /* =========================================
-   7. SANGAR LOADING SCREEN LOGIC
+   7. SANGAR LOADING SCREEN LOGIC (UPDATED)
    ========================================= */
 const loadingScreen = document.getElementById('loading-screen');
-const progressBar = document.getElementById('progress-bar');
 const percentageText = document.getElementById('loading-percentage');
 const statusText = document.getElementById('loader-status');
+
+// --- PERBAIKAN: Tambahkan baris ini ---
+const progressBar = document.getElementById('progress-bar'); 
+// --------------------------------------
 
 const loadingStatuses = [
     "> INITIALIZING KERNEL...",
@@ -370,8 +373,9 @@ const loadingStatuses = [
 ];
 
 let width = 0;
-// Only run if loading screen elements exist
-if (loadingScreen && progressBar) {
+
+// Pastikan elemen ada sebelum dijalankan (tambahkan progressBar ke pengecekan)
+if (loadingScreen && percentageText && progressBar) {
     const interval = setInterval(() => {
         if (width >= 100) {
             clearInterval(interval);
@@ -389,7 +393,11 @@ if (loadingScreen && progressBar) {
 
         } else {
             width++;
-            if(progressBar) progressBar.style.width = width + '%';
+            
+            // --- PERBAIKAN: Update lebar progress bar ---
+            progressBar.style.width = width + '%';
+            // ------------------------------------------
+            
             if(percentageText) percentageText.innerText = width + '%';
 
             // Change text based on width
@@ -401,3 +409,24 @@ if (loadingScreen && progressBar) {
         }
     }, 30); // Speed of loading
 }
+
+// --- ABOUT ME CAROUSEL (NEW) ---
+        var aboutSwiper = new Swiper(".aboutSwiper", {
+            slidesPerView: 1,
+            spaceBetween: 50,
+            loop: true,
+            speed: 800, // Transisi halus
+            effect: 'fade', // Efek fade supaya elegan (ganti 'slide' jika ingin geser)
+            fadeEffect: {
+                crossFade: true
+            },
+            autoplay: {
+                delay: 5000, // Ganti slide setiap 5 detik
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+                dynamicBullets: true,
+            },
+        });

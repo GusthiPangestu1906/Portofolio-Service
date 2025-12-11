@@ -17,11 +17,11 @@
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper@11/swiper-bundle.min.css" />
 
-    <!-- External Custom CSS -->
-    <link rel="stylesheet" href="style.css">
-
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Panggil Style External -->
+    <link rel="stylesheet" href="style.css">
     
     <!-- Tailwind Config -->
     <script>
@@ -213,35 +213,112 @@
 
     <section id="about" class="py-20 pt-32">
         <div class="container mx-auto px-6">
-            <!-- Content -->
-            <div class="glass-card p-8 md:p-12 rounded-3xl border border-white/5 relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <!-- Image/Visual -->
-                    <div class="relative order-2 md:order-1">
-                        <div class="rounded-2xl overflow-hidden h-80 md:h-96 w-full relative group shadow-[0_0_30px_rgba(135,80,247,0.2)]">
-                            <!-- Foto Formal Jas -->
-                            <img src="Gusthi Pangestu (2).JPG" onerror="this.src='https://placehold.co/600x800/2a1454/ffffff?text=Photo+Unavailable'" alt="Gusthi Pangestu Formal" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110">
-                            <div class="absolute inset-0 bg-gradient-to-t from-purple/80 to-transparent"></div>
+            
+            <!-- Swiper About -->
+            <div class="swiper aboutSwiper pb-12" data-aos="fade-up" data-aos-delay="100">
+                <div class="swiper-wrapper">
+
+                    <!-- SLIDE 1: SISI KREATIF (Visual Creator) -->
+                    <div class="swiper-slide">
+                        <div class="glass-card p-8 md:p-12 rounded-3xl border border-white/5 relative overflow-hidden">
+                            <div class="grid md:grid-cols-2 gap-12 items-center">
+                                <!-- Image Visual -->
+                                <div class="relative order-2 md:order-1">
+                                    <div class="rounded-2xl overflow-hidden h-80 md:h-96 w-full relative group shadow-[0_0_30px_rgba(135,80,247,0.2)]">
+                                        <img src="Gusthi Pangestu (2).JPG" onerror="this.src='https://placehold.co/600x800/2a1454/ffffff?text=Creative+Photo'" alt="Creative Gusthi" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-purple/80 to-transparent"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Text Creative -->
+                                <div class="order-1 md:order-2">
+                                    <div class="inline-block px-3 py-1 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-400 text-xs font-bold mb-4">CREATIVE SIDE</div>
+                                    <h3 class="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">Visual Creator & <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-500">Event Specialist</span></h3>
+                                    
+                                    <div class="w-20 h-1 bg-pink-500 mb-6 rounded-full"></div>
+
+                                    <p class="text-gray-400 leading-relaxed mb-6 text-sm md:text-base">
+                                        Di balik layar, saya adalah seorang kreator yang menghidupkan suasana acara. Fokus saya adalah menciptakan pengalaman visual yang imersif melalui desain grafis dan manajemen panggung digital.
+                                    </p>
+
+                                    <ul class="space-y-3 mb-8">
+                                        <li class="flex items-start gap-3">
+                                            <div class="mt-1 min-w-[20px] text-pink-400"><i class='bx bxs-palette text-xl'></i></div>
+                                            <span class="text-gray-300 text-sm md:text-base">Spesialis <strong>Desain Grafis & Branding</strong> untuk kebutuhan event.</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <div class="mt-1 min-w-[20px] text-pink-400"><i class='bx bxs-camera-movie text-xl'></i></div>
+                                            <span class="text-gray-300 text-sm md:text-base">Expert <strong>Operator OBS Studio</strong> untuk live production & visual jockey.</span>
+                                        </li>
+                                    </ul>
+                                    
+                                    <!-- Social Media (Instagram Focus) -->
+                                    <div class="flex flex-wrap gap-3 md:gap-4">
+                                        <a href="https://instagram.com/gusthipangestu" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-full border border-pink-500/30 bg-pink-500/10 hover:bg-pink-500 hover:text-white transition-all duration-300 group">
+                                            <i class='bx bxl-instagram text-xl'></i>
+                                            <span class="text-sm font-medium">Instagram Portfolio</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <!-- Text -->
-                    <div class="order-1 md:order-2">
-                        <div class="inline-block px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-bold mb-4">WHO I AM</div>
-                        <h3 class="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">Mahasiswa PENS & <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-white">Kreator Visual Berdedikasi</span></h3>
-                        <div class="grid grid-cols-3 gap-4 border-t border-white/10 pt-6"></div>
 
-                        <p class="text-gray-400 leading-relaxed mb-6 text-sm md:text-base">
-                            Halo! Saya <span class="text-white font-semibold">Gusthi Pangestu</span>, mahasiswa Teknik Informatika di Politeknik Elektronika Negeri Surabaya (PENS). 
-                            Saya memiliki ketertarikan mendalam pada dunia <span class="text-primary">Programming</span> dan <span class="text-primary">Desain Grafis</span>.
-                        </p>
-                        <p class="text-gray-400 leading-relaxed mb-8 text-sm md:text-base">
-                            Berpengalaman dalam optimasi performa website dan pembuatan konten visual untuk berbagai event kampus dan organisasi. 
-                            Saya berkomitmen untuk selalu memberikan hasil terbaik, memiliki kemampuan komunikasi yang kuat, serta mampu bekerja secara mandiri maupun dalam tim.
-                        </p>
+                    <!-- SLIDE 2: SISI IT (Informatics Student) -->
+                    <div class="swiper-slide">
+                        <div class="glass-card p-8 md:p-12 rounded-3xl border border-white/5 relative overflow-hidden">
+                            <div class="grid md:grid-cols-2 gap-12 items-center">
+                                <!-- Image Formal -->
+                                <div class="relative order-2 md:order-1">
+                                    <div class="rounded-2xl overflow-hidden h-80 md:h-96 w-full relative group shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+                                        <!-- Ganti (1).JPG sesuai file foto formal kamu -->
+                                        <img src="Gusthi Pangestu (1).JPG" onerror="this.src='https://placehold.co/600x800/1e3a8a/ffffff?text=Formal+Photo'" alt="Formal Gusthi" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110">
+                                    </div>
+                                </div>
+                                
+                                <!-- Text IT -->
+                                <div class="order-1 md:order-2">
+                                    <div class="inline-block px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-xs font-bold mb-4">TECHNICAL SIDE</div>
+                                    <h3 class="text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">Mahasiswa PENS <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Informatics Engineering</span></h3>
+                                    
+                                    <div class="w-20 h-1 bg-blue-500 mb-6 rounded-full"></div>
+
+                                    <p class="text-gray-400 leading-relaxed mb-6 text-sm md:text-base">
+                                        Sebagai mahasiswa Teknik Informatika di PENS, saya mendalami pengembangan perangkat lunak dan teknologi web. Saya menggabungkan logika pemrograman dengan estetika desain.
+                                    </p>
+
+                                    <ul class="space-y-3 mb-8">
+                                        <li class="flex items-start gap-3">
+                                            <div class="mt-1 min-w-[20px] text-blue-400"><i class='bx bx-code-block' ></i></div>
+                                            <span class="text-gray-300 text-sm md:text-base">Berpengalaman dalam <strong>Web Development</strong> (Front-end & UI/UX).</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <div class="mt-1 min-w-[20px] text-blue-400"><i class='bx bxs-data text-xl'></i></div>
+                                            <span class="text-gray-300 text-sm md:text-base">Memahami konsep <strong>Database & Backend Logic</strong> untuk aplikasi skala kecil-menengah.</span>
+                                        </li>
+                                    </ul>
+                                    
+                                    <!-- Social Media (LinkedIn Focus) -->
+                                    <div class="flex flex-wrap gap-3 md:gap-4">
+                                        <a href="https://linkedin.com/in/gusthipangestu" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 hover:bg-blue-600 hover:text-white transition-all duration-300 group">
+                                            <i class='bx bxl-linkedin text-xl'></i>
+                                            <span class="text-sm font-medium">LinkedIn Profile</span>
+                                        </a>
+                                        <a href="https://github.com" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white hover:text-black transition-all duration-300 group">
+                                            <i class='bx bxl-github text-xl'></i>
+                                            <span class="text-sm font-medium">GitHub</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
+                <!-- Pagination Tombol Bulat di bawah -->
+                <div class="swiper-pagination !bottom-0"></div>
             </div>
+
         </div>
     </section>
 
@@ -751,43 +828,43 @@
         <div id="caption" class="lightbox-caption"></div>
     </div>
 
-    <!-- Contact Section -->
+    <!-- Contact Section (UPDATED) -->
     <section id="contact" class="py-24 pt-32">
-        <div class="container mx-auto px-6">
-            <div class="max-w-4xl mx-auto glass-card rounded-[3rem] p-10 md:p-16 text-center border-white/10 relative overflow-hidden" data-aos="zoom-in">
+        <div class="container mx-auto px-4 md:px-6"> <!-- Adjusted px for mobile -->
+            <div class="max-w-4xl mx-auto glass-card rounded-3xl md:rounded-[3rem] p-6 md:p-16 text-center border-white/10 relative overflow-hidden" data-aos="zoom-in">
                 <!-- Decorative Glows -->
                 <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
                 
-                <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-primary to-white">Siap Kolaborasi?</h2>
-                <p class="text-gray-300 text-lg mb-12">Diskusikan kebutuhan Operator LCD atau Desain Grafis untuk sukseskan acara Anda.</p>
+                <h2 class="text-3xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-primary to-white">Siap Kolaborasi?</h2>
+                <p class="text-gray-300 text-base md:text-lg mb-8 md:mb-12">Diskusikan kebutuhan Operator LCD atau Desain Grafis untuk sukseskan acara Anda.</p>
                 
-                <div class="flex flex-col md:flex-row justify-center gap-6">
-                    <a href="mailto:gusthipangestu1906@gmail.com" class="group flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-primary/20 hover:border-primary/50 transition-all duration-300 text-left min-w-[280px]">
-                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-2xl text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                <div class="flex flex-col md:flex-row justify-center gap-4 md:gap-6">
+                    <a href="mailto:gusthipangestu1906@gmail.com" class="group flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-primary/20 hover:border-primary/50 transition-all duration-300 text-left w-full md:w-auto md:min-w-[280px]">
+                        <div class="w-12 h-12 rounded-xl bg-white/10 flex-shrink-0 flex items-center justify-center text-2xl text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                             <i class='bx bxs-envelope'></i>
                         </div>
-                        <div>
+                        <div class="overflow-hidden">
                             <div class="text-sm text-gray-400">Email Me</div>
-                            <div class="font-bold text-white text-sm md:text-base">gusthipangestu...</div>
+                            <div class="font-bold text-white text-sm md:text-base truncate">gusthipangestu1906@gmail.com</div>
                         </div>
                     </a>
 
-                    <a href="https://wa.me/6282334015531" class="group flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-green-500/20 hover:border-green-500/50 transition-all duration-300 text-left min-w-[280px]">
-                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-2xl text-green-500 group-hover:bg-green-500 group-hover:text-white transition-colors">
+                    <a href="https://wa.me/6282334015531" class="group flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-green-500/20 hover:border-green-500/50 transition-all duration-300 text-left w-full md:w-auto md:min-w-[280px]">
+                        <div class="w-12 h-12 rounded-xl bg-white/10 flex-shrink-0 flex items-center justify-center text-2xl text-green-500 group-hover:bg-green-500 group-hover:text-white transition-colors">
                             <i class='bx bxl-whatsapp'></i>
                         </div>
                         <div>
                             <div class="text-sm text-gray-400">WhatsApp</div>
-                            <div class="font-bold text-white">+62 823-3401-5531</div>
+                            <div class="font-bold text-white text-sm md:text-base">+62 823-3401-5531</div>
                         </div>
                     </a>
                 </div>
 
-                <div class="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
-                    <div class="flex items-center gap-2 mb-4 md:mb-0">
+                <div class="mt-12 md:mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm gap-4">
+                    <div class="flex items-center gap-2">
                         <i class='bx bxs-map text-primary'></i> Surabaya, Indonesia
                     </div>
-                    <div>© 2025 Gusthi Pangestu. All rights reserved.</div>
+                    <div class="text-center md:text-right">© 2025 Gusthi Pangestu. All rights reserved.</div>
                 </div>
             </div>
         </div>
@@ -800,9 +877,7 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script> <!-- Swiper JS - Changed to unpkg -->
-
-    <!-- External Custom JS -->
+    <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
