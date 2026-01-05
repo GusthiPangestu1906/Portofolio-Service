@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import ReactTyped from 'react-typed';
+import Typed from 'typed.js';
 
 // Pastikan Anda memindahkan style.css ke folder src atau sesuaikan path import ini
 // import './style.css'; 
@@ -15,6 +15,7 @@ const App = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lang, setLang] = useState('id'); // 'id' or 'en'
   const [emailRevealed, setEmailRevealed] = useState(false);
+  const el = useRef(null); // Ref untuk elemen ketikan
 
   useEffect(() => {
     // Initialize AOS
@@ -30,6 +31,22 @@ const App = () => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Efek mengetik (Typed.js) dijalankan setelah loading selesai
+  useEffect(() => {
+    if (!isLoading && el.current) {
+      const typed = new Typed(el.current, {
+        strings: ['LCD Operator', 'Graphic Designer', 'Event Specialist'],
+        typeSpeed: 50,
+        backSpeed: 30,
+        loop: true
+      });
+
+      return () => {
+        typed.destroy();
+      };
+    }
+  }, [isLoading]);
 
   const toggleLanguage = () => {
     setLang((prev) => (prev === 'id' ? 'en' : 'id'));
@@ -155,12 +172,7 @@ const App = () => {
                 <span>Hi, I'm</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-white">Gusthi Pangestu</span>
                 <br />
                 <span className="text-3xl md:text-5xl mt-2 block text-white">
-                    <ReactTyped
-                        strings={['LCD Operator', 'Graphic Designer', 'Event Specialist']}
-                        typeSpeed={50}
-                        backSpeed={30}
-                        loop
-                    />
+                    <span ref={el}></span>
                 </span>
             </h1>
             

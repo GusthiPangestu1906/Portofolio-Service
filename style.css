@@ -389,7 +389,7 @@ body {
 .skillsSwiper .swiper-pagination { bottom: 0.5rem; }
 
 /* Active slide glow: make center card glow automatically */
-.skillsSwiper .swiper-slide-active .group > .-inset-0.5 {
+.skillsSwiper .swiper-slide-active .group > .-inset-0\.5 {
     opacity: 1 !important;
     filter: blur(14px);
     transition: opacity 300ms ease, filter 300ms ease;
