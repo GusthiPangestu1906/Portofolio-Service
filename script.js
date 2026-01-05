@@ -138,6 +138,37 @@ function initSwipers() {
     document.head.appendChild(style);
 })();
 
+// Inject CSS dinamis untuk Home Page (Cyber Grid Effect)
+(function(){
+    var css = `
+    .cyber-grid {
+        position: absolute;
+        bottom: -25%;
+        left: -50%;
+        width: 200%;
+        height: 75%;
+        background-image: 
+            linear-gradient(rgba(135, 80, 247, 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(135, 80, 247, 0.2) 1px, transparent 1px);
+        background-size: 50px 50px;
+        transform: perspective(500px) rotateX(60deg);
+        animation: gridScroll 3s linear infinite;
+        opacity: 0.3;
+        z-index: 0;
+        pointer-events: none;
+        mask-image: linear-gradient(to top, black, transparent 90%);
+        -webkit-mask-image: linear-gradient(to top, black, transparent 90%);
+    }
+    @keyframes gridScroll {
+        0% { background-position: 0 0; }
+        100% { background-position: 0 50px; }
+    }
+    `;
+    var style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+})();
+
 
 /* =========================================
    2. SMART LOADING SCREEN LOGIC
