@@ -3,7 +3,7 @@
    ========================================= */
 
 // Variabel Global untuk menampung instance
-let portfolioSwiper, skillsSwiper, servicesSwiper, aboutSwiper;
+let portfolioSwiper, skillsSwiper, servicesSwiper;
 
 // Fungsi inisialisasi Swiper (Dipanggil saat siap)
 function initSwipers() {
@@ -113,27 +113,6 @@ function initSwipers() {
                     spaceBetween: 30,
                     effect: 'slide',
                 },
-            },
-        });
-
-        // About Carousel
-        aboutSwiper = new Swiper(".aboutSwiper", {
-            slidesPerView: 1,
-            spaceBetween: 50,
-            loop: true,
-            speed: 800,
-            effect: 'fade',
-            observer: true,
-            observeParents: true,
-            fadeEffect: { crossFade: true },
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-                dynamicBullets: true,
             },
         });
     }
@@ -857,6 +836,14 @@ function toggleLanguage() {
 
     // Update Typewriter
     updateTypewriterLanguage();
+
+    // Reset AI Chat saat ganti bahasa agar sinkron
+    if (typeof chatBody !== 'undefined' && chatBody) {
+        chatBody.innerHTML = ''; // Hapus riwayat chat lama
+        if (typeof aiModal !== 'undefined' && aiModal && !aiModal.classList.contains('hidden')) {
+            startConversation(); // Mulai ulang dengan bahasa baru jika sedang terbuka
+        }
+    }
 }
 
 // 4. Update Typewriter secara Dinamis
@@ -876,4 +863,289 @@ function updateTypewriterLanguage() {
         
         // Hapus timeout yang sedang berjalan agar tidak tumpang tindih (opsional, tapi lebih aman dibiarkan loop sendiri)
     }
+}
+
+/* =========================================
+   7. AI ASSISTANT LOGIC
+   ========================================= */
+const aiModal = document.getElementById('ai-modal');
+const aiBox = document.getElementById('ai-box');
+const closeAiBtn = document.getElementById('close-ai');
+const letsTalkBtn = document.getElementById('lets-talk-btn');
+const chatBody = document.getElementById('ai-chat-body');
+const optionsContainer = document.getElementById('ai-options');
+
+const aiChatData = {
+    id: {
+        greeting: "Halo! Saya Celestiq AI. Ada yang bisa saya bantu?",
+        options: [
+            { text: "Rekrut Gusthi", next: "hire" },
+            { text: "Tanya Skill", next: "skills" },
+            { text: "Lihat Portofolio", next: "portfolio" },
+            { text: "Fakta Unik", next: "fun" },
+            { text: "Cuma Sapa", next: "hi" }
+        ],
+        responses: {
+            hire: {
+                text: "Pilihan bagus! Gusthi terbuka untuk kolaborasi. Anda bisa email langsung atau terhubung via LinkedIn.",
+                options: [
+                    { text: "Kirim Email", action: "email" },
+                    { text: "Buka LinkedIn", action: "linkedin" },
+                    { text: "Kembali", next: "init" }
+                ]
+            },
+            skills: {
+                text: "Gusthi ahli menggunakan OBS Studio, Photoshop, Canva, Figma, dan Web Development. Dia adalah Operator LCD & Desainer Grafis yang serba bisa.",
+                options: [
+                    { text: "Lihat Pengalaman", next: "experience" },
+                    { text: "Kembali", next: "init" }
+                ]
+            },
+            portfolio: {
+                text: "Anda bisa melihat bagian 'Projects' di website ini untuk melihat karyanya dalam Manajemen Event dan Desain.",
+                options: [
+                    { text: "Ke Projects", action: "scroll_projects" },
+                    { text: "Kembali", next: "init" }
+                ]
+            },
+            fun: {
+                text: "Fakta unik: Gusthi bisa debugging kode berjam-jam, tapi kalau disuruh milih font bisa seharian! 🎨💻",
+                options: [
+                    { text: "Haha, Relate!", next: "init" },
+                    { text: "Kembali", next: "init" }
+                ]
+            },
+            experience: {
+                text: "Dia memiliki pengalaman lebih dari 2 tahun di manajemen event dan desain visual, termasuk di PMCC, MBEX, dan berbagai organisasi kampus.",
+                options: [
+                    { text: "Kembali", next: "init" }
+                ]
+            },
+            hi: {
+                text: "Halo! Terima kasih sudah berkunjung. Semoga harimu menyenangkan! ✨",
+                options: [
+                    { text: "Kembali", next: "init" }
+                ]
+            }
+        }
+    },
+    en: {
+        greeting: "Hello! I'm Celestiq AI. How can I help you today?",
+        options: [
+            { text: "Hire Gusthi", next: "hire" },
+            { text: "Ask about Skills", next: "skills" },
+            { text: "See Portfolio", next: "portfolio" },
+            { text: "Fun Fact", next: "fun" },
+            { text: "Just saying Hi", next: "hi" }
+        ],
+        responses: {
+            hire: {
+                text: "Great choice! Gusthi is open for collaboration. You can email him directly or connect via LinkedIn.",
+                options: [
+                    { text: "Send Email", action: "email" },
+                    { text: "Open LinkedIn", action: "linkedin" },
+                    { text: "Back to Menu", next: "init" }
+                ]
+            },
+            skills: {
+                text: "Gusthi is proficient in OBS Studio, Photoshop, Canva, Figma, and Web Development. He is a versatile LCD Operator & Graphic Designer.",
+                options: [
+                    { text: "See Experience", next: "experience" },
+                    { text: "Back to Menu", next: "init" }
+                ]
+            },
+            portfolio: {
+                text: "You can explore the 'Projects' section on this website to see his work in Event Management and Design.",
+                options: [
+                    { text: "Go to Projects", action: "scroll_projects" },
+                    { text: "Back to Menu", next: "init" }
+                ]
+            },
+            fun: {
+                text: "Fun fact: Gusthi can spend hours debugging code, but choosing a font might take him all day! 🎨💻",
+                options: [
+                    { text: "Haha, Relatable!", next: "init" },
+                    { text: "Back to Menu", next: "init" }
+                ]
+            },
+            experience: {
+                text: "He has over 2 years of experience in event management and visual design, including roles in PMCC, MBEX, and various campus organizations.",
+                options: [
+                    { text: "Back to Menu", next: "init" }
+                ]
+            },
+            hi: {
+                text: "Hi there! Thanks for visiting. Hope you have a wonderful day! ✨",
+                options: [
+                    { text: "Back to Menu", next: "init" }
+                ]
+            }
+        }
+    }
+};
+
+function openAI() {
+    if (!aiModal) return;
+    aiModal.classList.remove('hidden');
+    // Trigger reflow
+    void aiModal.offsetWidth;
+    aiModal.classList.remove('opacity-0');
+    aiBox.classList.remove('scale-95');
+    aiBox.classList.add('scale-100');
+    
+    if (chatBody.children.length === 0) {
+        startConversation();
+    }
+}
+
+function closeAI() {
+    if (!aiModal) return;
+    aiModal.classList.add('opacity-0');
+    aiBox.classList.remove('scale-100');
+    aiBox.classList.add('scale-95');
+    
+    setTimeout(() => {
+        aiModal.classList.add('hidden');
+    }, 300);
+}
+
+function addMessage(text, sender) {
+    const div = document.createElement('div');
+    div.className = sender === 'ai' ? 'ai-msg' : 'user-msg';
+    div.innerHTML = text;
+    chatBody.appendChild(div);
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function addTypingIndicator() {
+    const div = document.createElement('div');
+    div.className = 'ai-msg typing-indicator';
+    div.id = 'typing-indicator';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    chatBody.appendChild(div);
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function removeTypingIndicator() {
+    const indicator = document.getElementById('typing-indicator');
+    if (indicator) indicator.remove();
+}
+
+function showOptions(options) {
+    optionsContainer.innerHTML = '';
+    options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'ai-option-btn';
+        btn.innerText = opt.text;
+        btn.onclick = () => handleOptionClick(opt);
+        optionsContainer.appendChild(btn);
+    });
+}
+
+function handleOptionClick(option) {
+    // User message
+    addMessage(option.text, 'user');
+    optionsContainer.innerHTML = ''; // Clear options
+    
+    addTypingIndicator();
+    
+    setTimeout(() => {
+        removeTypingIndicator();
+        
+        if (option.action) {
+            handleAction(option.action);
+            // Tampilkan menu lagi setelah aksi
+             setTimeout(() => {
+                 const followUp = currentLang === 'id' ? "Ada lagi yang bisa saya bantu?" : "Is there anything else?";
+                 addMessage(followUp, 'ai');
+                 showOptions(aiChatData[currentLang].options);
+             }, 1000);
+             return;
+        }
+
+        if (option.next === 'init') {
+            addMessage(aiChatData[currentLang].greeting, 'ai');
+            showOptions(aiChatData[currentLang].options);
+        } else if (aiChatData[currentLang].responses[option.next]) {
+            const response = aiChatData[currentLang].responses[option.next];
+            addMessage(response.text, 'ai');
+            showOptions(response.options);
+        }
+    }, 800);
+}
+
+function handleAction(action) {
+    if (action === 'email') {
+        const msg = currentLang === 'id' ? "Membuka aplikasi email..." : "Opening email client...";
+        addMessage(msg, 'ai');
+        document.getElementById('email-link').click();
+    } else if (action === 'linkedin') {
+        const msg = currentLang === 'id' ? "Membuka LinkedIn..." : "Opening LinkedIn...";
+        addMessage(msg, 'ai');
+        window.open('https://linkedin.com/in/gusthipangestu', '_blank');
+    } else if (action === 'scroll_projects') {
+        const msg = currentLang === 'id' ? "Menggulir ke bagian Projects..." : "Scrolling to Projects section...";
+        addMessage(msg, 'ai');
+        closeAI();
+        document.querySelector('#portfolio').scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function startConversation() {
+    chatBody.innerHTML = '';
+    addTypingIndicator();
+    setTimeout(() => {
+        removeTypingIndicator();
+        addMessage(aiChatData[currentLang].greeting, 'ai');
+        showOptions(aiChatData[currentLang].options);
+    }, 1000);
+}
+
+// Event Listeners
+if (letsTalkBtn) {
+    letsTalkBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openAI();
+    });
+}
+
+if (closeAiBtn) {
+    closeAiBtn.addEventListener('click', closeAI);
+}
+
+// Close on outside click
+if (aiModal) {
+    aiModal.addEventListener('click', (e) => {
+        if (e.target === aiModal) closeAI();
+    });
+}
+
+/* =========================================
+   8. PARTICLES BACKGROUND
+   ========================================= */
+if (document.getElementById('particles-js') && typeof particlesJS !== 'undefined') {
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+            "color": { "value": "#ffffff" },
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.3, "random": true },
+            "size": { "value": 3, "random": true },
+            "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.2, "width": 1 },
+            "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": { "enable": true, "mode": "grab" },
+                "onclick": { "enable": true, "mode": "push" },
+                "resize": true
+            },
+            "modes": {
+                "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+                "push": { "particles_nb": 4 }
+            }
+        },
+        "retina_detect": true
+    });
 }
