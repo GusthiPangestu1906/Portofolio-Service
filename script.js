@@ -686,7 +686,8 @@ const translations = {
         port_staff_desc: "Sewaktu Menjadi Staff Muda dalam departemen MEDFO LMB PENS tahun periode 2024 - 2025 kenangan bersama Staff Ahli.",
 
         // Contact Section
-        contact_title: "Siap Kolaborasi?",
+        contact_title: "Mari Bekerja <br> <span class='text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400'>Sama.</span>",
+        contact_desc: "Menciptakan cerita visual dan pengalaman digital. Terbuka untuk proyek freelance dan kolaborasi.",
         contact_subtitle: "Diskusikan kebutuhan Operator LCD atau Desain Grafis untuk sukseskan acara Anda.",
         contact_email_label: "Email Me",
         contact_linkedin_label: "Connect",
@@ -807,7 +808,8 @@ const translations = {
         port_staff_desc: "During my time as Junior Staff in the MEDFO department of LMB PENS for the 2024 - 2025 period, memories with Expert Staff.",
 
         // Contact Section
-        contact_title: "Ready to Collaborate?",
+        contact_title: "Let's Work <br> <span class='text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400'>Together.</span>",
+        contact_desc: "Creating visual stories and digital experiences. Open for freelance projects and collaborations.",
         contact_subtitle: "Discuss your LCD Operator or Graphic Design needs to make your event a success.",
         contact_email_label: "Email Me",
         contact_linkedin_label: "Connect",
