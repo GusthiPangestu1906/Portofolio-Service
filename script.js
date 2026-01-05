@@ -874,110 +874,99 @@ const closeAiBtn = document.getElementById('close-ai');
 const letsTalkBtn = document.getElementById('lets-talk-btn');
 const chatBody = document.getElementById('ai-chat-body');
 const optionsContainer = document.getElementById('ai-options');
+const inputForm = document.getElementById('ai-input-form');
+const userInput = document.getElementById('user-input');
+let userName = localStorage.getItem('celestiq_username');
 
 const aiChatData = {
     id: {
-        greeting: "Halo! Saya Celestiq AI. Ada yang bisa saya bantu?",
+        greeting: "Halo! Saya Celestiq AI, asisten virtual Gusthi. Saya bisa ceritakan profil Gusthi secara singkat. Mau mulai dari mana?",
         options: [
-            { text: "Rekrut Gusthi", next: "hire" },
-            { text: "Tanya Skill", next: "skills" },
-            { text: "Lihat Portofolio", next: "portfolio" },
-            { text: "Fakta Unik", next: "fun" },
-            { text: "Cuma Sapa", next: "hi" }
+            { text: "Siapa Gusthi sebenarnya?", next: "who_is" },
+            { text: "Apa keahlian utamanya?", next: "skills" },
+            { text: "Langsung ke kontak", next: "hire" }
         ],
         responses: {
-            hire: {
-                text: "Pilihan bagus! Gusthi terbuka untuk kolaborasi. Anda bisa email langsung atau terhubung via LinkedIn.",
+            who_is: {
+                text: "Gusthi adalah mahasiswa Teknik Informatika PENS yang punya passion unik: menggabungkan <strong>Coding</strong> dan <strong>Visual Art</strong>. Sehari-hari dia kuliah, tapi di luar itu dia sering jadi Operator Visual untuk event besar.",
                 options: [
-                    { text: "Kirim Email", action: "email" },
-                    { text: "Buka LinkedIn", action: "linkedin" },
-                    { text: "Kembali", next: "init" }
-                ]
-            },
-            skills: {
-                text: "Gusthi ahli menggunakan OBS Studio, Photoshop, Canva, Figma, dan Web Development. Dia adalah Operator LCD & Desainer Grafis yang serba bisa.",
-                options: [
-                    { text: "Lihat Pengalaman", next: "experience" },
-                    { text: "Kembali", next: "init" }
-                ]
-            },
-            portfolio: {
-                text: "Anda bisa melihat bagian 'Projects' di website ini untuk melihat karyanya dalam Manajemen Event dan Desain.",
-                options: [
-                    { text: "Ke Projects", action: "scroll_projects" },
-                    { text: "Kembali", next: "init" }
-                ]
-            },
-            fun: {
-                text: "Fakta unik: Gusthi bisa debugging kode berjam-jam, tapi kalau disuruh milih font bisa seharian! 🎨💻",
-                options: [
-                    { text: "Haha, Relate!", next: "init" },
-                    { text: "Kembali", next: "init" }
+                    { text: "Event apa saja?", next: "experience" },
+                    { text: "Bisa lihat karyanya?", next: "portfolio" }
                 ]
             },
             experience: {
-                text: "Dia memiliki pengalaman lebih dari 2 tahun di manajemen event dan desain visual, termasuk di PMCC, MBEX, dan berbagai organisasi kampus.",
+                text: "Dia sudah menangani visual untuk 15+ event, termasuk turnamen esports PMCC dan expo kampus MBEX. Dia memastikan tampilan layar panggung selalu memukau.",
                 options: [
-                    { text: "Kembali", next: "init" }
+                    { text: "Keren, lihat buktinya dong", next: "portfolio" },
+                    { text: "Apa tools yang dipakai?", next: "skills" }
                 ]
             },
-            hi: {
-                text: "Halo! Terima kasih sudah berkunjung. Semoga harimu menyenangkan! ✨",
+            skills: {
+                text: "Untuk visual panggung, dia jago pakai <strong>OBS Studio</strong>. Untuk desain, dia pakai <strong>Photoshop & Figma</strong>. Dan karena dia anak IT, dia juga bisa bikin website seperti ini!",
                 options: [
+                    { text: "Saya butuh skill itu", next: "hire" },
+                    { text: "Kembali ke awal", next: "init" }
+                ]
+            },
+            portfolio: {
+                text: "Semua dokumentasi event dan desainnya ada di halaman ini. Mau saya antarkan ke bagian Portfolio?",
+                options: [
+                    { text: "Ya, antarkan saya", action: "scroll_projects" },
+                    { text: "Nanti saja, tanya lain", next: "init" }
+                ]
+            },
+            hire: {
+                text: "Gusthi selalu terbuka untuk diskusi project baru. Kamu lebih nyaman menghubungi lewat mana?",
+                options: [
+                    { text: "Email saja", action: "email" },
+                    { text: "LinkedIn", action: "linkedin" },
                     { text: "Kembali", next: "init" }
                 ]
             }
         }
     },
     en: {
-        greeting: "Hello! I'm Celestiq AI. How can I help you today?",
+        greeting: "Hello! I'm Celestiq AI, Gusthi's virtual assistant. I can tell you a bit about him. Where should we start?",
         options: [
-            { text: "Hire Gusthi", next: "hire" },
-            { text: "Ask about Skills", next: "skills" },
-            { text: "See Portfolio", next: "portfolio" },
-            { text: "Fun Fact", next: "fun" },
-            { text: "Just saying Hi", next: "hi" }
+            { text: "Who is Gusthi?", next: "who_is" },
+            { text: "What are his skills?", next: "skills" },
+            { text: "Contact info", next: "hire" }
         ],
         responses: {
-            hire: {
-                text: "Great choice! Gusthi is open for collaboration. You can email him directly or connect via LinkedIn.",
+            who_is: {
+                text: "Gusthi is an Informatics student at PENS with a unique passion: combining <strong>Coding</strong> and <strong>Visual Art</strong>. By day he studies, but he often works as a Visual Operator for major events.",
                 options: [
-                    { text: "Send Email", action: "email" },
-                    { text: "Open LinkedIn", action: "linkedin" },
-                    { text: "Back to Menu", next: "init" }
-                ]
-            },
-            skills: {
-                text: "Gusthi is proficient in OBS Studio, Photoshop, Canva, Figma, and Web Development. He is a versatile LCD Operator & Graphic Designer.",
-                options: [
-                    { text: "See Experience", next: "experience" },
-                    { text: "Back to Menu", next: "init" }
-                ]
-            },
-            portfolio: {
-                text: "You can explore the 'Projects' section on this website to see his work in Event Management and Design.",
-                options: [
-                    { text: "Go to Projects", action: "scroll_projects" },
-                    { text: "Back to Menu", next: "init" }
-                ]
-            },
-            fun: {
-                text: "Fun fact: Gusthi can spend hours debugging code, but choosing a font might take him all day! 🎨💻",
-                options: [
-                    { text: "Haha, Relatable!", next: "init" },
-                    { text: "Back to Menu", next: "init" }
+                    { text: "What kind of events?", next: "experience" },
+                    { text: "Can I see his work?", next: "portfolio" }
                 ]
             },
             experience: {
-                text: "He has over 2 years of experience in event management and visual design, including roles in PMCC, MBEX, and various campus organizations.",
+                text: "He has handled visuals for 15+ events, including the PMCC esports tournament and MBEX campus expo. He ensures the stage screen always looks stunning.",
                 options: [
-                    { text: "Back to Menu", next: "init" }
+                    { text: "Cool, show me proof", next: "portfolio" },
+                    { text: "What tools does he use?", next: "skills" }
                 ]
             },
-            hi: {
-                text: "Hi there! Thanks for visiting. Hope you have a wonderful day! ✨",
+            skills: {
+                text: "For stage visuals, he's an expert in <strong>OBS Studio</strong>. For design, he uses <strong>Photoshop & Figma</strong>. And since he's an IT student, he built this website too!",
                 options: [
-                    { text: "Back to Menu", next: "init" }
+                    { text: "I need those skills", next: "hire" },
+                    { text: "Back to start", next: "init" }
+                ]
+            },
+            portfolio: {
+                text: "All his event documentation and designs are on this page. Shall I take you to the Portfolio section?",
+                options: [
+                    { text: "Yes, take me there", action: "scroll_projects" },
+                    { text: "Maybe later", next: "init" }
+                ]
+            },
+            hire: {
+                text: "Gusthi is always open to discussing new projects. How would you prefer to contact him?",
+                options: [
+                    { text: "Email", action: "email" },
+                    { text: "LinkedIn", action: "linkedin" },
+                    { text: "Back", next: "init" }
                 ]
             }
         }
@@ -993,8 +982,24 @@ function openAI() {
     aiBox.classList.remove('scale-95');
     aiBox.classList.add('scale-100');
     
-    if (chatBody.children.length === 0) {
-        startConversation();
+    if (!userName) {
+        // Jika belum kenalan: Tampilkan Input, Sembunyikan Opsi
+        if(inputForm) inputForm.style.display = 'flex';
+        if(optionsContainer) optionsContainer.style.display = 'none';
+        if(userInput) setTimeout(() => userInput.focus(), 100);
+        
+        if (chatBody.children.length === 0 || chatBody.innerHTML.trim() === "") {
+            addMessage('Halo! Saya Celestiq AI. Boleh tau nama kamu siapa?', 'ai');
+        }
+    } else {
+        // Jika sudah kenalan: Sembunyikan Input, Tampilkan Opsi
+        if(inputForm) inputForm.style.display = 'none';
+        if(optionsContainer) optionsContainer.style.display = 'flex';
+        
+        if (chatBody.children.length === 0 || chatBody.innerHTML.trim() === "") {
+            addMessage(`Halo kembali, ${userName}! Ada yang bisa saya bantu?`, 'ai');
+            showOptions(aiChatData[currentLang].options);
+        }
     }
 }
 
@@ -1011,17 +1016,22 @@ function closeAI() {
 
 function addMessage(text, sender) {
     const div = document.createElement('div');
-    div.className = sender === 'ai' ? 'ai-msg' : 'user-msg';
-    div.innerHTML = text;
+    if (sender === 'ai') {
+        div.className = 'flex gap-3';
+        div.innerHTML = `<div class="w-8 h-8 rounded-full bg-primary flex-shrink-0 flex items-center justify-center text-white text-xs"><i class='bx bx-bot'></i></div><div class="bg-white/10 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200 leading-relaxed border border-white/5">${text}</div>`;
+    } else {
+        div.className = 'flex gap-3 flex-row-reverse';
+        div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gray-700 flex-shrink-0 flex items-center justify-center text-white text-xs"><i class='bx bx-user'></i></div><div class="bg-primary/20 p-3 rounded-2xl rounded-tr-none text-sm text-white leading-relaxed border border-primary/20">${text}</div>`;
+    }
     chatBody.appendChild(div);
     chatBody.scrollTop = chatBody.scrollHeight;
 }
 
 function addTypingIndicator() {
     const div = document.createElement('div');
-    div.className = 'ai-msg typing-indicator';
+    div.className = 'flex gap-3';
     div.id = 'typing-indicator';
-    div.innerHTML = '<span></span><span></span><span></span>';
+    div.innerHTML = `<div class="w-8 h-8 rounded-full bg-primary flex-shrink-0 flex items-center justify-center text-white text-xs"><i class='bx bx-bot'></i></div><div class="bg-white/10 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200 leading-relaxed border border-white/5 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span><span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span><span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span></div>`;
     chatBody.appendChild(div);
     chatBody.scrollTop = chatBody.scrollHeight;
 }
@@ -1078,7 +1088,12 @@ function handleAction(action) {
     if (action === 'email') {
         const msg = currentLang === 'id' ? "Membuka aplikasi email..." : "Opening email client...";
         addMessage(msg, 'ai');
-        document.getElementById('email-link').click();
+        const emailBtn = document.getElementById('email-link');
+        if (emailBtn) {
+            emailBtn.click();
+        } else {
+            window.location.href = "mailto:gusthipangestu1906@gmail.com";
+        }
     } else if (action === 'linkedin') {
         const msg = currentLang === 'id' ? "Membuka LinkedIn..." : "Opening LinkedIn...";
         addMessage(msg, 'ai');
@@ -1093,12 +1108,17 @@ function handleAction(action) {
 
 function startConversation() {
     chatBody.innerHTML = '';
-    addTypingIndicator();
-    setTimeout(() => {
-        removeTypingIndicator();
-        addMessage(aiChatData[currentLang].greeting, 'ai');
+    // Logic reset conversation
+    if (!userName) {
+        addMessage('Halo! Saya Celestiq AI. Boleh tau nama kamu siapa?', 'ai');
+        if(optionsContainer) optionsContainer.style.display = 'none';
+        if(inputForm) inputForm.style.display = 'flex';
+    } else {
+        addMessage(`Halo kembali, ${userName}! Ada yang bisa saya bantu?`, 'ai');
+        if(optionsContainer) optionsContainer.style.display = 'flex';
+        if(inputForm) inputForm.style.display = 'none';
         showOptions(aiChatData[currentLang].options);
-    }, 1000);
+    }
 }
 
 // Event Listeners
@@ -1117,6 +1137,50 @@ if (closeAiBtn) {
 if (aiModal) {
     aiModal.addEventListener('click', (e) => {
         if (e.target === aiModal) closeAI();
+    });
+}
+
+if (inputForm) {
+    inputForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        addMessage(text, 'user');
+        userInput.value = '';
+
+        if (!userName) {
+            // Smart Name Extraction (Agar tidak kaku jika user mengetik "Nama saya Gusthi")
+            let name = text;
+            // Regex untuk menangkap nama setelah kata kunci umum
+            const nameRegex = /(?:nama\s+(?:saya|aku|gue|ku)|panggil\s+(?:saya|aku|gue)|i'm|my\s+name\s+is)\s+(?:adalah\s+)?(.+)/i;
+            const match = text.match(nameRegex);
+            
+            if (match && match[1]) {
+                name = match[1].trim();
+            }
+            
+            // Bersihkan tanda baca dan Capitalize
+            name = name.replace(/[!.,?]/g, '');
+            name = name.charAt(0).toUpperCase() + name.slice(1);
+
+            userName = name;
+            localStorage.setItem('celestiq_username', userName);
+            
+            // Sembunyikan form input setelah nama dimasukkan
+            if(inputForm) inputForm.style.display = 'none';
+
+            addTypingIndicator();
+            setTimeout(() => {
+                removeTypingIndicator();
+                addMessage(`Salam kenal, ${userName}! Senang bertemu denganmu.`, 'ai');
+                setTimeout(() => {
+                    addMessage('Silakan pilih topik di bawah ini.', 'ai');
+                    if(optionsContainer) optionsContainer.style.display = 'flex';
+                    showOptions(aiChatData[currentLang].options);
+                }, 800);
+            }, 600);
+        }
     });
 }
 
