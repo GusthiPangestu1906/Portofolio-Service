@@ -580,13 +580,13 @@
 
                     <div class="space-y-4 md:space-y-6">
                         <!-- Email -->
-                        <div class="flex items-center gap-3 md:gap-4 group cursor-pointer p-3 rounded-2xl hover:bg-white/5 transition-all" onclick="window.location.href='mailto:gustipangestu1906@gmail.com'">
+                        <div class="flex items-center gap-3 md:gap-4 group cursor-pointer p-3 rounded-2xl hover:bg-white/5 transition-all" onclick="window.location.href='mailto:gusthipangestu1906@gmail.com'">
                             <div class="contact-icon-box shrink-0">
                                 <i class='bx bx-envelope'></i>
                             </div>
                             <div class="overflow-hidden">
                                 <div class="text-gray-500 text-xs md:text-sm font-mono tracking-wider">EMAIL</div>
-                                <div class="text-white text-sm md:text-lg font-medium group-hover:text-primary transition-colors truncate">gustipangestu1906@gmail.com</div>
+                                <div class="text-white text-sm md:text-lg font-medium group-hover:text-primary transition-colors truncate">gusthipangestu1906@gmail.com</div>
                             </div>
                         </div>
 
@@ -618,26 +618,26 @@
 
                 <!-- Contact Form -->
                 <div class="glass-card p-6 md:p-8 rounded-3xl relative order-1 md:order-2" data-aos="fade-left" data-aos-delay="100">
-                     <form onsubmit="event.preventDefault(); alert('Message sent!');">
+                     <form id="contact-form" action="https://formspree.io/f/maqngzkw" method="POST">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
                             <div class="space-y-2">
                                 <label class="text-xs md:text-sm text-gray-400 uppercase tracking-wider font-bold">Name</label>
-                                <input type="text" class="w-full contact-input px-4 py-3 text-sm md:text-base" placeholder="John Doe">
+                                <input type="text" id="contact-name" name="name" class="w-full contact-input px-4 py-3 text-sm md:text-base" placeholder="John Doe" required>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs md:text-sm text-gray-400 uppercase tracking-wider font-bold">Email</label>
-                                <input type="email" class="w-full contact-input px-4 py-3 text-sm md:text-base" placeholder="john@example.com">
+                                <input type="email" id="contact-email" name="email" class="w-full contact-input px-4 py-3 text-sm md:text-base" placeholder="john@example.com" required>
                             </div>
                         </div>
                         
                         <div class="space-y-2 mb-4 md:mb-6">
                             <label class="text-xs md:text-sm text-gray-400 uppercase tracking-wider font-bold">Subject</label>
-                            <input type="text" class="w-full contact-input px-4 py-3 text-sm md:text-base" placeholder="Project Inquiry">
+                            <input type="text" id="contact-subject" name="subject" class="w-full contact-input px-4 py-3 text-sm md:text-base" placeholder="Project Inquiry" required>
                         </div>
 
                         <div class="space-y-2 mb-6 md:mb-8">
                             <label class="text-xs md:text-sm text-gray-400 uppercase tracking-wider font-bold">Message</label>
-                            <textarea class="w-full contact-input px-4 py-3 h-28 md:h-32 resize-none text-sm md:text-base" placeholder="Tell me about your project..."></textarea>
+                            <textarea id="contact-message" name="message" class="w-full contact-input px-4 py-3 h-28 md:h-32 resize-none text-sm md:text-base" placeholder="Tell me about your project..." required></textarea>
                         </div>
 
                         <button type="submit" class="btn-pill-primary w-full justify-center group text-sm md:text-base">

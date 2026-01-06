@@ -686,7 +686,7 @@ const translations = {
         port_staff_desc: "Sewaktu Menjadi Staff Muda dalam departemen MEDFO LMB PENS tahun periode 2024 - 2025 kenangan bersama Staff Ahli.",
 
         // Contact Section
-        contact_title: "Mari Bekerja <br> <span class='text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400'>Sama.</span>",
+        contact_title: "Mari Bekerja <br> <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400\">Sama.</span>",
         contact_desc: "Menciptakan cerita visual dan pengalaman digital. Terbuka untuk proyek freelance dan kolaborasi.",
         contact_subtitle: "Diskusikan kebutuhan Operator LCD atau Desain Grafis untuk sukseskan acara Anda.",
         contact_email_label: "Email Me",
@@ -808,7 +808,7 @@ const translations = {
         port_staff_desc: "During my time as Junior Staff in the MEDFO department of LMB PENS for the 2024 - 2025 period, memories with Expert Staff.",
 
         // Contact Section
-        contact_title: "Let's Work <br> <span class='text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400'>Together.</span>",
+        contact_title: "Let's Work <br> <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400\">Sama.</span>",
         contact_desc: "Creating visual stories and digital experiences. Open for freelance projects and collaborations.",
         contact_subtitle: "Discuss your LCD Operator or Graphic Design needs to make your event a success.",
         contact_email_label: "Email Me",
@@ -1244,5 +1244,59 @@ if (document.getElementById('particles-js') && typeof particlesJS !== 'undefined
             }
         },
         "retina_detect": true
+    });
+}
+
+/* =========================================
+   9. CONTACT FORM HANDLER (FORMSPREE EDITION)
+   ========================================= */
+const contactForm = document.getElementById('contact-form');
+
+if (contactForm) {
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Ambil elemen input
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        const formAction = contactForm.getAttribute('action');
+
+        // Cek apakah user sudah mengganti placeholder Formspree
+        if (formAction.includes('PLACEHOLDER_CODE_DISINI')) {
+            alert('PERHATIAN: Anda belum memasukkan kode Formspree di index.html!\n\nSilakan daftar di formspree.io, buat form baru, dan copy ID-nya ke file index.html baris form action.');
+            return;
+        }
+
+        // Ubah tombol jadi loading
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Sending...';
+
+        try {
+            const formData = new FormData(contactForm);
+            
+            const response = await fetch(formAction, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Thank you! Your message has been sent successfully.');
+                contactForm.reset();
+            } else {
+                throw new Error(result.error || 'Failed to send message');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Oops! There was a problem sending your message. Please try again later.');
+        } finally {
+            // Kembalikan tombol ke semula
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        }
     });
 }
