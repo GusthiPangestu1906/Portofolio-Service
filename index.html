@@ -618,7 +618,7 @@
 
                 <!-- Contact Form -->
                 <div class="glass-card p-6 md:p-8 rounded-3xl relative order-1 md:order-2" data-aos="fade-left" data-aos-delay="100">
-                     <form id="contact-form" action="https://formspree.io/f/maqngzkw" method="POST" onsubmit="return validateContactForm(event)">
+                     <form id="contact-form" action="https://formspree.io/f/maqngzkw" method="POST">
                         <!-- Honeypot Spam Protection: Bot akan mengisi ini, Formspree akan menolaknya -->
                         <input type="text" name="_gotcha" style="display:none !important" tabindex="-1" autocomplete="off">
 
@@ -724,30 +724,5 @@
     <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
-    
-    <!-- Form Validation Script -->
-    <script>
-        function validateContactForm(event) {
-            const messageInput = document.getElementById('contact-message');
-            const message = messageInput.value.trim();
-            
-            // Cek apakah pesan hanya berisi angka
-            if (/^\d+$/.test(message)) {
-                alert("Pesan tidak boleh hanya berisi angka.");
-                event.preventDefault();
-                return false;
-            }
-
-            // Cek apakah pesan mengandung huruf (minimal 3 huruf untuk menghindari '...')
-            const letterCount = (message.match(/[a-zA-Z]/g) || []).length;
-            if (letterCount < 3) {
-                alert("Mohon tuliskan pesan yang jelas (gunakan huruf).");
-                event.preventDefault();
-                return false;
-            }
-            
-            return true;
-        }
-    </script>
 </body>
 </html>

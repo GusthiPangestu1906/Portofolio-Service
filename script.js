@@ -164,6 +164,15 @@ function initSwipers() {
         100% { background-position: 0 50px; }
     }
     `;
+    // Tambahan CSS untuk Shake Animation (Efek Error)
+    css += `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    .shake-animation { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+    `;
     var style = document.createElement('style');
     style.appendChild(document.createTextNode(css));
     document.head.appendChild(style);
@@ -1292,6 +1301,39 @@ if (contactForm) {
     contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
+        // --- VALIDASI INPUT (SECURITY & UX) ---
+        const formData = new FormData(contactForm);
+        const message = formData.get('message').trim();
+        
+        // Fungsi efek getar saat error
+        const triggerShake = () => {
+            contactForm.classList.add('shake-animation');
+            setTimeout(() => contactForm.classList.remove('shake-animation'), 500);
+        };
+
+        // 1. Cek apakah pesan HANYA berisi angka
+        if (/^\d+$/.test(message)) {
+            showToast('error', 'Invalid Message', 'Pesan tidak boleh hanya berisi angka.');
+            triggerShake();
+            return;
+        }
+
+        // 2. Cek apakah pesan mengandung huruf yang cukup (minimal 3 huruf)
+        // Mencegah spam simbol "..." atau angka acak "123456"
+        const letterCount = (message.match(/[a-zA-Z]/g) || []).length;
+        if (letterCount < 3) {
+            showToast('error', 'Message Unclear', 'Mohon tulis pesan yang jelas (gunakan huruf).');
+            triggerShake();
+            return;
+        }
+
+        // 3. Cek Spam Karakter Berulang (misal: "aaaaaaa" atau ".......")
+        if (/(.)\1{4,}/.test(message)) {
+            showToast('error', 'Spam Detected', 'Terdeteksi karakter berulang yang tidak wajar.');
+            triggerShake();
+            return;
+        }
+
         // Ambil elemen input
         const submitBtn = contactForm.querySelector('button[type="submit"]');
         const originalBtnText = submitBtn.innerHTML;
@@ -1308,8 +1350,6 @@ if (contactForm) {
         submitBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin text-xl"></i> <span class="ml-2">Sending...</span>';
 
         try {
-            const formData = new FormData(contactForm);
-            
             const response = await fetch(formAction, {
                 method: 'POST',
                 body: formData,
