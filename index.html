@@ -618,11 +618,14 @@
 
                 <!-- Contact Form -->
                 <div class="glass-card p-6 md:p-8 rounded-3xl relative order-1 md:order-2" data-aos="fade-left" data-aos-delay="100">
-                     <form id="contact-form" action="https://formspree.io/f/maqngzkw" method="POST">
+                     <form id="contact-form" action="https://formspree.io/f/maqngzkw" method="POST" onsubmit="return validateContactForm(event)">
+                        <!-- Honeypot Spam Protection: Bot akan mengisi ini, Formspree akan menolaknya -->
+                        <input type="text" name="_gotcha" style="display:none !important" tabindex="-1" autocomplete="off">
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
                             <div class="space-y-2">
                                 <label class="text-xs md:text-sm text-gray-400 uppercase tracking-wider font-bold">Name</label>
-                                <input type="text" id="contact-name" name="name" class="w-full contact-input px-4 py-3 text-sm md:text-base" placeholder="John Doe" required>
+                                <input type="text" id="contact-name" name="name" class="w-full contact-input px-4 py-3 text-sm md:text-base" placeholder="John Doe" required minlength="3" pattern="[A-Za-z\s\.\-']+" title="Nama hanya boleh berisi huruf">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs md:text-sm text-gray-400 uppercase tracking-wider font-bold">Email</label>
@@ -632,12 +635,12 @@
                         
                         <div class="space-y-2 mb-4 md:mb-6">
                             <label class="text-xs md:text-sm text-gray-400 uppercase tracking-wider font-bold">Subject</label>
-                            <input type="text" id="contact-subject" name="subject" class="w-full contact-input px-4 py-3 text-sm md:text-base" placeholder="Project Inquiry" required>
+                            <input type="text" id="contact-subject" name="subject" class="w-full contact-input px-4 py-3 text-sm md:text-base" placeholder="Project Inquiry" required minlength="5" pattern=".*[a-zA-Z].*" title="Subjek harus mengandung huruf">
                         </div>
 
                         <div class="space-y-2 mb-6 md:mb-8">
                             <label class="text-xs md:text-sm text-gray-400 uppercase tracking-wider font-bold">Message</label>
-                            <textarea id="contact-message" name="message" class="w-full contact-input px-4 py-3 h-28 md:h-32 resize-none text-sm md:text-base" placeholder="Tell me about your project..." required></textarea>
+                            <textarea id="contact-message" name="message" class="w-full contact-input px-4 py-3 h-28 md:h-32 resize-none text-sm md:text-base" placeholder="Tell me about your project..." required minlength="10"></textarea>
                         </div>
 
                         <button type="submit" class="btn-pill-primary w-full justify-center group text-sm md:text-base">
@@ -707,10 +710,44 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 z-[100] transform translate-y-24 opacity-0 transition-all duration-500 flex items-center gap-4 px-6 py-4 rounded-2xl bg-[#0f0f13] border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)] backdrop-blur-md">
+        <div id="toast-icon" class="w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0"></div>
+        <div>
+            <h4 id="toast-title" class="font-bold text-sm text-white tracking-wide"></h4>
+            <p id="toast-message" class="text-xs text-gray-400 mt-0.5"></p>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
+    
+    <!-- Form Validation Script -->
+    <script>
+        function validateContactForm(event) {
+            const messageInput = document.getElementById('contact-message');
+            const message = messageInput.value.trim();
+            
+            // Cek apakah pesan hanya berisi angka
+            if (/^\d+$/.test(message)) {
+                alert("Pesan tidak boleh hanya berisi angka.");
+                event.preventDefault();
+                return false;
+            }
+
+            // Cek apakah pesan mengandung huruf (minimal 3 huruf untuk menghindari '...')
+            const letterCount = (message.match(/[a-zA-Z]/g) || []).length;
+            if (letterCount < 3) {
+                alert("Mohon tuliskan pesan yang jelas (gunakan huruf).");
+                event.preventDefault();
+                return false;
+            }
+            
+            return true;
+        }
+    </script>
 </body>
 </html>

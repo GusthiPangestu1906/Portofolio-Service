@@ -1252,6 +1252,42 @@ if (document.getElementById('particles-js') && typeof particlesJS !== 'undefined
    ========================================= */
 const contactForm = document.getElementById('contact-form');
 
+// Toast Notification Function
+function showToast(type, title, message) {
+    const toast = document.getElementById('toast-notification');
+    const iconBox = document.getElementById('toast-icon');
+    const titleEl = document.getElementById('toast-title');
+    const msgEl = document.getElementById('toast-message');
+
+    if (!toast || !iconBox || !titleEl || !msgEl) return;
+
+    // Set Content
+    titleEl.innerText = title;
+    msgEl.innerText = message;
+
+    // Set Style based on Type
+    if (type === 'success') {
+        iconBox.className = 'w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0 bg-green-500/20 text-green-500';
+        iconBox.innerHTML = "<i class='bx bx-check'></i>";
+        toast.classList.add('border-green-500/30');
+    } else {
+        iconBox.className = 'w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0 bg-red-500/20 text-red-500';
+        iconBox.innerHTML = "<i class='bx bx-x'></i>";
+        toast.classList.add('border-red-500/30');
+    }
+
+    // Show
+    toast.classList.remove('translate-y-24', 'opacity-0');
+    
+    // Hide after 4s
+    setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+        setTimeout(() => {
+            toast.classList.remove('border-green-500/30', 'border-red-500/30');
+        }, 500);
+    }, 4000);
+}
+
 if (contactForm) {
     contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -1269,7 +1305,7 @@ if (contactForm) {
 
         // Ubah tombol jadi loading
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Sending...';
+        submitBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin text-xl"></i> <span class="ml-2">Sending...</span>';
 
         try {
             const formData = new FormData(contactForm);
@@ -1285,14 +1321,14 @@ if (contactForm) {
             const result = await response.json();
 
             if (response.ok) {
-                alert('Thank you! Your message has been sent successfully.');
+                showToast('success', 'Message Sent!', 'Thank you, I will get back to you soon.');
                 contactForm.reset();
             } else {
                 throw new Error(result.error || 'Failed to send message');
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Oops! There was a problem sending your message. Please try again later.');
+            showToast('error', 'Sending Failed', 'Oops! Something went wrong. Please try again.');
         } finally {
             // Kembalikan tombol ke semula
             submitBtn.disabled = false;
