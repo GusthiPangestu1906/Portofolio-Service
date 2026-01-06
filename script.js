@@ -1303,6 +1303,9 @@ if (contactForm) {
 
         // --- VALIDASI INPUT (SECURITY & UX) ---
         const formData = new FormData(contactForm);
+        const name = formData.get('name').trim();
+        const email = formData.get('email').trim();
+        const subject = formData.get('subject').trim();
         const message = formData.get('message').trim();
         
         // Fungsi efek getar saat error
@@ -1311,23 +1314,46 @@ if (contactForm) {
             setTimeout(() => contactForm.classList.remove('shake-animation'), 500);
         };
 
-        // 1. Cek apakah pesan HANYA berisi angka
+        // 1. Validasi Nama (Wajib diisi & Tidak boleh angka/simbol aneh)
+        // Regex: Hanya huruf, spasi, titik, strip, atau petik satu
+        if (!name || !/^[A-Za-z\s\.\-']+$/.test(name)) {
+            showToast('error', 'Invalid Name', 'Nama harus diisi huruf (tidak boleh angka).');
+            triggerShake();
+            return;
+        }
+
+        // 2. Validasi Email (Format standard)
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showToast('error', 'Invalid Email', 'Mohon masukkan alamat email yang valid.');
+            triggerShake();
+            return;
+        }
+
+        // 3. Validasi Subject (Harus ada huruf, minimal 3 karakter huruf)
+        // Mengatasi "masih bisa ditembus kalau pakai angka" -> misal "12345"
+        const subjectLetters = (subject.match(/[a-zA-Z]/g) || []).length;
+        if (subjectLetters < 3) {
+            showToast('error', 'Invalid Subject', 'Subjek harus jelas (minimal 3 huruf).');
+            triggerShake();
+            return;
+        }
+
+        // 4. Cek apakah pesan HANYA berisi angka
         if (/^\d+$/.test(message)) {
             showToast('error', 'Invalid Message', 'Pesan tidak boleh hanya berisi angka.');
             triggerShake();
             return;
         }
 
-        // 2. Cek apakah pesan mengandung huruf yang cukup (minimal 3 huruf)
-        // Mencegah spam simbol "..." atau angka acak "123456"
-        const letterCount = (message.match(/[a-zA-Z]/g) || []).length;
-        if (letterCount < 3) {
+        // 5. Cek apakah pesan mengandung huruf yang cukup (minimal 3 huruf)
+        const messageLetters = (message.match(/[a-zA-Z]/g) || []).length;
+        if (messageLetters < 3) {
             showToast('error', 'Message Unclear', 'Mohon tulis pesan yang jelas (gunakan huruf).');
             triggerShake();
             return;
         }
 
-        // 3. Cek Spam Karakter Berulang (misal: "aaaaaaa" atau ".......")
+        // 6. Cek Spam Karakter Berulang (misal: "aaaaaaa" atau ".......")
         if (/(.)\1{4,}/.test(message)) {
             showToast('error', 'Spam Detected', 'Terdeteksi karakter berulang yang tidak wajar.');
             triggerShake();
