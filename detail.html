@@ -6,6 +6,7 @@
     <title>Project Detail | Celestiq</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script>
         tailwind.config = {
             theme: {
@@ -40,7 +41,30 @@
         
         <!-- Konten Detail -->
         <div class="glass-panel rounded-3xl p-2 md:p-4 shadow-2xl">
-            <img id="detail-img" src="" class="w-full rounded-2xl shadow-lg object-cover max-h-[40vh] md:max-h-[60vh] bg-gray-800 cursor-zoom-in hover:opacity-95 transition-opacity" onclick="openLightbox()">
+            <div class="relative group rounded-2xl overflow-hidden bg-gray-800 shadow-lg min-h-[300px] md:min-h-[400px]">
+                <img id="detail-img" src="" class="w-full object-cover max-h-[40vh] md:max-h-[60vh] transition-transform duration-700 group-hover:scale-105">
+                <iframe id="detail-pdf" class="w-full h-[40vh] md:h-[60vh] hidden" frameborder="0" allow="autoplay"></iframe>
+                
+                <!-- Loading Spinner -->
+                <div id="pdf-loader" class="absolute inset-0 flex items-center justify-center bg-gray-800 z-10 hidden transition-opacity duration-300">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+                        <span class="text-xs text-gray-400 font-mono animate-pulse">LOADING DOC...</span>
+                    </div>
+                </div>
+                
+                <button id="btn-fullscreen" class="absolute top-4 right-4 z-20 w-10 h-10 bg-black/50 hover:bg-primary text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hidden" title="Fullscreen">
+                    <i class='bx bx-fullscreen text-xl'></i>
+                </button>
+                
+                <!-- Action Overlay -->
+                <div id="action-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                    <div class="w-16 h-16 rounded-full bg-primary/20 backdrop-blur-md flex items-center justify-center mb-3 border border-primary/50 shadow-[0_0_30px_rgba(135,80,247,0.3)] transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <i id="action-icon" class='bx bx-zoom-in text-3xl text-white'></i>
+                    </div>
+                    <span id="action-text" class="text-white font-bold text-sm tracking-widest uppercase transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">Zoom Image</span>
+                </div>
+            </div>
             
             <div class="p-6 md:p-8">
                 <div class="flex flex-wrap items-center gap-4 mb-4">
@@ -125,6 +149,63 @@
             document.getElementById('detail-organizer').textContent = data.organizer || '-';
             document.getElementById('detail-year').textContent = data.year || '-';
             document.getElementById('detail-role-real').textContent = data.role_real || '-';
+
+            // Logic: Jika ada link (PDF/Drive), klik gambar membuka link tersebut
+            // Jika tidak ada link, klik gambar membuka lightbox (zoom)
+            const imgEl = document.getElementById('detail-img');
+            const pdfEl = document.getElementById('detail-pdf');
+            const overlayEl = document.getElementById('action-overlay');
+            const iconEl = document.getElementById('action-icon');
+            const textEl = document.getElementById('action-text');
+            const fsBtn = document.getElementById('btn-fullscreen');
+            const pdfLoader = document.getElementById('pdf-loader');
+
+            // Reset State
+            imgEl.classList.remove('hidden');
+            pdfEl.classList.add('hidden');
+            overlayEl.classList.remove('hidden');
+            fsBtn.classList.add('hidden');
+            if(pdfLoader) pdfLoader.classList.add('hidden');
+
+            if (data.link) {
+                // Cek apakah ini link Google Drive
+                const driveMatch = data.link.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                if (driveMatch && driveMatch[1]) {
+                    // Embed Preview Google Drive
+                    const driveId = driveMatch[1];
+                    
+                    // Show Loader
+                    if(pdfLoader) pdfLoader.classList.remove('hidden');
+                    pdfEl.onload = () => {
+                        if(pdfLoader) pdfLoader.classList.add('hidden');
+                    };
+
+                    pdfEl.src = `https://drive.google.com/file/d/${driveId}/preview`;
+                    pdfEl.classList.remove('hidden');
+                    imgEl.classList.add('hidden');
+                    overlayEl.classList.add('hidden'); // Sembunyikan overlay agar iframe bisa diakses
+                    
+                    // Aktifkan Tombol Fullscreen
+                    fsBtn.classList.remove('hidden');
+                    fsBtn.onclick = () => {
+                        if (pdfEl.requestFullscreen) {
+                            pdfEl.requestFullscreen();
+                        } else if (pdfEl.webkitRequestFullscreen) { /* Safari */
+                            pdfEl.webkitRequestFullscreen();
+                        } else if (pdfEl.msRequestFullscreen) { /* IE11 */
+                            pdfEl.msRequestFullscreen();
+                        }
+                    };
+                } else {
+                    const openLink = () => window.open(data.link, '_blank');
+                    overlayEl.onclick = openLink;
+                    iconEl.className = 'bx bxs-file-pdf text-3xl text-white';
+                    textEl.textContent = 'View Document';
+                }
+            } else {
+                overlayEl.onclick = openLightbox;
+                // Default icon & text is already set in HTML
+            }
 
             // Inisialisasi Bahasa
             const currentLang = localStorage.getItem('celestiq_lang') || 'id';
