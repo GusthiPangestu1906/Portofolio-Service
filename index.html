@@ -785,6 +785,9 @@
                 if (imgEl) imgSrc = imgEl.src;
             }
 
+            // Deteksi Tipe: Apakah dari section Experience atau Portfolio?
+            const sectionType = element.closest('#experience') ? 'experience' : 'portfolio';
+
             const data = {
                 img: imgSrc,
                 role: element.getAttribute('data-role-title'),
@@ -793,6 +796,7 @@
                 year: element.getAttribute('data-year'),
                 organizer: element.getAttribute('data-organizer'),
                 role_real: element.getAttribute('data-role-title'),
+                type: sectionType, // Kirim tipe section ke detail.html
                 
                 // Simpan kedua versi bahasa (gunakan customDetail jika ada, jika tidak gunakan kamus)
                 desc_id: customDetail || descId,

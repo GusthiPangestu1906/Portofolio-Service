@@ -167,7 +167,9 @@
             fsBtn.classList.add('hidden');
             if(pdfLoader) pdfLoader.classList.add('hidden');
 
-            if (data.link) {
+            // LOGIKA BARU:
+            // Hanya tampilkan PDF Preview jika tipe-nya 'experience' DAN ada linknya.
+            if (data.type === 'experience' && data.link) {
                 // Cek apakah ini link Google Drive
                 const driveMatch = data.link.match(/\/d\/([a-zA-Z0-9_-]+)/);
                 if (driveMatch && driveMatch[1]) {
@@ -203,8 +205,11 @@
                     textEl.textContent = 'View Document';
                 }
             } else {
+                // Jika Portfolio (atau Experience tanpa link), gunakan mode Lightbox (Zoom)
                 overlayEl.onclick = openLightbox;
-                // Default icon & text is already set in HTML
+                // Reset icon & text ke mode zoom (jaga-jaga)
+                iconEl.className = 'bx bx-zoom-in text-3xl text-white';
+                textEl.textContent = 'Zoom Image';
             }
 
             // Inisialisasi Bahasa
