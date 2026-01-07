@@ -204,6 +204,9 @@ window.addEventListener('load', () => {
     isPageLoaded = true;
     initSwipers(); // Inisialisasi slider di background
     initEmailProtection(); // Inisialisasi email
+    if (typeof updateLanguageUI === 'function' && currentLang === 'en') {
+        updateLanguageUI();
+    }
 });
 
 if (loadingScreen && percentageText && progressBar) {
@@ -830,13 +833,10 @@ const translations = {
 };
 
 // 2. State Bahasa Saat Ini (Default ID)
-let currentLang = 'id'; 
+let currentLang = localStorage.getItem('celestiq_lang') || 'id'; 
 
-// 3. Fungsi Toggle (Versi Matematika Presisi)
-function toggleLanguage() {
-    // Switch state
-    currentLang = currentLang === 'id' ? 'en' : 'id';
-    
+// 3. Fungsi Update UI Bahasa
+function updateLanguageUI() {
     // Update Konten Website
     const elements = document.querySelectorAll('[data-i18n]');
     elements.forEach(el => {
@@ -886,6 +886,14 @@ function toggleLanguage() {
             startConversation(); // Mulai ulang dengan bahasa baru jika sedang terbuka
         }
     }
+}
+
+// 4. Fungsi Toggle (Versi Matematika Presisi)
+function toggleLanguage() {
+    // Switch state
+    currentLang = currentLang === 'id' ? 'en' : 'id';
+    localStorage.setItem('celestiq_lang', currentLang);
+    updateLanguageUI();
 }
 
 // 4. Update Typewriter secara Dinamis
@@ -1224,6 +1232,28 @@ if (inputForm) {
             }, 600);
         }
     });
+}
+
+/* =========================================
+   10. PORTFOLIO DETAIL HANDLER
+   ========================================= */
+function openDetail(element) {
+    // Ambil data dari elemen yang diklik
+    const img = element.querySelector('img').src;
+    // Mencari elemen role (biasanya text-xs font-bold)
+    const role = element.querySelector('.text-xs.font-bold').innerText;
+    const title = element.querySelector('h3').innerText;
+    const desc = element.querySelector('p').innerText;
+    
+    // Ambil link asli dari atribut data-link
+    const link = element.getAttribute('data-link');
+
+    // Simpan ke LocalStorage agar bisa dibaca di halaman detail.html
+    const data = { img, role, title, desc, link };
+    localStorage.setItem('celestiq_detail', JSON.stringify(data));
+    
+    // Buka halaman detail di tab baru
+    window.open('detail.html', '_blank');
 }
 
 /* =========================================

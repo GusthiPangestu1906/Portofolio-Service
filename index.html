@@ -59,6 +59,15 @@
             }
         }
     </script>
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .filter-anim {
+            animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+    </style>
 </head>
 
 <body class="text-white antialiased ambient-glow selection:bg-primary selection:text-white">
@@ -411,17 +420,24 @@
                 <p class="text-gray-400" data-i18n="port_subtitle">Arsip proyek, kegiatan, dan sertifikasi.</p>
             </div>
 
+            <!-- Filter Buttons -->
+            <div class="flex justify-center gap-3 md:gap-4 mb-10 flex-wrap" data-aos="fade-up" data-aos-delay="100">
+                <button class="filter-btn active px-5 py-2 rounded-full border border-primary/50 bg-primary/10 text-white text-xs md:text-sm font-bold transition-all hover:bg-primary hover:text-white" onclick="filterPortfolio('all', this)">All Projects</button>
+                <button class="filter-btn px-5 py-2 rounded-full border border-white/10 bg-white/5 text-gray-400 text-xs md:text-sm font-bold transition-all hover:bg-primary hover:text-white" onclick="filterPortfolio('graphic', this)">Graphic Designer</button>
+                <button class="filter-btn px-5 py-2 rounded-full border border-white/10 bg-white/5 text-gray-400 text-xs md:text-sm font-bold transition-all hover:bg-primary hover:text-white" onclick="filterPortfolio('operator', this)">Operator OBS</button>
+            </div>
+
             <!-- Swiper Container -->
             <div class="swiper portfolioSwiper" data-aos="fade-up" data-aos-delay="200">
                 <div class="swiper-wrapper">
                     
                     <!-- Portfolio Item 1 (PMCC 25) -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-primary/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/1-QmqJZTZChqBm0fgk4iX6-USG_cShkSR/view?usp=sharing" role="link" tabindex="0" aria-label="Open PMCC detail in new tab" onclick="window.open('https://drive.google.com/file/d/1-QmqJZTZChqBm0fgk4iX6-USG_cShkSR/view?usp=sharing', '_blank')">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-primary/50 transition-all duration-500 w-full flex flex-col h-full" data-link="https://drive.google.com/file/d/1-QmqJZTZChqBm0fgk4iX6-USG_cShkSR/view?usp=sharing" data-year="2025" data-organizer="PENSESPORT" data-role-title="Tournament Judge" onclick="openDetail(this)">
+                            <div class="h-64 overflow-hidden relative shrink-0">
                                 <img src="PMCC 25.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="PMCC 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <span class="px-6 py-2 bg-primary rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                    <span class="px-6 py-2 bg-primary rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Detail</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow">
@@ -435,11 +451,11 @@
 
                     <!-- Portfolio Item 2 (Pekan Komunitas) -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-orange-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/1rNj0Le1Jzp-OYU7A9Ux24t9CYZiFozpN/view?usp=sharing" role="link" tabindex="0" aria-label="Open Pekan Komunitas detail in new tab" onclick="window.open('https://drive.google.com/file/d/1rNj0Le1Jzp-OYU7A9Ux24t9CYZiFozpN/view?usp=sharing', '_blank')">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-orange-500/50 transition-all duration-500 w-full flex flex-col h-full" data-link="https://drive.google.com/file/d/1rNj0Le1Jzp-OYU7A9Ux24t9CYZiFozpN/view?usp=sharing" data-year="2025" data-organizer="HIMIT PENS" data-role-title="PDD & Operator OBS" onclick="openDetail(this)">
+                            <div class="h-64 overflow-hidden relative shrink-0">
                                 <img src="PKT_PKO.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="PKT_PKO 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <span class="px-6 py-2 bg-orange-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                    <span class="px-6 py-2 bg-orange-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Detail</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow">
@@ -453,11 +469,11 @@
 
                     <!-- Portfolio Item 3 (MBEX 25) -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-green-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/1OKMkOQr7FddyFEBEYDz4OF5losfGFkDa/view?usp=sharing" role="link" tabindex="0" aria-label="Open MBEX detail in new tab" onclick="window.open('https://drive.google.com/file/d/1OKMkOQr7FddyFEBEYDz4OF5losfGFkDa/view?usp=sharing', '_blank')">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-green-500/50 transition-all duration-500 w-full flex flex-col h-full" data-link="https://drive.google.com/file/d/1OKMkOQr7FddyFEBEYDz4OF5losfGFkDa/view?usp=sharing" data-year="2025" data-organizer="LMB PENS" data-role-title="PDD & Operator OBS" onclick="openDetail(this)">
+                            <div class="h-64 overflow-hidden relative shrink-0">
                                 <img src="MBEX.jpeg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="MBEX 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <span class="px-6 py-2 bg-green-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                    <span class="px-6 py-2 bg-green-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Detail</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow">
@@ -471,11 +487,11 @@
 
                     <!-- Portfolio Item 4 (LMB CERDAS) -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/1gHjP3fNh-2S6GzjfX_oTua_qzr00-qti/view?usp=sharing" role="link" tabindex="0" aria-label="Open LMB CERDAS detail in new tab" onclick="window.open('https://drive.google.com/file/d/1gHjP3fNh-2S6GzjfX_oTua_qzr00-qti/view?usp=sharing', '_blank')">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500 w-full flex flex-col h-full" data-link="https://drive.google.com/file/d/1gHjP3fNh-2S6GzjfX_oTua_qzr00-qti/view?usp=sharing" data-year="2025" data-organizer="LMB PENS" data-role-title="Person in Charge" onclick="openDetail(this)">
+                            <div class="h-64 overflow-hidden relative shrink-0">
                                 <img src="LMB CERDAS.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="LMB CERDAS 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                    <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Detail</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow">
@@ -489,11 +505,11 @@
 
                     <!-- Portfolio Item 5 (ITDS INSIGHT) -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/1kPYqJBSTgJ9f2VeY4TG9jv3u5ww2plOl/view?usp=sharing" role="link" tabindex="0" aria-label="Open ITDS INSIGHT detail in new tab" onclick="window.open('https://drive.google.com/file/d/1kPYqJBSTgJ9f2VeY4TG9jv3u5ww2plOl/view?usp=sharing', '_blank')">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500 w-full flex flex-col h-full" data-link="https://drive.google.com/file/d/1kPYqJBSTgJ9f2VeY4TG9jv3u5ww2plOl/view?usp=sharing" data-year="2025" data-organizer="HIMIT PENS" data-role-title="Graphic Designer" onclick="openDetail(this)">
+                            <div class="h-64 overflow-hidden relative shrink-0">
                                 <img src="ITDS 25.jpeg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="ITDS INSIGHT 2025" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                    <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Detail</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow">
@@ -507,11 +523,11 @@
 
                     <!-- Portfolio Item 6 (AT-FEST) -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-purple-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/12oaz7el6e-keFgExyp82fOKJNck7EknD/view?usp=sharing" role="link" tabindex="0" aria-label="Open AT-FEST detail in new tab" onclick="window.open('https://drive.google.com/file/d/12oaz7el6e-keFgExyp82fOKJNck7EknD/view?usp=sharing', '_blank')">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-purple-500/50 transition-all duration-500 w-full flex flex-col h-full" data-link="https://drive.google.com/file/d/12oaz7el6e-keFgExyp82fOKJNck7EknD/view?usp=sharing" data-year="2025" data-organizer="PENS" data-role-title="Graphic Designer" onclick="openDetail(this)">
+                            <div class="h-64 overflow-hidden relative shrink-0">
                                 <img src="AT-FEST.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="AT-FEST Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <span class="px-6 py-2 bg-purple-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                    <span class="px-6 py-2 bg-purple-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Detail</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow">
@@ -525,11 +541,11 @@
 
                     <!-- Portfolio Item 7 (ELTAFEST) -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/19h-oqBWUwa55C-4IY2WkvmbIP7C32uJW/view?usp=sharing" role="link" tabindex="0" aria-label="Open ELTAFEST detail in new tab" onclick="window.open('https://drive.google.com/file/d/19h-oqBWUwa55C-4IY2WkvmbIP7C32uJW/view?usp=sharing', '_blank')">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-blue-500/50 transition-all duration-500 w-full flex flex-col h-full" data-link="https://drive.google.com/file/d/19h-oqBWUwa55C-4IY2WkvmbIP7C32uJW/view?usp=sharing" data-year="2025" data-organizer="LMB PENS" data-role-title="Operator OBS" onclick="openDetail(this)">
+                            <div class="h-64 overflow-hidden relative shrink-0">
                                 <img src="ELTAFEST 25.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="ELTAFEST 25" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                    <span class="px-6 py-2 bg-blue-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Detail</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow">
@@ -543,11 +559,11 @@
 
                     <!-- Portfolio Item 8 (STAFF MUDA) -->
                     <div class="swiper-slide h-auto">
-                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500 w-full flex flex-col h-full">
-                            <div class="h-64 overflow-hidden relative shrink-0" data-link="https://drive.google.com/file/d/149uR1dk8NmumY9SUYefpqdmedj-ANDIz/view?usp=sharing" role="link" tabindex="0" aria-label="Open STAFF MUDA detail in new tab" onclick="window.open('https://drive.google.com/file/d/149uR1dk8NmumY9SUYefpqdmedj-ANDIz/view?usp=sharing', '_blank')">
+                        <div class="glass-card rounded-3xl overflow-hidden group cursor-pointer border border-white/5 hover:border-yellow-500/50 transition-all duration-500 w-full flex flex-col h-full" data-link="https://drive.google.com/file/d/149uR1dk8NmumY9SUYefpqdmedj-ANDIz/view?usp=sharing" data-year="2024 - 2025" data-organizer="LMB PENS" data-role-title="Staff Medfo" onclick="openDetail(this)">
+                            <div class="h-64 overflow-hidden relative shrink-0">
                                 <img src="STAFF MUDA LMB.jpg" onerror="this.src='https://placehold.co/600x400/2a1454/ffffff?text=Image+Unavailable'" alt="SM MEDFO 24" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in">
                                 <div class="absolute inset-0 bg-dark/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Image.</span>
+                                    <span class="px-6 py-2 bg-yellow-500 rounded-full text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Detail</span>
                                 </div>
                             </div>
                             <div class="p-6 flex-grow">
@@ -724,5 +740,84 @@
     <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
+    
+    <script>
+        // Override openDetail to include new data fields
+        function openDetail(element) {
+            const descEl = element.querySelector('p');
+            const i18nKey = descEl.getAttribute('data-i18n');
+            
+            // Default: ambil teks yang tampil saat ini
+            let descId = descEl.textContent;
+            let descEn = descEl.textContent;
+
+            // Cek kamus translations dari script.js untuk mendapatkan kedua bahasa
+            if (i18nKey && typeof translations !== 'undefined') {
+                if (translations.id && translations.id[i18nKey]) descId = translations.id[i18nKey];
+                if (translations.en && translations.en[i18nKey]) descEn = translations.en[i18nKey];
+            }
+
+            // Cek jika ada override deskripsi detail (custom attribute)
+            const customDetail = element.getAttribute('data-detail-desc');
+
+            const data = {
+                img: element.querySelector('img').src,
+                role: element.querySelector('[data-i18n*="role"]').textContent,
+                title: element.querySelector('h3').textContent,
+                link: element.getAttribute('data-link'),
+                year: element.getAttribute('data-year'),
+                organizer: element.getAttribute('data-organizer'),
+                role_real: element.getAttribute('data-role-title'),
+                
+                // Simpan kedua versi bahasa (gunakan customDetail jika ada, jika tidak gunakan kamus)
+                desc_id: customDetail || descId,
+                desc_en: customDetail || descEn
+            };
+            localStorage.setItem('celestiq_detail', JSON.stringify(data));
+            window.open('detail.html', '_blank');
+        }
+
+        // Portfolio Filter Logic
+        let originalPortfolioSlides = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrapper = document.querySelector('.portfolioSwiper .swiper-wrapper');
+            if(wrapper) {
+                // Clone nodes to preserve events and data before Swiper initializes
+                originalPortfolioSlides = Array.from(wrapper.children).map(node => node.cloneNode(true));
+            }
+        });
+
+        function filterPortfolio(category, btn) {
+            // Update UI Buttons
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('active', 'bg-primary/10', 'border-primary/50', 'text-white');
+                b.classList.add('bg-white/5', 'border-white/10', 'text-gray-400');
+            });
+            btn.classList.remove('bg-white/5', 'border-white/10', 'text-gray-400');
+            btn.classList.add('active', 'bg-primary/10', 'border-primary/50', 'text-white');
+
+            if (typeof portfolioSwiper !== 'undefined') {
+                const filtered = originalPortfolioSlides.filter(slide => {
+                    if (category === 'all') return true;
+                    const role = slide.querySelector('.glass-card').getAttribute('data-role-title').toLowerCase();
+                    if (category === 'graphic') return role.includes('graphic') || role.includes('pdd') || role.includes('design');
+                    if (category === 'operator') return role.includes('operator') || role.includes('obs');
+                    return false;
+                }).map(slide => {
+                    const clone = slide.cloneNode(true);
+                    clone.classList.add('filter-anim');
+                    return clone;
+                });
+
+                portfolioSwiper.removeAllSlides();
+                portfolioSwiper.appendSlide(filtered);
+                portfolioSwiper.loopDestroy();
+                portfolioSwiper.loopCreate();
+                portfolioSwiper.update();
+                portfolioSwiper.slideTo(0);
+            }
+        }
+    </script>
 </body>
 </html>
