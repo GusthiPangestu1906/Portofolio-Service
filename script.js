@@ -204,9 +204,7 @@ window.addEventListener('load', () => {
     isPageLoaded = true;
     initSwipers(); // Inisialisasi slider di background
     initEmailProtection(); // Inisialisasi email
-    if (typeof updateLanguageUI === 'function' && currentLang === 'en') {
-        updateLanguageUI();
-    }
+    updateLanguageUI(); // Update UI & Typewriter saat load
 });
 
 if (loadingScreen && percentageText && progressBar) {
@@ -652,50 +650,50 @@ const translations = {
         exp_subtitle: "Rekam jejak dalam manajemen event, desain visual, dan kompetisi.",
         
         exp_itds_role: "Creative Design",
-        exp_itds_desc: "Bertanggung jawab penuh atas seluruh desain identitas visual termasuk poster, banner, dan materi promosi digital.",
+        exp_itds_desc: "Bertanggung jawab penuh atas konseptualisasi dan eksekusi seluruh identitas visual acara, mencakup pembuatan aset digital strategis seperti poster, banner, dan materi promosi media sosial guna meningkatkan brand awareness dan keterlibatan peserta secara signifikan.",
         
         exp_mbex_role: "Main Operator Visual",
-        exp_mbex_desc: "Operator utama dalam acara Minat Bakat Expo 2025 bertugas dalam mengelola transisi visual dan display menggunakan OBS.",
+        exp_mbex_desc: "Bertindak sebagai Operator Visual Utama untuk Minat Bakat Expo 2025, mengelola orkestrasi visual secara real-time menggunakan OBS Studio untuk memastikan transisi yang mulus dan tampilan multimedia yang profesional demi mendukung pengalaman audiens yang imersif.",
         
         exp_figma_role: "UI/UX Design",
-        exp_figma_desc: "Mempelajari semua dasar teori dalam membuat desain UI/UX beserta penerapannya menggunakan figma.",
+        exp_figma_desc: "Menyelesaikan pelatihan intensif mengenai prinsip-prinsip desain UI/UX, mencakup riset pengguna, wireframing, dan prototyping interaktif, serta mengimplementasikan metodologi Design Thinking menggunakan perangkat lunak Figma untuk solusi desain yang user-centric.",
         
         exp_digiup_role: "Digital Graphic Designer",
-        exp_digiup_desc: "Mempelajari semua dasar teori Graphic Design beserta penerapannya menggunakan Photoshop.",
+        exp_digiup_desc: "Mendalami fundamental Desain Grafis melalui program pelatihan komprehensif, dengan fokus pada komposisi visual, teori warna, dan tipografi, serta penerapan teknis tingkat lanjut menggunakan Adobe Photoshop untuk menghasilkan karya visual berkualitas industri.",
         
         exp_bnsp_role: "Junior Graphic Designer",
-        exp_bnsp_desc: "Sertifikasi bersama dengan BNSP setelah menyelesaikan kelas Digital Graphic Designer menggunakan Photoshop.",
+        exp_bnsp_desc: "Meraih sertifikasi kompetensi nasional dari BNSP sebagai Desainer Grafis Muda, memvalidasi keahlian teknis dan pemahaman teoritis dalam pengoperasian perangkat lunak desain standar industri serta manajemen aset visual yang sesuai dengan standar profesional.",
         
         exp_gla_role: "Intro to Graphic Design",
-        exp_gla_desc: "Mempelajari dasar-dasar Graphic Design beserta penerapannya dalam Photoshop.",
+        exp_gla_desc: "Menyelesaikan kursus fundamental Desain Grafis yang mencakup prinsip dasar estetika visual dan manipulasi gambar digital, memperkuat landasan teknis dalam penggunaan Adobe Photoshop untuk kebutuhan kreatif dan komunikasi visual.",
 
         // Portfolio Section
         port_title: "Dokumentasi & Portofolio",
         port_subtitle: "Arsip proyek, kegiatan, dan sertifikasi.",
         
         port_pmcc_role: "AS JUDGE OF",
-        port_pmcc_desc: "Panitia kegiatan turnamen esports resmi PUBG Mobile yang khusus diadakan untuk mahasiswa di berbagai universitas",
+        port_pmcc_desc: "Berperan sebagai Juri Turnamen dalam kompetisi esports resmi PUBG Mobile Campus Championship, bertanggung jawab atas penegakan regulasi kompetisi, pemantauan integritas pertandingan, dan pengambilan keputusan strategis untuk memastikan fair play dan sportivitas di antara peserta mahasiswa.",
         
         port_pekan_role: "AS PDD & OPERATOR OF",
-        port_pekan_desc: "Panitia Kegiatan Pekan Komunitas Teknologi dan Olahraga yang diselenggarakan HIMIT PENS berupa pengenalan komunitas yang ada dalam HIMIT PENS kepada MABA angkatan 25",
+        port_pekan_desc: "Menjabat sebagai staf Publikasi, Dekorasi, dan Dokumentasi (PDD) sekaligus Operator OBS dalam Pekan Komunitas Teknologi dan Olahraga HIMIT PENS. Mengelola produksi visual live dan materi publikasi strategis untuk memperkenalkan ekosistem komunitas secara efektif kepada mahasiswa baru angkatan 2025.",
         
         port_mbex_role: "AS PDD & OPERATOR OF",
-        port_mbex_desc: "Kegiatan Expo yang diselenggarakan oleh LMB PENS berupa pengenalan UKM (Unit Kegiatan Mahasiswa) / komunitas yang ada dalam PENS kepada MABA angkatan 25.",
+        port_mbex_desc: "Berkontribusi sebagai staf PDD dan Operator Visual dalam Minat Bakat Expo (MBEX) yang diselenggarakan oleh LMB PENS. Bertanggung jawab atas desain visual acara dan manajemen tampilan layar multimedia untuk memfasilitasi pengenalan Unit Kegiatan Mahasiswa (UKM) yang komprehensif kepada mahasiswa baru.",
         
         port_lmb_role: "AS PENANGGUNG JAWAB OF",
-        port_lmb_desc: "Kegiatan Pelatihan Desain yang diselenggarakan oleh LMB PENS berupa pembelajaran terkait pembuatan desain mulai dari teori hingga penerapannya menggunakan tools canva.",
+        port_lmb_desc: "Diamanahkan sebagai Penanggung Jawab (PJ) dalam kegiatan Pelatihan Desain LMB PENS. Mengoordinasikan kurikulum pelatihan, memfasilitasi sesi pembelajaran teori dan praktik desain grafis menggunakan Canva, serta membimbing peserta dalam pengembangan keterampilan visual dasar hingga menengah.",
         
         port_itds_role: "AS PDD OF",
-        port_itds_desc: "Kegiatan pengenalan Program Studi IT PENS yang diselenggarakan oleh HIMIT PENS berupa pengenalan terkait mata kuliah dan etika mulai dari teori hingga penerapannya dalam kehidupan perkuliahan.",
+        port_itds_desc: "Bertugas sebagai staf PDD dalam kegiatan ITDS Insight HIMIT PENS. Mengembangkan konsep visual dan materi edukasi kreatif untuk memperkenalkan kurikulum Program Studi IT serta etika perkuliahan kepada mahasiswa baru, memastikan penyampaian informasi yang efektif, menarik, dan mudah dipahami.",
         
         port_atfest_role: "AS PDD OF",
-        port_atfest_desc: "Kegiatan Expo yang diselenggarakan oleh PENS berupa pengenalan produk mahasiswa IT yang ada dalam PENS kepada khalayak umum.",
+        port_atfest_desc: "Berperan sebagai staf PDD dalam Agile Teknik Festival (AT-FEST) PENS. Merancang aset visual menarik untuk pameran produk inovasi mahasiswa IT, mendukung strategi branding acara untuk menarik minat khalayak umum dan industri terhadap karya teknologi mahasiswa PENS.",
         
         port_elta_role: "AS OPERATOR OF",
-        port_elta_desc: "Kegiatan Perlombaan yang diselenggarakan oleh LMB PENS berupa perlombaan dalam berbagai bidang dengan berkolaborasi bersama dengan UKM yang ada dalam PENS.",
+        port_elta_desc: "Bertindak sebagai Operator Visual dalam ELTAFEST 25, sebuah kompetisi multi-bidang yang diselenggarakan oleh LMB PENS. Mengelola aspek teknis visualisasi acara secara profesional untuk mendukung kolaborasi antar UKM dan memastikan kelancaran jalannya perlombaan yang dinamis.",
         
         port_staff_role: "AS STAFF OF",
-        port_staff_desc: "Sewaktu Menjadi Staff Muda dalam departemen MEDFO LMB PENS tahun periode 2024 - 2025 kenangan bersama Staff Ahli.",
+        port_staff_desc: "Menjalani masa bakti sebagai Staf Muda di Departemen Media dan Informasi (MEDFO) LMB PENS periode 2024-2025. Berkolaborasi secara aktif dengan Staf Ahli dalam pengelolaan media sosial organisasi, pembuatan konten kreatif, dan diseminasi informasi kegiatan kemahasiswaan yang strategis.",
 
         // Contact Section
         contact_title: "Mari Bekerja <br> <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400\">Sama.</span>",
@@ -774,50 +772,50 @@ const translations = {
         exp_subtitle: "Track record in event management, visual design, and competitions.",
         
         exp_itds_role: "Creative Design",
-        exp_itds_desc: "Fully responsible for all visual identity designs including posters, banners, and digital promotional materials.",
+        exp_itds_desc: "Fully responsible for the conceptualization and execution of the event's entire visual identity, including the creation of strategic digital assets such as posters, banners, and social media promotional materials to significantly enhance brand awareness and participant engagement.",
         
         exp_mbex_role: "Main Visual Operator",
-        exp_mbex_desc: "Main operator in the Minat Bakat Expo 2025 event, tasked with managing visual transitions and displays using OBS.",
+        exp_mbex_desc: "Served as the Lead Visual Operator for Minat Bakat Expo 2025, managing real-time visual orchestration using OBS Studio to ensure seamless transitions and professional multimedia displays, supporting an immersive audience experience.",
         
         exp_figma_role: "UI/UX Design",
-        exp_figma_desc: "Learned all basic theories in creating UI/UX designs along with their application using Figma.",
+        exp_figma_desc: "Completed intensive training on UI/UX design principles, covering user research, wireframing, and interactive prototyping, while implementing Design Thinking methodologies using Figma software for user-centric design solutions.",
         
         exp_digiup_role: "Digital Graphic Designer",
-        exp_digiup_desc: "Learned all basic theories of Graphic Design along with their application using Photoshop.",
+        exp_digiup_desc: "Delved into Graphic Design fundamentals through a comprehensive training program, focusing on visual composition, color theory, and typography, along with advanced technical application using Adobe Photoshop to produce industry-quality visual works.",
         
         exp_bnsp_role: "Junior Graphic Designer",
-        exp_bnsp_desc: "Certification with BNSP after completing the Digital Graphic Designer class using Photoshop.",
+        exp_bnsp_desc: "Achieved national competency certification from BNSP as a Junior Graphic Designer, validating technical expertise and theoretical understanding in operating industry-standard design software and visual asset management in accordance with professional standards.",
         
         exp_gla_role: "Intro to Graphic Design",
-        exp_gla_desc: "Learned the basics of Graphic Design along with their application in Photoshop.",
+        exp_gla_desc: "Completed a fundamental Graphic Design course covering basic visual aesthetics principles and digital image manipulation, strengthening the technical foundation in using Adobe Photoshop for creative needs and visual communication.",
 
         // Portfolio Section
         port_title: "Documentation & Portfolio",
         port_subtitle: "Archive of projects, activities, and certifications.",
         
         port_pmcc_role: "AS JUDGE OF",
-        port_pmcc_desc: "Committee for the official PUBG Mobile esports tournament specifically held for students in various universities",
+        port_pmcc_desc: "Served as a Tournament Judge in the official PUBG Mobile Campus Championship esports competition, responsible for enforcing competition regulations, monitoring match integrity, and making strategic decisions to ensure fair play and sportsmanship among student participants.",
         
         port_pekan_role: "AS PDD & OPERATOR OF",
-        port_pekan_desc: "Committee for the Technology and Sports Community Week organized by HIMIT PENS involving the introduction of communities within HIMIT PENS to batch 25 freshmen",
+        port_pekan_desc: "Served as Publication, Decoration, and Documentation (PDD) staff as well as OBS Operator for the HIMIT PENS Technology and Sports Community Week. Managed live visual production and strategic publication materials to effectively introduce the community ecosystem to the class of 2025 freshmen.",
         
         port_mbex_role: "AS PDD & OPERATOR OF",
-        port_mbex_desc: "Expo activity organized by LMB PENS involving the introduction of UKM (Student Activity Units) / communities within PENS to batch 25 freshmen.",
+        port_mbex_desc: "Contributed as PDD staff and Visual Operator in the Minat Bakat Expo (MBEX) organized by LMB PENS. Responsible for event visual design and multimedia screen display management to facilitate a comprehensive introduction of Student Activity Units (UKM) to new students.",
         
         port_lmb_role: "AS PERSON IN CHARGE OF",
-        port_lmb_desc: "Design Training activity organized by LMB PENS involving learning related to design creation from theory to application using Canva tools.",
+        port_lmb_desc: "Entrusted as the Person in Charge (PJ) for the LMB PENS Design Training activity. Coordinated the training curriculum, facilitated graphic design theory and practice sessions using Canva, and guided participants in developing basic to intermediate visual skills.",
         
         port_itds_role: "AS PDD OF",
-        port_itds_desc: "Introduction activity for the IT PENS Study Program organized by HIMIT PENS involving introduction related to courses and ethics from theory to application in college life.",
+        port_itds_desc: "Served as PDD staff in the HIMIT PENS ITDS Insight activity. Developed visual concepts and creative educational materials to introduce the IT Study Program curriculum and academic ethics to new students, ensuring effective, engaging, and comprehensible information delivery.",
         
         port_atfest_role: "AS PDD OF",
-        port_atfest_desc: "Expo activity organized by PENS involving the introduction of IT student products within PENS to the general public.",
+        port_atfest_desc: "Served as PDD staff in the PENS Agile Teknik Festival (AT-FEST). Designed engaging visual assets for the IT student innovation product exhibition, supporting the event branding strategy to attract public and industrial interest in PENS student technological works.",
         
         port_elta_role: "AS OPERATOR OF",
-        port_elta_desc: "Competition activity organized by LMB PENS involving competitions in various fields in collaboration with UKMs within PENS.",
+        port_elta_desc: "Acted as Visual Operator in ELTAFEST 25, a multi-disciplinary competition organized by LMB PENS. Professionally managed the technical visualization aspects of the event to support collaboration between UKMs and ensure the smooth running of dynamic competitions.",
         
         port_staff_role: "AS STAFF OF",
-        port_staff_desc: "During my time as Junior Staff in the MEDFO department of LMB PENS for the 2024 - 2025 period, memories with Expert Staff.",
+        port_staff_desc: "Served as Junior Staff in the Media and Information (MEDFO) Department of LMB PENS for the 2024-2025 period. Actively collaborated with Expert Staff in managing organizational social media, creating creative content, and strategically disseminating student activity information.",
 
         // Contact Section
         contact_title: "Let's Work <br> <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400\">Sama.</span>",
@@ -835,6 +833,32 @@ const translations = {
 // 2. State Bahasa Saat Ini (Default ID)
 let currentLang = localStorage.getItem('celestiq_lang') || 'id'; 
 
+// --- GLOBAL TYPEWRITER SETUP ---
+const globalTypeSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
+globalTypeSound.volume = 0.2;
+let globalTypingTimeout;
+
+function typeWriterGlobal(element, text, speed = 40) {
+    if (!element) return;
+    
+    if (globalTypingTimeout) clearTimeout(globalTypingTimeout);
+    element.textContent = "";
+    
+    let i = 0;
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            if (Math.random() > 0.5) {
+                globalTypeSound.currentTime = 0;
+                globalTypeSound.play().catch(() => {});
+            }
+            i++;
+            globalTypingTimeout = setTimeout(type, speed);
+        }
+    }
+    type();
+}
+
 // 3. Fungsi Update UI Bahasa
 function updateLanguageUI() {
     // Update Konten Website
@@ -842,7 +866,12 @@ function updateLanguageUI() {
     elements.forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[currentLang][key]) {
-            el.innerHTML = translations[currentLang][key];
+            // Terapkan Typewriter khusus untuk hero_desc (Profil)
+            if (key === 'hero_desc') {
+                typeWriterGlobal(el, translations[currentLang][key]);
+            } else {
+                el.innerHTML = translations[currentLang][key];
+            }
         }
     });
 

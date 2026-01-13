@@ -289,6 +289,13 @@ body {
 }
 @keyframes blink { 50% { opacity: 0; } }
 
+/* Typewriter Cursor for Profile */
+.typing-cursor::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+    color: #8750f7;
+}
+
 /* Lightbox */
 .lightbox {
     display: none;

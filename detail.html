@@ -20,6 +20,23 @@
     <style>
         body { background-color: #090910; color: white; }
         .glass-panel { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+        
+        /* Animasi Fade In Up */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-card {
+            opacity: 0; /* Mulai dari hidden agar tidak berkedip */
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        /* Typewriter Cursor Effect */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+            color: #8750f7;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
@@ -40,8 +57,8 @@
         </div>
         
         <!-- Konten Detail -->
-        <div class="glass-panel rounded-3xl p-2 md:p-4 shadow-2xl">
-            <div class="relative group rounded-2xl overflow-hidden bg-gray-800 shadow-lg h-[300px] md:h-[500px]">
+        <div class="glass-panel rounded-[2rem] p-3 md:p-5 shadow-2xl border border-white/10 relative overflow-hidden">
+                <div class="relative group rounded-[1.5rem] overflow-hidden bg-gray-900 shadow-2xl h-[300px] md:h-[500px] transition-all duration-500">
                 <img id="detail-img" src="" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 <iframe id="detail-pdf" class="absolute inset-0 w-full h-full hidden" frameborder="0" allow="autoplay"></iframe>
                 
@@ -66,33 +83,50 @@
                 </div>
             </div>
             
-            <div class="p-6 md:p-8">
-                <div class="flex flex-wrap items-center gap-4 mb-4">
-                    <span id="detail-role" class="px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-bold tracking-wider border border-primary/20"></span>
+            <div class="p-6 md:p-10">
+                <div class="flex flex-col gap-4 mb-8">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <span id="detail-role" class="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold tracking-widest uppercase border border-primary/20 shadow-[0_0_15px_rgba(135,80,247,0.2)]"></span>
+                    </div>
+                    <h1 id="detail-title" class="text-3xl md:text-5xl font-bold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400 drop-shadow-sm"></h1>
                 </div>
                 
-                <h1 id="detail-title" class="text-3xl md:text-4xl font-bold leading-tight mb-6"></h1>
-                
                 <!-- Info Grid: Organizer, Year, Role -->
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8 border-y border-white/10 py-6">
-                    <div>
-                        <p class="text-gray-500 text-xs font-bold tracking-widest mb-1 uppercase">Organizer</p>
-                        <p id="detail-organizer" class="text-white font-medium text-lg"></p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+                    <!-- Organizer Card -->
+                    <div class="bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-300 hover:scale-105 group/card animate-card" style="animation-delay: 0.1s;">
+                        <div class="flex items-center gap-3 mb-2 text-gray-400 group-hover/card:text-blue-400 transition-colors">
+                            <i class='bx bxs-building-house text-xl'></i>
+                            <p class="text-xs font-bold tracking-widest uppercase">Organizer</p>
+                        </div>
+                        <p id="detail-organizer" class="text-white font-bold text-lg md:text-xl pl-8"></p>
                     </div>
-                    <div>
-                        <p class="text-gray-500 text-xs font-bold tracking-widest mb-1 uppercase">Year</p>
-                        <p id="detail-year" class="text-white font-medium text-lg"></p>
+                    <!-- Year Card -->
+                    <div class="bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-300 hover:scale-105 group/card animate-card" style="animation-delay: 0.2s;">
+                        <div class="flex items-center gap-3 mb-2 text-gray-400 group-hover/card:text-yellow-400 transition-colors">
+                            <i class='bx bxs-calendar text-xl'></i>
+                            <p class="text-xs font-bold tracking-widest uppercase">Year</p>
+                        </div>
+                        <p id="detail-year" class="text-white font-bold text-lg md:text-xl pl-8"></p>
                     </div>
-                    <div class="col-span-2 md:col-span-1">
-                        <p class="text-gray-500 text-xs font-bold tracking-widest mb-1 uppercase">My Role</p>
-                        <p id="detail-role-real" class="text-white font-medium text-lg text-primary"></p>
+                    <!-- Role Card -->
+                    <div class="bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-primary/30 transition-all duration-300 hover:scale-105 group/card relative overflow-hidden animate-card" style="animation-delay: 0.3s;">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-primary/10 rounded-bl-full -mr-8 -mt-8"></div>
+                        <div class="flex items-center gap-3 mb-2 text-gray-400 group-hover/card:text-primary transition-colors">
+                            <i class='bx bxs-user-badge text-xl'></i>
+                            <p class="text-xs font-bold tracking-widest uppercase">My Role</p>
+                        </div>
+                        <p id="detail-role-real" class="text-white font-bold text-lg md:text-xl pl-8"></p>
                     </div>
                 </div>
 
-                <div class="h-px w-full bg-white/10 mb-6"></div>
-                
-                <h3 id="detail-desc-title" class="text-white font-bold text-xl mb-4">Deskripsi Acara</h3>
-                <p id="detail-desc" class="text-gray-400 leading-relaxed text-lg mb-8"></p>
+                <!-- Description Section -->
+                <div class="bg-gradient-to-b from-white/5 to-transparent p-6 md:p-8 rounded-3xl border border-white/5">
+                    <h3 id="detail-desc-title" class="text-white font-bold text-xl mb-4 flex items-center gap-2">
+                        <i class='bx bx-align-left text-primary'></i> Deskripsi Acara
+                    </h3>
+                    <p id="detail-desc" class="text-gray-300 leading-relaxed text-lg font-light typing-cursor"></p>
+                </div>
             </div>
         </div>
     </div>
@@ -109,19 +143,71 @@
         // Ambil data dari LocalStorage
         const data = JSON.parse(localStorage.getItem('celestiq_detail'));
         
+        // Variable global untuk menyimpan timeout typing
+        let typingTimeout;
+        
+        // Setup Audio Ketikan (Sound Effect)
+        const typeSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3'); 
+        typeSound.volume = 0.2; // Volume disesuaikan untuk suara yang lebih halus
+
+        function typeWriterEffect(element, text, speed = 40) {
+            if (!element) return;
+            
+            // Hentikan animasi sebelumnya jika ada
+            if (typingTimeout) clearTimeout(typingTimeout);
+            element.textContent = "";
+            
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    
+                    // Mainkan suara secara acak (agar terdengar natural seperti mengetik)
+                    if (Math.random() > 0.5) {
+                        typeSound.currentTime = 0;
+                        typeSound.play().catch(() => {}); // Ignore error jika autoplay belum allowed
+                    }
+                    
+                    i++;
+                    typingTimeout = setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
         function updateDetailLanguage(lang) {
             if (!data) return;
 
             // Update Judul Bagian
             const descTitle = document.getElementById('detail-desc-title');
             if (descTitle) {
-                descTitle.textContent = lang === 'en' ? 'Event Description' : 'Deskripsi Acara';
+                let titleId = 'Deskripsi Acara';
+                let titleEn = 'Event Description';
+                
+                const cat = (data.category || '').toUpperCase();
+                
+                if (cat.includes('TRAINING') || cat.includes('PELATIHAN')) {
+                    titleId = 'Deskripsi Pelatihan';
+                    titleEn = 'Training Description';
+                } else if (cat.includes('CERTIFICATION') || cat.includes('SERTIFIKASI')) {
+                    titleId = 'Deskripsi Sertifikasi';
+                    titleEn = 'Certification Description';
+                } else if (cat.includes('COURSE') || cat.includes('KURSUS')) {
+                    titleId = 'Deskripsi Kursus';
+                    titleEn = 'Course Description';
+                } else if (cat.includes('PROJECT') || data.type === 'portfolio') {
+                    titleId = 'Deskripsi Proyek';
+                    titleEn = 'Project Description';
+                }
+
+                descTitle.innerHTML = `<i class='bx bx-align-left text-primary'></i> ${lang === 'en' ? titleEn : titleId}`;
             }
 
             // Update Deskripsi Proyek
             const descEl = document.getElementById('detail-desc');
             if (descEl) {
-                descEl.textContent = lang === 'en' ? data.desc_en : data.desc_id;
+                const text = lang === 'en' ? data.desc_en : data.desc_id;
+                typeWriterEffect(descEl, text || "");
             }
 
             // Update Toggle UI
