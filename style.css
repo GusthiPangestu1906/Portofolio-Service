@@ -364,6 +364,31 @@ body {
     box-shadow: 0 15px 40px rgba(135, 80, 247, 0.7);
 }
 
+/* Floating WhatsApp Button (CRM) */
+.floating-wa {
+    position: fixed;
+    bottom: 100px; /* Posisi di atas tombol AI Chat */
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #25D366, #128C7E); /* Warna Khas WA */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 32px;
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+    cursor: pointer;
+    z-index: 90;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+.floating-wa:hover {
+    transform: scale(1.1) rotate(-10deg);
+    box-shadow: 0 15px 40px rgba(37, 211, 102, 0.6);
+}
+
 /* Button Styles */
 .btn-pill-primary {
     background: linear-gradient(135deg, #8750f7, #d946ef);
@@ -418,17 +443,19 @@ body {
 .swiper-pagination-bullet {
     background: #4b5563;
     opacity: 0.5;
-    width: 10px;
-    height: 10px;
+    width: 24px;      /* Ubah jadi garis pendek */
+    height: 4px;      /* Tipis */
+    border-radius: 2px; /* Sudut tajam/sedikit tumpul */
+    transition: all 0.3s ease;
 }
 
 .swiper-pagination-bullet-active {
-    background: #06b6d4; /* Warna cyan */
+    background: #8750f7; /* Warna Primary */
     opacity: 1;
-    box-shadow: 0 0 10px #06b6d4;
-    width: 25px; /* Jadi lonjong saat aktif */
-    border-radius: 999px;
-    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(135, 80, 247, 0.6);
+    width: 48px;      /* Memanjang saat aktif */
+    height: 4px;
+    border-radius: 2px;
 }
 .swiper-button-next, .swiper-button-prev {
     color: #8750f7;

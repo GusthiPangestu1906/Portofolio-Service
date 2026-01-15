@@ -21,7 +21,7 @@ function initSwipers() {
                 disableOnInteraction: false,
             },
             pagination: {
-                el: ".swiper-pagination",
+                el: ".portfolioSwiper .swiper-pagination",
                 clickable: true,
             },
             breakpoints: {
@@ -70,10 +70,6 @@ function initSwipers() {
             autoplay: {
                 delay: 4500,
                 disableOnInteraction: false,
-            },
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
             },
             breakpoints: {
                 640: { slidesPerView: 1, spaceBetween: 20 },
@@ -178,6 +174,72 @@ function initSwipers() {
     document.head.appendChild(style);
 })();
 
+/* =========================================
+   SYSTEM CHECK (BATTERY, ISP, NET)
+   ========================================= */
+async function initSystemCheck() {
+    const batVal = document.getElementById('sys-battery-val');
+    const batBar = document.getElementById('sys-battery-bar');
+    const netVal = document.getElementById('sys-net-val');
+    const netBar = document.getElementById('sys-net-bar');
+    const ispVal = document.getElementById('sys-isp-val');
+    const locVal = document.getElementById('sys-loc-val');
+
+    // Sound Effect
+    const sysSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1386/1386-preview.mp3');
+
+    // 1. Battery Check
+    if ('getBattery' in navigator) {
+        try {
+            const battery = await navigator.getBattery();
+            const updateBat = () => {
+                const level = Math.round(battery.level * 100);
+                const status = battery.charging ? "CHARGING" : "BATTERY";
+                if (batVal) {
+                    batVal.innerText = `${level}% [${status}]`;
+                    if(batBar) batBar.style.width = `${level}%`;
+                    
+                    sysSound.currentTime = 0;
+                    sysSound.play().catch(() => {});
+                }
+            };
+            updateBat();
+        } catch (e) { if(batVal) batVal.innerText = "AC POWER / DESKTOP"; if(batBar) batBar.style.width = "100%"; }
+    } else {
+        if(batVal) batVal.innerText = "AC POWER / DESKTOP";
+        if(batBar) batBar.style.width = "100%";
+    }
+
+    // 2. Network Info
+    if (navigator.connection) {
+        const conn = navigator.connection;
+        const type = conn.effectiveType ? conn.effectiveType.toUpperCase() : 'WIRED';
+        const speed = conn.downlink ? conn.downlink + ' Mbps' : 'UNKNOWN';
+        
+        if (netVal) {
+            netVal.innerText = `${type} // ${speed}`;
+            if(netBar) netBar.style.width = "100%"; // Asumsi koneksi stabil
+            sysSound.currentTime = 0;
+            sysSound.play().catch(() => {});
+        }
+    }
+
+    // 3. ISP Check (Async)
+    try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+
+        // Tambahkan sound effect setiap data ISP selesai di-load
+        if (ispVal && data.org) ispVal.innerText = data.org.toUpperCase().substring(0, 20);
+        if (locVal && data.city) locVal.innerText = `${data.city.toUpperCase()}, ${data.country_code}`;
+        
+        sysSound.currentTime = 0;
+        sysSound.play().catch(() => {});
+    } catch (e) { 
+        if(ispVal) ispVal.innerText = "HIDDEN / VPN"; 
+        if(locVal) locVal.innerText = "UNKNOWN";
+    }
+}
 
 /* =========================================
    2. SMART LOADING SCREEN LOGIC
@@ -205,6 +267,7 @@ window.addEventListener('load', () => {
     initSwipers(); // Inisialisasi slider di background
     initEmailProtection(); // Inisialisasi email
     updateLanguageUI(); // Update UI & Typewriter saat load
+    initSystemCheck(); // Jalankan pengecekan sistem
 });
 
 if (loadingScreen && percentageText && progressBar) {
@@ -225,11 +288,20 @@ if (loadingScreen && percentageText && progressBar) {
         if (width >= 100) {
             clearInterval(interval);
             
-            // Final Status
-            if(statusText) statusText.innerText = "> SYSTEM READY";
-            if(percentageText) percentageText.innerText = "100%";
-            
-            // --- TRIGGER ANIMASI KELUAR ---
+            // 1. Sembunyikan Loading Bar & Logo
+            const loaderContent = document.getElementById('loader-content');
+            if(loaderContent) loaderContent.style.opacity = '0';
+
+            // 2. Tampilkan System Diagnostic Overlay
+            const sysOverlay = document.getElementById('sys-overlay');
+            if(sysOverlay) {
+                setTimeout(() => {
+                    sysOverlay.classList.remove('hidden');
+                    // Play sound effect for HUD appearance if desired
+                }, 300);
+            }
+
+            // 3. Tunggu sebentar (baca stats), lalu masuk ke website
             setTimeout(() => {
                 loadingScreen.classList.add('loading-finished');
                 loadingScreen.classList.add('bg-transparent'); 
@@ -244,13 +316,13 @@ if (loadingScreen && percentageText && progressBar) {
                         easing: 'ease-out-cubic',
                     });
                 }
-            }, 500); 
+            }, 3500); // Delay 3.5 detik untuk menampilkan System Check
 
             // Hapus elemen dari DOM
             setTimeout(() => {
                 loadingScreen.style.display = 'none';
                 document.body.style.overflow = 'auto';
-            }, 2000); 
+            }, 5000); 
 
         } else {
             width++;
@@ -650,22 +722,22 @@ const translations = {
         exp_subtitle: "Rekam jejak dalam manajemen event, desain visual, dan kompetisi.",
         
         exp_itds_role: "Creative Design",
-        exp_itds_desc: "Bertanggung jawab penuh atas konseptualisasi dan eksekusi seluruh identitas visual acara, mencakup pembuatan aset digital strategis seperti poster, banner, dan materi promosi media sosial guna meningkatkan brand awareness dan keterlibatan peserta secara signifikan.",
+        exp_itds_desc: "Merancang identitas visual utama ITDS Insight 2025, memproduksi 15+ aset grafis (Poster, Banner, Feeds) menggunakan Adobe Illustrator yang meningkatkan engagement media sosial HIMIT PENS.",
         
         exp_mbex_role: "Main Operator Visual",
-        exp_mbex_desc: "Bertindak sebagai Operator Visual Utama untuk Minat Bakat Expo 2025, mengelola orkestrasi visual secara real-time menggunakan OBS Studio untuk memastikan transisi yang mulus dan tampilan multimedia yang profesional demi mendukung pengalaman audiens yang imersif.",
+        exp_mbex_desc: "Mengoperasikan visual panggung utama Minat Bakat Expo 2025 menggunakan OBS Studio, mengelola 50+ scene transisi dan multimedia live untuk audiens skala kampus.",
         
         exp_figma_role: "UI/UX Design",
-        exp_figma_desc: "Menyelesaikan pelatihan intensif mengenai prinsip-prinsip desain UI/UX, mencakup riset pengguna, wireframing, dan prototyping interaktif, serta mengimplementasikan metodologi Design Thinking menggunakan perangkat lunak Figma untuk solusi desain yang user-centric.",
+        exp_figma_desc: "Menyelesaikan bootcamp UI/UX intensif, menghasilkan High-Fidelity Prototype aplikasi mobile dengan penerapan Design Thinking dan Auto-Layout di Figma.",
         
         exp_digiup_role: "Digital Graphic Designer",
-        exp_digiup_desc: "Mendalami fundamental Desain Grafis melalui program pelatihan komprehensif, dengan fokus pada komposisi visual, teori warna, dan tipografi, serta penerapan teknis tingkat lanjut menggunakan Adobe Photoshop untuk menghasilkan karya visual berkualitas industri.",
+        exp_digiup_desc: "Lulus sertifikasi Digital Graphic Designer dengan predikat kompeten, menguasai manipulasi foto advanced dan layouting komersial menggunakan Adobe Photoshop.",
         
         exp_bnsp_role: "Junior Graphic Designer",
-        exp_bnsp_desc: "Meraih sertifikasi kompetensi nasional dari BNSP sebagai Desainer Grafis Muda, memvalidasi keahlian teknis dan pemahaman teoritis dalam pengoperasian perangkat lunak desain standar industri serta manajemen aset visual yang sesuai dengan standar profesional.",
+        exp_bnsp_desc: "Tersertifikasi kompetensi nasional (BNSP) skema Junior Graphic Designer, memvalidasi keahlian teknis dalam manajemen warna, tipografi, dan penyiapan file cetak standar industri.",
         
         exp_gla_role: "Intro to Graphic Design",
-        exp_gla_desc: "Menyelesaikan kursus fundamental Desain Grafis yang mencakup prinsip dasar estetika visual dan manipulasi gambar digital, memperkuat landasan teknis dalam penggunaan Adobe Photoshop untuk kebutuhan kreatif dan komunikasi visual.",
+        exp_gla_desc: "Menuntaskan kursus fundamental desain grafis, memperdalam pemahaman teori warna dan komposisi visual untuk kebutuhan branding digital.",
 
         // Portfolio Section
         port_title: "Dokumentasi & Portofolio",
