@@ -177,68 +177,172 @@ function initSwipers() {
 /* =========================================
    SYSTEM CHECK (BATTERY, ISP, NET)
    ========================================= */
-async function initSystemCheck() {
-    const batVal = document.getElementById('sys-battery-val');
-    const batBar = document.getElementById('sys-battery-bar');
-    const netVal = document.getElementById('sys-net-val');
-    const netBar = document.getElementById('sys-net-bar');
-    const ispVal = document.getElementById('sys-isp-val');
-    const locVal = document.getElementById('sys-loc-val');
 
-    // Sound Effect
-    const sysSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1386/1386-preview.mp3');
+// Global Data Container
+window.sysData = {
+    battery: "AC POWER / DESKTOP",
+    connection: "WIRED / STABLE",
+    device: "UNKNOWN TERMINAL",
+    loc: "UNKNOWN LOCATION",
+    isp: "PRIVATE NETWORK"
+};
+
+async function initSystemCheck() {
+    // 0. Detect Device/Browser
+    const ua = navigator.userAgent;
+    if (ua.includes("Android")) window.sysData.device = "ANDROID SYSTEM";
+    else if (ua.includes("iPhone")) window.sysData.device = "IOS DEVICE";
+    else if (ua.includes("Windows")) window.sysData.device = "WINDOWS NT WORKSTATION";
+    else if (ua.includes("Mac")) window.sysData.device = "MACINTOSH SYSTEM";
+    else if (ua.includes("Linux")) window.sysData.device = "LINUX TERMINAL";
 
     // 1. Battery Check
     if ('getBattery' in navigator) {
         try {
             const battery = await navigator.getBattery();
-            const updateBat = () => {
-                const level = Math.round(battery.level * 100);
-                const status = battery.charging ? "CHARGING" : "BATTERY";
-                if (batVal) {
-                    batVal.innerText = `${level}% [${status}]`;
-                    if(batBar) batBar.style.width = `${level}%`;
-                    
-                    sysSound.currentTime = 0;
-                    sysSound.play().catch(() => {});
-                }
-            };
-            updateBat();
-        } catch (e) { if(batVal) batVal.innerText = "AC POWER / DESKTOP"; if(batBar) batBar.style.width = "100%"; }
-    } else {
-        if(batVal) batVal.innerText = "AC POWER / DESKTOP";
-        if(batBar) batBar.style.width = "100%";
-    }
+            const level = Math.round(battery.level * 100);
+            const status = battery.charging ? "CHARGING" : "DRAINING";
+            window.sysData.battery = `${level}% [${status}]`;
+        } catch (e) { /* Ignore */ }
+    } 
 
     // 2. Network Info
     if (navigator.connection) {
         const conn = navigator.connection;
         const type = conn.effectiveType ? conn.effectiveType.toUpperCase() : 'WIRED';
         const speed = conn.downlink ? conn.downlink + ' Mbps' : 'UNKNOWN';
-        
-        if (netVal) {
-            netVal.innerText = `${type} // ${speed}`;
-            if(netBar) netBar.style.width = "100%"; // Asumsi koneksi stabil
-            sysSound.currentTime = 0;
-            sysSound.play().catch(() => {});
-        }
+        window.sysData.connection = `${type} // ${speed}`;
     }
 
     // 3. ISP Check (Async)
     try {
         const res = await fetch('https://ipapi.co/json/');
         const data = await res.json();
+        if (data.org) window.sysData.isp = data.org.toUpperCase().substring(0, 25);
+        if (data.city) window.sysData.loc = `${data.city.toUpperCase()}, ${data.country_code}`;
+    } catch (e) { /* Ignore */ }
+}
 
-        // Tambahkan sound effect setiap data ISP selesai di-load
-        if (ispVal && data.org) ispVal.innerText = data.org.toUpperCase().substring(0, 20);
-        if (locVal && data.city) locVal.innerText = `${data.city.toUpperCase()}, ${data.country_code}`;
+// --- NEW: INTRO STORY SEQUENCE ---
+async function runIntroStory() {
+    const overlay = document.getElementById('intro-story-overlay');
+    const textEl = document.getElementById('intro-story-text');
+    
+    if(!overlay || !textEl) return;
+    
+    overlay.classList.remove('hidden');
+    
+    // Helper: Delay
+    const wait = (ms) => new Promise(r => setTimeout(r, ms));
+
+    // Naskah Cerita
+    const storyLines = [
+        { text: "CELESTIQ", size: "text-6xl md:text-9xl", color: "text-primary" },
+        { text: "THE CELESTIAL QUANTUM", size: "text-3xl md:text-6xl", color: "text-white" },
+        { text: "CREATED BY GUSTHI PANGESTU", size: "text-2xl md:text-5xl", color: "text-gray-400" },
+        { text: "PORTFOLIO INTERFACE", size: "text-4xl md:text-7xl", color: "text-white" }
+    ];
+
+    for (const line of storyLines) {
+        // Set styles & Reset content
+        textEl.className = `font-black tracking-tighter text-center transition-opacity duration-300 ${line.size} ${line.color}`;
+        textEl.innerHTML = "";
+        textEl.style.opacity = "1";
         
-        sysSound.currentTime = 0;
-        sysSound.play().catch(() => {});
-    } catch (e) { 
-        if(ispVal) ispVal.innerText = "HIDDEN / VPN"; 
-        if(locVal) locVal.innerText = "UNKNOWN";
+        // Typing Effect
+        for (let i = 0; i < line.text.length; i++) {
+            textEl.innerHTML += line.text[i];
+            await wait(Math.random() * 30 + 40); // Kecepatan ketik variatif biar natural
+        }
+        
+        await wait(1200); // Waktu baca
+        
+        // Fade out
+        textEl.style.opacity = "0";
+        await wait(300);
     }
+    
+    overlay.classList.add('hidden');
+}
+
+// --- NEW: SYSTEM SEQUENCE STORYTELLER ---
+async function runSystemSequence() {
+    const consoleDiv = document.getElementById('sys-console');
+    const statusDot = document.getElementById('sys-status-dot');
+    const statusText = document.getElementById('sys-status-text');
+    const deviceId = document.getElementById('sys-device-id');
+    const timeDisplay = document.getElementById('sys-time');
+
+    // Update Time
+    const now = new Date();
+    if(timeDisplay) timeDisplay.innerText = now.toLocaleTimeString();
+
+    // Helper: Delay
+    const wait = (ms) => new Promise(r => setTimeout(r, ms));
+    
+    // Helper: Add Line
+    const addLine = (text, type = 'normal') => {
+        const div = document.createElement('div');
+        div.className = `sys-line ${type}`;
+        div.innerHTML = text;
+        consoleDiv.appendChild(div);
+        consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        
+        // Sound effect (optional, reusing global sound if available or silent)
+    };
+
+    // --- THE STORY SEQUENCE ---
+    
+    addLine("> INITIALIZING HANDSHAKE PROTOCOL...", "info");
+    await wait(600);
+
+    addLine(`> DETECTING CLIENT HARDWARE...`, "normal");
+    await wait(500);
+    
+    addLine(`> TARGET IDENTIFIED: <span class="text-white font-bold">${window.sysData.device}</span>`, "success");
+    if(deviceId) {
+        deviceId.innerText = window.sysData.device;
+        deviceId.classList.remove('opacity-50');
+    }
+    await wait(400);
+
+    addLine(`> CHECKING POWER SOURCE...`, "normal");
+    await wait(300);
+    const batClass = window.sysData.battery.includes("CHARGING") ? "success" : "warning";
+    addLine(`> BATTERY STATUS: ${window.sysData.battery}`, batClass);
+    await wait(400);
+
+    addLine(`> VERIFYING NETWORK INTEGRITY...`, "normal");
+    await wait(500);
+    addLine(`> UPLINK: ${window.sysData.connection}`, "info");
+    await wait(400);
+
+    addLine(`> TRIANGULATING SIGNAL ORIGIN...`, "normal");
+    await wait(600);
+    addLine(`> LOCATION: ${window.sysData.loc}`, "warning");
+    addLine(`> PROVIDER: ${window.sysData.isp}`, "normal");
+    await wait(500);
+
+    addLine("> ESTABLISHING SECURE TUNNEL...", "info");
+    await wait(800);
+
+    addLine("> BIOMETRIC SCAN: BYPASSED (GUEST MODE)", "warning");
+    await wait(400);
+
+    // Trigger Haptic Vibration (Mobile)
+    if ("vibrate" in navigator) navigator.vibrate([50, 50, 150]);
+
+    addLine("> ACCESS GRANTED. WELCOME.", "flash-success");
+    if(statusDot) {
+        statusDot.classList.remove('bg-red-500');
+        statusDot.classList.add('bg-green-500', 'animate-pulse');
+    }
+    if(statusText) {
+        statusText.innerText = "SECURE CONNECTION ESTABLISHED";
+        statusText.classList.add('text-green-400');
+    }
+    
+    await wait(2000); // Pause before entering site
 }
 
 /* =========================================
@@ -270,17 +374,54 @@ window.addEventListener('load', () => {
     initSystemCheck(); // Jalankan pengecekan sistem
 });
 
-if (loadingScreen && percentageText && progressBar) {
-    // Kecepatan loading diperlambat (50ms) agar sempat load aset
+// Fungsi untuk menjalankan animasi loading (bisa dipanggil ulang)
+function startLoadingAnimation() {
+    // Reset State UI
+    width = 0;
+    if(loadingScreen) {
+        loadingScreen.style.display = 'flex';
+        loadingScreen.classList.remove('loading-finished', 'bg-transparent');
+    }
+    document.body.style.overflow = 'hidden';
+    
+    // Reset Konten Loading
+    const loaderContent = document.getElementById('loader-content');
+    if(loaderContent) loaderContent.style.opacity = '1';
+
+    // Reset System Overlay
+    const sysOverlay = document.getElementById('sys-overlay');
+    if(sysOverlay) {
+        sysOverlay.classList.add('hidden');
+        sysOverlay.style.opacity = ''; 
+        sysOverlay.style.transition = '';
+    }
+
+    // Reset Intro Story Overlay
+    const storyOverlay = document.getElementById('intro-story-overlay');
+    if(storyOverlay) storyOverlay.classList.add('hidden');
+    
+    // Bersihkan Console System
+    const consoleDiv = document.getElementById('sys-console');
+    if(consoleDiv) consoleDiv.innerHTML = '';
+
+    // Reset Status Dot
+    const statusDot = document.getElementById('sys-status-dot');
+    if(statusDot) {
+        statusDot.classList.remove('bg-green-500', 'animate-pulse');
+        statusDot.classList.add('bg-red-500');
+    }
+    const statusTextEl = document.getElementById('sys-status-text');
+    if(statusTextEl) {
+        statusTextEl.innerText = "Disconnected";
+        statusTextEl.classList.remove('text-green-400');
+    }
+
+    if(progressBar) progressBar.style.width = '0%';
+    if(percentageText) percentageText.innerText = '0%';
+
+    // Mulai Interval Loading
     const interval = setInterval(() => {
-        
-        // Logika Smart Loading:
-        // Jika loading bar sudah 99% TAPI halaman belum selesai load (isPageLoaded = false),
-        // maka tahan di 99% ("Menunggu...").
-        // Jika halaman sudah load, baru gass ke 100%.
-        
         if (width >= 99 && !isPageLoaded) {
-            // Tahan di 99%
             if(statusText) statusText.innerText = "> WAITING FOR ASSETS...";
             return; 
         }
@@ -288,54 +429,66 @@ if (loadingScreen && percentageText && progressBar) {
         if (width >= 100) {
             clearInterval(interval);
             
-            // 1. Sembunyikan Loading Bar & Logo
-            const loaderContent = document.getElementById('loader-content');
             if(loaderContent) loaderContent.style.opacity = '0';
 
-            // 2. Tampilkan System Diagnostic Overlay
-            const sysOverlay = document.getElementById('sys-overlay');
-            if(sysOverlay) {
-                setTimeout(() => {
+            // Jalankan Cerita Dulu -> Baru Diagnosis Sistem
+            runIntroStory().then(() => {
+                if(sysOverlay) {
                     sysOverlay.classList.remove('hidden');
-                    // Play sound effect for HUD appearance if desired
-                }, 300);
-            }
-
-            // 3. Tunggu sebentar (baca stats), lalu masuk ke website
-            setTimeout(() => {
-                loadingScreen.classList.add('loading-finished');
-                loadingScreen.classList.add('bg-transparent'); 
-                
-                // Mulai AOS (Scroll Animation) hanya setelah loading selesai
-                // Ini mencegah animasi berjalan saat layar masih hitam
-                if (typeof AOS !== 'undefined') {
-                    AOS.init({
-                        once: true,
-                        offset: 50, // Offset lebih kecil di mobile biar cepat muncul
-                        duration: 800,
-                        easing: 'ease-out-cubic',
+                    runSystemSequence().then(() => {
+                        finishLoading();
                     });
                 }
-            }, 3500); // Delay 3.5 detik untuk menampilkan System Check
-
-            // Hapus elemen dari DOM
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }, 5000); 
-
+            });
         } else {
             width++;
-            progressBar.style.width = width + '%';
+            if(progressBar) progressBar.style.width = width + '%';
             if(percentageText) percentageText.innerText = width + '%';
 
-            // Update status text
             if (width % 15 === 0 && width < 90) {
                  const randIdx = Math.floor(Math.random() * (loadingStatuses.length - 1));
                  if(statusText) statusText.innerText = loadingStatuses[randIdx];
             }
         }
     }, 50); // Diperlambat dari 25ms ke 50ms
+}
+
+// Jalankan saat pertama kali load
+if (loadingScreen && percentageText && progressBar) {
+    startLoadingAnimation();
+}
+
+// Fungsi Replay Global
+window.replayIntro = function() {
+    window.scrollTo(0, 0);
+    startLoadingAnimation();
+}
+
+// Fungsi Finalisasi Loading (Dipanggil setelah sequence selesai)
+function finishLoading() {
+    loadingScreen.classList.add('loading-finished');
+    loadingScreen.classList.add('bg-transparent'); 
+
+    // Fade out system overlay if visible
+    const sysOverlay = document.getElementById('sys-overlay');
+    if(sysOverlay) {
+        sysOverlay.style.transition = 'opacity 0.8s ease';
+        sysOverlay.style.opacity = '0';
+    }
+    
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            once: true,
+            offset: 50,
+            duration: 800,
+            easing: 'ease-out-cubic',
+        });
+    }
+
+    setTimeout(() => {
+        loadingScreen.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }, 1000);
 }
 
 
