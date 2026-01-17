@@ -144,8 +144,8 @@ function initSwipers() {
         width: 200%;
         height: 75%;
         background-image: 
-            linear-gradient(rgba(135, 80, 247, 0.2) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(135, 80, 247, 0.2) 1px, transparent 1px);
+            linear-gradient(rgba(0, 194, 255, 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 194, 255, 0.2) 1px, transparent 1px);
         background-size: 50px 50px;
         transform: perspective(500px) rotateX(60deg);
         animation: gridScroll 3s linear infinite;
@@ -184,7 +184,11 @@ window.sysData = {
     connection: "WIRED / STABLE",
     device: "UNKNOWN TERMINAL",
     loc: "UNKNOWN LOCATION",
-    isp: "PRIVATE NETWORK"
+    isp: "PRIVATE NETWORK",
+    screen: "UNKNOWN RES",
+    cores: "UNKNOWN",
+    ram: "UNKNOWN",
+    platform: "UNKNOWN"
 };
 
 async function initSystemCheck() {
@@ -221,48 +225,12 @@ async function initSystemCheck() {
         if (data.org) window.sysData.isp = data.org.toUpperCase().substring(0, 25);
         if (data.city) window.sysData.loc = `${data.city.toUpperCase()}, ${data.country_code}`;
     } catch (e) { /* Ignore */ }
-}
 
-// --- NEW: INTRO STORY SEQUENCE ---
-async function runIntroStory() {
-    const overlay = document.getElementById('intro-story-overlay');
-    const textEl = document.getElementById('intro-story-text');
-    
-    if(!overlay || !textEl) return;
-    
-    overlay.classList.remove('hidden');
-    
-    // Helper: Delay
-    const wait = (ms) => new Promise(r => setTimeout(r, ms));
-
-    // Naskah Cerita
-    const storyLines = [
-        { text: "CELESTIQ", size: "text-6xl md:text-9xl", color: "text-primary" },
-        { text: "THE CELESTIAL QUANTUM", size: "text-3xl md:text-6xl", color: "text-white" },
-        { text: "CREATED BY GUSTHI PANGESTU", size: "text-2xl md:text-5xl", color: "text-gray-400" },
-        { text: "PORTFOLIO INTERFACE", size: "text-4xl md:text-7xl", color: "text-white" }
-    ];
-
-    for (const line of storyLines) {
-        // Set styles & Reset content
-        textEl.className = `font-black tracking-tighter text-center transition-opacity duration-300 ${line.size} ${line.color}`;
-        textEl.innerHTML = "";
-        textEl.style.opacity = "1";
-        
-        // Typing Effect
-        for (let i = 0; i < line.text.length; i++) {
-            textEl.innerHTML += line.text[i];
-            await wait(Math.random() * 30 + 40); // Kecepatan ketik variatif biar natural
-        }
-        
-        await wait(1200); // Waktu baca
-        
-        // Fade out
-        textEl.style.opacity = "0";
-        await wait(300);
-    }
-    
-    overlay.classList.add('hidden');
+    // 4. Hardware Info (Linux Style Data)
+    window.sysData.screen = `${window.screen.width}x${window.screen.height}`;
+    window.sysData.platform = navigator.platform ? navigator.platform.toUpperCase() : "UNKNOWN OS";
+    if (navigator.hardwareConcurrency) window.sysData.cores = `${navigator.hardwareConcurrency} CORES`;
+    if (navigator.deviceMemory) window.sysData.ram = `${navigator.deviceMemory} GB`;
 }
 
 // --- NEW: SYSTEM SEQUENCE STORYTELLER ---
@@ -280,6 +248,10 @@ async function runSystemSequence() {
     // Helper: Delay
     const wait = (ms) => new Promise(r => setTimeout(r, ms));
     
+    // Sound Effect for System Lines
+    const lineSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
+    lineSound.volume = 0.15;
+
     // Helper: Add Line
     const addLine = (text, type = 'normal') => {
         const div = document.createElement('div');
@@ -288,11 +260,35 @@ async function runSystemSequence() {
         consoleDiv.appendChild(div);
         consoleDiv.scrollTop = consoleDiv.scrollHeight;
         
-        // Sound effect (optional, reusing global sound if available or silent)
+        // Play sound per line
+        lineSound.currentTime = 0;
+        lineSound.play().catch(() => {});
+    };
+
+    // Helper: Play Beep (Motherboard POST Sound)
+    const playBeep = () => {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        
+        osc.type = 'square'; // Suara kotak khas speaker motherboard jadul
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime); // Volume kecil
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.start();
+        osc.stop(ctx.currentTime + 0.2); // Beep pendek (200ms)
     };
 
     // --- THE STORY SEQUENCE ---
     
+    playBeep(); // Bunyi Beep Motherboard
+    await wait(500);
+
     addLine("> INITIALIZING HANDSHAKE PROTOCOL...", "info");
     await wait(600);
 
@@ -396,10 +392,6 @@ function startLoadingAnimation() {
         sysOverlay.style.transition = '';
     }
 
-    // Reset Intro Story Overlay
-    const storyOverlay = document.getElementById('intro-story-overlay');
-    if(storyOverlay) storyOverlay.classList.add('hidden');
-    
     // Bersihkan Console System
     const consoleDiv = document.getElementById('sys-console');
     if(consoleDiv) consoleDiv.innerHTML = '';
@@ -431,15 +423,12 @@ function startLoadingAnimation() {
             
             if(loaderContent) loaderContent.style.opacity = '0';
 
-            // Jalankan Cerita Dulu -> Baru Diagnosis Sistem
-            runIntroStory().then(() => {
-                if(sysOverlay) {
-                    sysOverlay.classList.remove('hidden');
-                    runSystemSequence().then(() => {
-                        finishLoading();
-                    });
-                }
-            });
+            if(sysOverlay) {
+                sysOverlay.classList.remove('hidden');
+                runSystemSequence().then(() => {
+                    finishLoading();
+                });
+            }
         } else {
             width++;
             if(progressBar) progressBar.style.width = width + '%';
@@ -454,7 +443,7 @@ function startLoadingAnimation() {
 }
 
 // Jalankan saat pertama kali load
-if (loadingScreen && percentageText && progressBar) {
+if (loadingScreen) {
     startLoadingAnimation();
 }
 
@@ -476,6 +465,14 @@ function finishLoading() {
         sysOverlay.style.opacity = '0';
     }
     
+    // Restart Hero Typewriter agar user melihat dan mendengarnya setelah loading selesai
+    const heroDesc = document.querySelector('[data-i18n="hero_desc"]');
+    if(heroDesc && typeof translations !== 'undefined' && translations[currentLang]) {
+        setTimeout(() => {
+             typeWriterGlobal(heroDesc, translations[currentLang]['hero_desc']);
+        }, 500);
+    }
+    
     if (typeof AOS !== 'undefined') {
         AOS.init({
             once: true,
@@ -491,13 +488,13 @@ function finishLoading() {
     }, 1000);
 }
 
-
 /* =========================================
    3. MOBILE MENU & NAVIGATION
    ========================================= */
 const btn = document.getElementById('mobile-menu-btn');
 const menu = document.getElementById('mobile-menu');
 const overlay = document.getElementById('mobile-menu-overlay');
+const transitionOverlay = document.getElementById('page-transition-overlay');
 
 if (btn && menu && overlay) {
     btn.addEventListener('click', () => {
@@ -525,6 +522,9 @@ if (btn && menu && overlay) {
 
 document.querySelectorAll('#mobile-menu a').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+
         if (menu && overlay && btn) {
             menu.classList.add('hidden');
             overlay.classList.remove('show');
@@ -534,6 +534,28 @@ document.querySelectorAll('#mobile-menu a').forEach(anchor => {
                 icon.classList.add('bx-menu');
             }
         }
+
+        // Transition Effect
+        if (transitionOverlay) {
+            transitionOverlay.classList.remove('hidden');
+            void transitionOverlay.offsetWidth; // Trigger reflow
+            transitionOverlay.classList.remove('opacity-0');
+            
+            setTimeout(() => {
+                const target = document.querySelector(targetId);
+                if (target) target.scrollIntoView({ behavior: 'auto', block: 'start' });
+                
+                setTimeout(() => {
+                    transitionOverlay.classList.add('opacity-0');
+                    setTimeout(() => {
+                        transitionOverlay.classList.add('hidden');
+                    }, 500);
+                }, 800); // Logo visible duration
+            }, 500); // Fade in duration
+        } else {
+             const target = document.querySelector(targetId);
+             if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }
     });
 });
 
@@ -541,23 +563,43 @@ document.querySelectorAll('#mobile-menu a').forEach(anchor => {
    4. DYNAMIC NAVBAR SCROLL
    ========================================= */
 const header = document.querySelector('header');
+const langToggle = document.getElementById('floating-lang-toggle');
 // Gunakan requestAnimationFrame untuk performa scroll yang lebih ringan
 let lastScrollY = window.scrollY;
 let ticking = false;
 
 window.addEventListener('scroll', () => {
-    lastScrollY = window.scrollY;
+    const currentScrollY = window.scrollY;
+
     if (!ticking) {
         window.requestAnimationFrame(() => {
-            if (lastScrollY > 50) {
-                header.classList.add('shadow-lg');
-                header.style.background = 'rgba(9, 9, 16, 0.95)';
-                header.style.padding = '10px 0';
+            // Navbar Logic (Existing)
+            if (currentScrollY > 50) {
+                if (header) {
+                    header.classList.add('shadow-lg');
+                    header.style.background = 'rgba(9, 9, 16, 0.95)';
+                    header.style.padding = '10px 0';
+                }
             } else {
-                header.classList.remove('shadow-lg');
-                header.style.background = 'rgba(9, 9, 16, 0.8)';
-                header.style.padding = '16px 0'; 
+                if (header) {
+                    header.classList.remove('shadow-lg');
+                    header.style.background = 'rgba(9, 9, 16, 0.8)';
+                    header.style.padding = '16px 0';
+                }
             }
+
+            // Floating Language Toggle Logic (Hide on Scroll Down)
+            if (langToggle) {
+                if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                    // Scroll Down & not at top -> Hide
+                    langToggle.style.transform = 'translateY(-100px)';
+                } else {
+                    // Scroll Up -> Show
+                    langToggle.style.transform = 'translateY(0)';
+                }
+            }
+
+            lastScrollY = currentScrollY;
             ticking = false;
         });
         ticking = true;
@@ -634,7 +676,7 @@ if (window.innerWidth > 768 && !document.querySelector('.mouse-glow')) {
     glow.style.position = 'fixed';
     glow.style.width = '300px';
     glow.style.height = '300px';
-    glow.style.background = 'radial-gradient(circle, rgba(135, 80, 247, 0.15) 0%, rgba(135, 80, 247, 0) 70%)';
+    glow.style.background = 'radial-gradient(circle, rgba(0, 194, 255, 0.15) 0%, rgba(0, 194, 255, 0) 70%)';
     glow.style.borderRadius = '50%';
     glow.style.pointerEvents = 'none'; 
     glow.style.zIndex = '9999';
@@ -745,7 +787,7 @@ if (gl && window.innerWidth > 1024) { // Hanya aktif di layar besar (>1024px)
             if (life > 0) {
                 positions.push(p.x, p.y);
                 sizes.push(30.0 * life); 
-                colors.push(0.5, 0.2, 1.0, life); 
+                colors.push(0.0, 0.76, 1.0, life); 
             }
         });
 
@@ -921,7 +963,7 @@ const translations = {
         port_staff_desc: "Menjalani masa bakti sebagai Staf Muda di Departemen Media dan Informasi (MEDFO) LMB PENS periode 2024-2025. Berkolaborasi secara aktif dengan Staf Ahli dalam pengelolaan media sosial organisasi, pembuatan konten kreatif, dan diseminasi informasi kegiatan kemahasiswaan yang strategis.",
 
         // Contact Section
-        contact_title: "Mari Bekerja <br> <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400\">Sama.</span>",
+        contact_title: "Mari Bekerja <br> <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-300\">Sama.</span>",
         contact_desc: "Menciptakan cerita visual dan pengalaman digital. Terbuka untuk proyek freelance dan kolaborasi.",
         contact_subtitle: "Diskusikan kebutuhan Operator LCD atau Desain Grafis untuk sukseskan acara Anda.",
         contact_email_label: "Email Me",
@@ -1043,7 +1085,7 @@ const translations = {
         port_staff_desc: "Served as Junior Staff in the Media and Information (MEDFO) Department of LMB PENS for the 2024-2025 period. Actively collaborated with Expert Staff in managing organizational social media, creating creative content, and strategically disseminating student activity information.",
 
         // Contact Section
-        contact_title: "Let's Work <br> <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400\">Sama.</span>",
+        contact_title: "Let's Work <br> <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-300\">Sama.</span>",
         contact_desc: "Creating visual stories and digital experiences. Open for freelance projects and collaborations.",
         contact_subtitle: "Discuss your LCD Operator or Graphic Design needs to make your event a success.",
         contact_email_label: "Email Me",
@@ -1073,7 +1115,12 @@ function typeWriterGlobal(element, text, speed = 40) {
     function type() {
         if (i < text.length) {
             element.textContent += text.charAt(i);
-            if (Math.random() > 0.5) {
+            
+            // Cek apakah loading screen masih aktif (mencegah suara bocor saat loading)
+            const loadingScreen = document.getElementById('loading-screen');
+            const isLoading = loadingScreen && loadingScreen.style.display !== 'none' && !loadingScreen.classList.contains('loading-finished');
+
+            if (!isLoading && Math.random() > 0.5) {
                 globalTypeSound.currentTime = 0;
                 globalTypeSound.play().catch(() => {});
             }
@@ -1127,6 +1174,27 @@ function updateLanguageUI() {
             
             labelId.classList.remove('text-gray-500');
             labelId.classList.add('text-white');
+        }
+    }
+
+    // --- LOGIKA ANIMASI PRESISI (MOBILE) ---
+    const sliderMob = document.getElementById('lang-slider-mobile');
+    const labelIdMob = document.getElementById('label-id-mobile');
+    const labelEnMob = document.getElementById('label-en-mobile');
+
+    if (sliderMob && labelIdMob && labelEnMob) {
+        if (currentLang === 'en') {
+            sliderMob.style.transform = 'translateX(100%)'; 
+            labelIdMob.classList.remove('text-white');
+            labelIdMob.classList.add('text-gray-500');
+            labelEnMob.classList.remove('text-gray-500');
+            labelEnMob.classList.add('text-white');
+        } else {
+            sliderMob.style.transform = 'translateX(0)';
+            labelEnMob.classList.remove('text-white');
+            labelEnMob.classList.add('text-gray-500');
+            labelIdMob.classList.remove('text-gray-500');
+            labelIdMob.classList.add('text-white');
         }
     }
 
@@ -1184,7 +1252,7 @@ let userName = localStorage.getItem('celestiq_username');
 
 const aiChatData = {
     id: {
-        greeting: "Halo! Saya Celestiq AI, asisten virtual Gusthi. Saya bisa ceritakan profil Gusthi secara singkat. Mau mulai dari mana?",
+        greeting: "Halo! Saya Noctua AI, asisten virtual Gusthi. Saya bisa ceritakan profil Gusthi secara singkat. Mau mulai dari mana?",
         options: [
             { text: "Siapa Gusthi sebenarnya?", next: "who_is" },
             { text: "Apa keahlian utamanya?", next: "skills" },
@@ -1230,7 +1298,7 @@ const aiChatData = {
         }
     },
     en: {
-        greeting: "Hello! I'm Celestiq AI, Gusthi's virtual assistant. I can tell you a bit about him. Where should we start?",
+        greeting: "Hello! I'm Noctua AI, Gusthi's virtual assistant. I can tell you a bit about him. Where should we start?",
         options: [
             { text: "Who is Gusthi?", next: "who_is" },
             { text: "What are his skills?", next: "skills" },
@@ -1293,7 +1361,7 @@ function openAI() {
         if(userInput) setTimeout(() => userInput.focus(), 100);
         
         if (chatBody.children.length === 0 || chatBody.innerHTML.trim() === "") {
-            addMessage('Halo! Saya Celestiq AI. Boleh tau nama kamu siapa?', 'ai');
+            addMessage('Halo! Saya Noctua AI. Boleh tau nama kamu siapa?', 'ai');
         }
     } else {
         // Jika sudah kenalan: Sembunyikan Input, Tampilkan Opsi
@@ -1414,7 +1482,7 @@ function startConversation() {
     chatBody.innerHTML = '';
     // Logic reset conversation
     if (!userName) {
-        addMessage('Halo! Saya Celestiq AI. Boleh tau nama kamu siapa?', 'ai');
+        addMessage('Halo! Saya Noctua AI. Boleh tau nama kamu siapa?', 'ai');
         if(optionsContainer) optionsContainer.style.display = 'none';
         if(inputForm) inputForm.style.display = 'flex';
     } else {
