@@ -231,6 +231,18 @@ async function initSystemCheck() {
     window.sysData.platform = navigator.platform ? navigator.platform.toUpperCase() : "UNKNOWN OS";
     if (navigator.hardwareConcurrency) window.sysData.cores = `${navigator.hardwareConcurrency} CORES`;
     if (navigator.deviceMemory) window.sysData.ram = `${navigator.deviceMemory} GB`;
+
+    // 5. GPU Detection (Advanced WebGL)
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (gl) {
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            window.sysData.gpu = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "STANDARD GRAPHICS";
+        } else {
+            window.sysData.gpu = "SOFTWARE RENDERER";
+        }
+    } catch (e) { window.sysData.gpu = "UNKNOWN GPU"; }
 }
 
 // --- SYSTEM SEQUENCE (DEFAULT) ---
@@ -240,6 +252,7 @@ async function runSystemSequence() {
     const statusText = document.getElementById('sys-status-text');
     const deviceId = document.getElementById('sys-device-id');
     const timeDisplay = document.getElementById('sys-time');
+    const sysBox = document.getElementById('sys-box');
 
     // Update Time
     const now = new Date();
@@ -252,66 +265,123 @@ async function runSystemSequence() {
     const lineSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
     lineSound.volume = 0.15;
 
-    // Helper: Add Line
-    const addLine = (text, type = 'normal') => {
+    // Helper: Add Header Group
+    const addHeader = (text) => {
         const div = document.createElement('div');
-        div.className = `sys-line ${type}`;
-        div.innerHTML = text;
+        div.className = "mt-4 mb-2 text-[10px] font-bold text-gray-500 tracking-[0.2em] border-b border-white/10 pb-1 flex items-center gap-2";
+        div.innerHTML = `<i class='bx bx-hash text-primary'></i> ${text}`;
         consoleDiv.appendChild(div);
         consoleDiv.scrollTop = consoleDiv.scrollHeight;
-        
-        // Play sound per line
-        lineSound.currentTime = 0;
-        lineSound.play().catch(() => {});
     };
 
-    // --- THE STORY SEQUENCE ---
+    // Helper: Add Data Row
+    const addData = async (label, value, color = "text-white") => {
+        const div = document.createElement('div');
+        div.className = "flex justify-between items-center font-mono text-xs opacity-0 transform translate-x-[-10px] transition-all duration-300 mb-1 pl-2 border-l border-white/5";
+        div.innerHTML = `<span class="text-gray-400">${label}</span> <span class="${color} font-bold text-right truncate max-w-[180px]">${value}</span>`;
+        consoleDiv.appendChild(div);
+        
+        // Trigger animation
+        requestAnimationFrame(() => div.classList.remove('opacity-0', 'translate-x-[-10px]'));
+        consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        
+        lineSound.currentTime = 0;
+        lineSound.play().catch(() => {});
+        await wait(100);
+    };
+
+    // --- THE SEQUENCE ---
+    if(sysBox) sysBox.classList.remove('scale-95'); // Zoom in effect
     
-    addLine("> INITIALIZING HANDSHAKE PROTOCOL...", "info");
+    const initDiv = document.createElement('div');
+    initDiv.className = "text-xs font-mono text-primary animate-pulse mb-2";
+    initDiv.innerText = "> ESTABLISHING SECURE HANDSHAKE...";
+    consoleDiv.appendChild(initDiv);
+    await wait(600);
+
+    // 1. HARDWARE
+    addHeader("HARDWARE_INTEGRITY");
+    await addData("DEVICE", window.sysData.device);
+    await addData("PLATFORM", window.sysData.platform);
+    if(window.sysData.cores) await addData("CPU THREADS", window.sysData.cores, "text-cyan-400");
+    if(window.sysData.gpu) {
+        // Clean GPU string for better display
+        let gpuName = window.sysData.gpu;
+        gpuName = gpuName.replace(/ANGLE \((.*)\)/, '$1'); // Remove ANGLE wrapper
+        gpuName = gpuName.replace(/Direct3D.*vs_.*\)/, ''); // Remove D3D version
+        gpuName = gpuName.split(',')[0]; // Take first part
+        await addData("GPU UNIT", gpuName, "text-cyan-400");
+    }
+    
+    // 2. POWER
+    addHeader("POWER_MANAGEMENT");
+    const batColor = window.sysData.battery.includes("CHARGING") ? "text-green-400" : "text-yellow-400";
+    await addData("BATTERY STATUS", window.sysData.battery, batColor);
+
+    // 3. NETWORK
+    addHeader("NETWORK_UPLINK");
+    await addData("CONNECTION TYPE", window.sysData.connection);
+    await addData("LATENCY", Math.floor(Math.random() * 30 + 10) + "ms", "text-green-400");
+    
+    // 4. LOCATION
+    addHeader("GEOLOCATION_DATA");
+    await addData("REGION", window.sysData.loc, "text-purple-400");
+    await addData("ISP NODE", window.sysData.isp);
+
     await wait(400);
 
-    addLine(`> DETECTING CLIENT HARDWARE...`, "normal");
-    await wait(300);
-    
-    addLine(`> TARGET IDENTIFIED: <span class="text-white font-bold">${window.sysData.device}</span>`, "success");
+    // Final Success
+    const successDiv = document.createElement('div');
+    successDiv.className = "mt-6 p-3 bg-green-500/10 border border-green-500/30 rounded text-center text-green-400 font-bold text-xs tracking-widest animate-pulse shadow-[0_0_20px_rgba(34,197,94,0.2)]";
+    successDiv.innerHTML = "<i class='bx bx-check-circle'></i> ACCESS GRANTED";
+    consoleDiv.appendChild(successDiv);
+    consoleDiv.scrollTop = consoleDiv.scrollHeight;
+
     if(deviceId) {
         deviceId.innerText = window.sysData.device;
         deviceId.classList.remove('opacity-50');
     }
-    await wait(300);
-
-    addLine(`> CHECKING POWER SOURCE...`, "normal");
-    await wait(200);
-    const batClass = window.sysData.battery.includes("CHARGING") ? "success" : "warning";
-    addLine(`> BATTERY STATUS: ${window.sysData.battery}`, batClass);
-    await wait(300);
-
-    addLine(`> VERIFYING NETWORK INTEGRITY...`, "normal");
-    await wait(400);
-    addLine(`> UPLINK: ${window.sysData.connection}`, "info");
-    await wait(300);
-
-    addLine(`> TRIANGULATING SIGNAL ORIGIN...`, "normal");
-    await wait(500);
-    addLine(`> LOCATION: ${window.sysData.loc}`, "warning");
-    addLine(`> PROVIDER: ${window.sysData.isp}`, "normal");
-    await wait(400);
-
-    addLine("> ESTABLISHING SECURE TUNNEL...", "info");
-    await wait(600);
-
-    addLine("> ACCESS GRANTED.", "flash-success");
 
     if(statusDot) {
         statusDot.classList.remove('bg-red-500');
         statusDot.classList.add('bg-green-500', 'animate-pulse');
     }
     if(statusText) {
-        statusText.innerText = "SECURE CONNECTION ESTABLISHED";
+        statusText.innerText = "SYSTEM ONLINE";
         statusText.classList.add('text-green-400');
     }
     
-    await wait(1500); // Pause before entering site
+    // --- NEW: MANUAL ENTRY CONCEPT ---
+    const actionContainer = document.getElementById('sys-action-container');
+    const enterBtn = document.getElementById('sys-enter-btn');
+    
+    if(actionContainer) {
+        actionContainer.classList.remove('hidden');
+        // Scroll agar tombol terlihat
+        consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    }
+
+    return new Promise((resolve) => {
+        if(!enterBtn) {
+            setTimeout(resolve, 1000); // Fallback jika tombol tidak ada
+            return;
+        }
+
+        // Add pulse animation to draw attention
+        enterBtn.classList.add('uplink-pulse');
+
+        enterBtn.onclick = () => {
+            enterBtn.classList.remove('uplink-pulse');
+            enterBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> ESTABLISHING CONNECTION...";
+            enterBtn.classList.add('cursor-wait', 'opacity-80');
+            // Efek suara klik (opsional)
+            new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3').play().catch(()=>{});
+            
+            setTimeout(() => {
+                resolve();
+            }, 800);
+        };
+    });
 }
 
 /* =========================================
@@ -321,151 +391,6 @@ const loadingScreen = document.getElementById('loading-screen');
 const percentageText = document.getElementById('loading-percentage');
 const statusText = document.getElementById('loader-status');
 const progressBar = document.getElementById('progress-bar');
-
-// --- NEW: BOOT SEQUENCE (STAGE 1) ---
-async function runBootSequence() {
-    const bootScreen = document.getElementById('boot-screen');
-    const bootText = document.getElementById('boot-text');
-    if (!bootScreen || !bootText) return;
-
-    // Reset & Show
-    bootText.innerHTML = '<span class="boot-cursor">_</span>';
-    bootScreen.classList.remove('hidden');
-    
-    const lines = [
-        "> ESTABLISHING SECURE CONNECTION...",
-        "> ENCRYPTION: ON",
-        "> TARGET SYSTEM: GUSTHI_PORTFOLIO_V2"
-    ];
-
-    // Initial Delay
-    await new Promise(r => setTimeout(r, 300));
-    bootText.innerHTML = ''; // Clear initial cursor
-
-    for (let line of lines) {
-        const p = document.createElement('div');
-        p.className = "mb-2";
-        p.innerHTML = `<span></span><span class="boot-cursor ml-1">_</span>`;
-        bootText.appendChild(p);
-        
-        const textSpan = p.querySelector('span');
-        const cursorSpan = p.querySelector('.boot-cursor');
-        
-        // Hide previous cursors
-        const allCursors = bootText.querySelectorAll('.boot-cursor');
-        allCursors.forEach(c => { if(c !== cursorSpan) c.style.display = 'none'; });
-
-        // Fast Typing
-        for (let i = 0; i < line.length; i++) {
-            textSpan.textContent = line.substring(0, i + 1);
-            await new Promise(r => setTimeout(r, 15)); // 15ms per char
-        }
-        await new Promise(r => setTimeout(r, 100));
-    }
-
-    await new Promise(r => setTimeout(r, 400));
-
-    // Glitch Transition
-    document.body.classList.add('glitch-effect');
-    await new Promise(r => setTimeout(r, 200));
-    document.body.classList.remove('glitch-effect');
-    
-    // Hide Boot Screen
-    bootScreen.classList.add('hidden');
-}
-
-// --- NEW: GATEKEEPER SEQUENCE (STAGE 2) ---
-async function runGatekeeperSequence() {
-    const gatekeeper = document.getElementById('gatekeeper-screen');
-    const gatekeeperBox = document.getElementById('gatekeeper-box');
-    const nameInput = document.getElementById('gk-name');
-    const emailInput = document.getElementById('gk-email');
-    const submitBtn = document.getElementById('gk-submit');
-    const skipBtn = document.getElementById('gk-skip');
-    const statusEl = document.getElementById('gk-status');
-
-    if (!gatekeeper) return;
-
-    // Pre-fill if exists
-    const savedName = localStorage.getItem('celestiq_username');
-    if(savedName && nameInput) nameInput.value = savedName;
-
-    // Show Gatekeeper
-    gatekeeper.classList.remove('hidden');
-    // Trigger reflow
-    void gatekeeper.offsetWidth;
-    gatekeeper.classList.remove('opacity-0');
-    if(gatekeeperBox) gatekeeperBox.classList.remove('scale-95');
-    
-    // Focus name input
-    if(nameInput) setTimeout(() => nameInput.focus(), 100);
-
-    return new Promise((resolve) => {
-        const finish = (name, email) => {
-            // Save to localStorage
-            if (name && name !== "GUEST_USER") {
-                localStorage.setItem('celestiq_username', name);
-                if(typeof userName !== 'undefined') userName = name; // Update global var
-            }
-            // Transition out
-            gatekeeper.classList.add('opacity-0');
-            if(gatekeeperBox) {
-                gatekeeperBox.classList.remove('scale-100');
-                gatekeeperBox.classList.add('scale-75'); // Zoom out effect
-            }
-            
-            setTimeout(() => {
-                gatekeeper.classList.add('hidden');
-                resolve();
-            }, 500);
-        };
-
-        const handleSubmit = async () => {
-            const name = nameInput.value.trim();
-            const email = emailInput.value.trim();
-            if (!name) {
-                nameInput.classList.add('border-red-500', 'animate-pulse');
-                setTimeout(() => nameInput.classList.remove('border-red-500', 'animate-pulse'), 500);
-                return;
-            }
-
-            // STAGE 3: THE HANDSHAKE (SCENARIO A)
-            // 1. Lock UI
-            nameInput.disabled = true;
-            if(emailInput) emailInput.disabled = true;
-            submitBtn.disabled = true;
-            skipBtn.style.display = 'none';
-
-            // 2. Visual Loader
-            submitBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin text-xl"></i>';
-            submitBtn.classList.add('opacity-75', 'cursor-wait');
-
-            // 3. Status Sequence
-            const steps = [
-                "> HASHING IDENTITY...",
-                "> STORING TO SESSION STORAGE...",
-                `> WELCOME, AGENT ${name.toUpperCase()}.`
-            ];
-
-            if(statusEl) {
-                for (const step of steps) {
-                    statusEl.innerText = step;
-                    await new Promise(r => setTimeout(r, 800));
-                }
-                await new Promise(r => setTimeout(r, 500));
-            }
-
-            finish(name, email);
-        };
-
-        submitBtn.onclick = handleSubmit;
-        skipBtn.onclick = () => finish("GUEST_USER", null); // SCENARIO B
-        
-        const handleEnter = (e) => { if (e.key === 'Enter') handleSubmit(); };
-        nameInput.onkeypress = handleEnter;
-        emailInput.onkeypress = handleEnter;
-    });
-}
 
 const loadingStatuses = [
     "> INITIALIZING KERNEL...",
@@ -499,17 +424,7 @@ async function startLoadingAnimation() {
     document.body.style.overflow = 'hidden';
     
     // Reset Konten Loading
-    // Hide Loader Content initially for Boot Sequence
     const loaderContent = document.getElementById('loader-content');
-    if(loaderContent) loaderContent.style.opacity = '0';
-
-    // Run Boot Sequence
-    await runBootSequence();
-
-    // Run Gatekeeper Sequence (Stage 2)
-    await runGatekeeperSequence();
-
-    // Show Loader Content (Stage 2 / Progress Bar)
     if(loaderContent) loaderContent.style.opacity = '1';
 
     // Reset System Overlay
@@ -518,6 +433,15 @@ async function startLoadingAnimation() {
         sysOverlay.classList.add('hidden');
         sysOverlay.style.opacity = ''; 
         sysOverlay.style.transition = '';
+    }
+    
+    // Reset Tombol Masuk
+    const sysAction = document.getElementById('sys-action-container');
+    if(sysAction) sysAction.classList.add('hidden');
+    const sysBtn = document.getElementById('sys-enter-btn');
+    if(sysBtn) {
+        sysBtn.innerHTML = `<span class="relative z-10 flex items-center justify-center gap-2 tracking-widest"><i class='bx bx-power-off'></i> INITIALIZE UPLINK</span><div class="absolute inset-0 bg-primary/20 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>`;
+        sysBtn.classList.remove('cursor-wait', 'opacity-80', 'animate-pulse', 'uplink-pulse');
     }
 
     // Bersihkan Console System
