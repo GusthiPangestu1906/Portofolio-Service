@@ -233,7 +233,7 @@ async function initSystemCheck() {
     if (navigator.deviceMemory) window.sysData.ram = `${navigator.deviceMemory} GB`;
 }
 
-// --- NEW: SYSTEM SEQUENCE STORYTELLER ---
+// --- SYSTEM SEQUENCE (DEFAULT) ---
 async function runSystemSequence() {
     const consoleDiv = document.getElementById('sys-console');
     const statusDot = document.getElementById('sys-status-dot');
@@ -265,70 +265,43 @@ async function runSystemSequence() {
         lineSound.play().catch(() => {});
     };
 
-    // Helper: Play Beep (Motherboard POST Sound)
-    const playBeep = () => {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        const ctx = new AudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        
-        osc.type = 'square'; // Suara kotak khas speaker motherboard jadul
-        osc.frequency.setValueAtTime(800, ctx.currentTime);
-        gain.gain.setValueAtTime(0.1, ctx.currentTime); // Volume kecil
-        
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        
-        osc.start();
-        osc.stop(ctx.currentTime + 0.2); // Beep pendek (200ms)
-    };
-
     // --- THE STORY SEQUENCE ---
     
-    playBeep(); // Bunyi Beep Motherboard
-    await wait(500);
-
     addLine("> INITIALIZING HANDSHAKE PROTOCOL...", "info");
-    await wait(600);
+    await wait(400);
 
     addLine(`> DETECTING CLIENT HARDWARE...`, "normal");
-    await wait(500);
+    await wait(300);
     
     addLine(`> TARGET IDENTIFIED: <span class="text-white font-bold">${window.sysData.device}</span>`, "success");
     if(deviceId) {
         deviceId.innerText = window.sysData.device;
         deviceId.classList.remove('opacity-50');
     }
-    await wait(400);
+    await wait(300);
 
     addLine(`> CHECKING POWER SOURCE...`, "normal");
-    await wait(300);
+    await wait(200);
     const batClass = window.sysData.battery.includes("CHARGING") ? "success" : "warning";
     addLine(`> BATTERY STATUS: ${window.sysData.battery}`, batClass);
-    await wait(400);
+    await wait(300);
 
     addLine(`> VERIFYING NETWORK INTEGRITY...`, "normal");
-    await wait(500);
-    addLine(`> UPLINK: ${window.sysData.connection}`, "info");
     await wait(400);
+    addLine(`> UPLINK: ${window.sysData.connection}`, "info");
+    await wait(300);
 
     addLine(`> TRIANGULATING SIGNAL ORIGIN...`, "normal");
-    await wait(600);
+    await wait(500);
     addLine(`> LOCATION: ${window.sysData.loc}`, "warning");
     addLine(`> PROVIDER: ${window.sysData.isp}`, "normal");
-    await wait(500);
-
-    addLine("> ESTABLISHING SECURE TUNNEL...", "info");
-    await wait(800);
-
-    addLine("> BIOMETRIC SCAN: BYPASSED (GUEST MODE)", "warning");
     await wait(400);
 
-    // Trigger Haptic Vibration (Mobile)
-    if ("vibrate" in navigator) navigator.vibrate([50, 50, 150]);
+    addLine("> ESTABLISHING SECURE TUNNEL...", "info");
+    await wait(600);
 
-    addLine("> ACCESS GRANTED. WELCOME.", "flash-success");
+    addLine("> ACCESS GRANTED.", "flash-success");
+
     if(statusDot) {
         statusDot.classList.remove('bg-red-500');
         statusDot.classList.add('bg-green-500', 'animate-pulse');
@@ -338,7 +311,7 @@ async function runSystemSequence() {
         statusText.classList.add('text-green-400');
     }
     
-    await wait(2000); // Pause before entering site
+    await wait(1500); // Pause before entering site
 }
 
 /* =========================================
@@ -348,6 +321,151 @@ const loadingScreen = document.getElementById('loading-screen');
 const percentageText = document.getElementById('loading-percentage');
 const statusText = document.getElementById('loader-status');
 const progressBar = document.getElementById('progress-bar');
+
+// --- NEW: BOOT SEQUENCE (STAGE 1) ---
+async function runBootSequence() {
+    const bootScreen = document.getElementById('boot-screen');
+    const bootText = document.getElementById('boot-text');
+    if (!bootScreen || !bootText) return;
+
+    // Reset & Show
+    bootText.innerHTML = '<span class="boot-cursor">_</span>';
+    bootScreen.classList.remove('hidden');
+    
+    const lines = [
+        "> ESTABLISHING SECURE CONNECTION...",
+        "> ENCRYPTION: ON",
+        "> TARGET SYSTEM: GUSTHI_PORTFOLIO_V2"
+    ];
+
+    // Initial Delay
+    await new Promise(r => setTimeout(r, 300));
+    bootText.innerHTML = ''; // Clear initial cursor
+
+    for (let line of lines) {
+        const p = document.createElement('div');
+        p.className = "mb-2";
+        p.innerHTML = `<span></span><span class="boot-cursor ml-1">_</span>`;
+        bootText.appendChild(p);
+        
+        const textSpan = p.querySelector('span');
+        const cursorSpan = p.querySelector('.boot-cursor');
+        
+        // Hide previous cursors
+        const allCursors = bootText.querySelectorAll('.boot-cursor');
+        allCursors.forEach(c => { if(c !== cursorSpan) c.style.display = 'none'; });
+
+        // Fast Typing
+        for (let i = 0; i < line.length; i++) {
+            textSpan.textContent = line.substring(0, i + 1);
+            await new Promise(r => setTimeout(r, 15)); // 15ms per char
+        }
+        await new Promise(r => setTimeout(r, 100));
+    }
+
+    await new Promise(r => setTimeout(r, 400));
+
+    // Glitch Transition
+    document.body.classList.add('glitch-effect');
+    await new Promise(r => setTimeout(r, 200));
+    document.body.classList.remove('glitch-effect');
+    
+    // Hide Boot Screen
+    bootScreen.classList.add('hidden');
+}
+
+// --- NEW: GATEKEEPER SEQUENCE (STAGE 2) ---
+async function runGatekeeperSequence() {
+    const gatekeeper = document.getElementById('gatekeeper-screen');
+    const gatekeeperBox = document.getElementById('gatekeeper-box');
+    const nameInput = document.getElementById('gk-name');
+    const emailInput = document.getElementById('gk-email');
+    const submitBtn = document.getElementById('gk-submit');
+    const skipBtn = document.getElementById('gk-skip');
+    const statusEl = document.getElementById('gk-status');
+
+    if (!gatekeeper) return;
+
+    // Pre-fill if exists
+    const savedName = localStorage.getItem('celestiq_username');
+    if(savedName && nameInput) nameInput.value = savedName;
+
+    // Show Gatekeeper
+    gatekeeper.classList.remove('hidden');
+    // Trigger reflow
+    void gatekeeper.offsetWidth;
+    gatekeeper.classList.remove('opacity-0');
+    if(gatekeeperBox) gatekeeperBox.classList.remove('scale-95');
+    
+    // Focus name input
+    if(nameInput) setTimeout(() => nameInput.focus(), 100);
+
+    return new Promise((resolve) => {
+        const finish = (name, email) => {
+            // Save to localStorage
+            if (name && name !== "GUEST_USER") {
+                localStorage.setItem('celestiq_username', name);
+                if(typeof userName !== 'undefined') userName = name; // Update global var
+            }
+            // Transition out
+            gatekeeper.classList.add('opacity-0');
+            if(gatekeeperBox) {
+                gatekeeperBox.classList.remove('scale-100');
+                gatekeeperBox.classList.add('scale-75'); // Zoom out effect
+            }
+            
+            setTimeout(() => {
+                gatekeeper.classList.add('hidden');
+                resolve();
+            }, 500);
+        };
+
+        const handleSubmit = async () => {
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            if (!name) {
+                nameInput.classList.add('border-red-500', 'animate-pulse');
+                setTimeout(() => nameInput.classList.remove('border-red-500', 'animate-pulse'), 500);
+                return;
+            }
+
+            // STAGE 3: THE HANDSHAKE (SCENARIO A)
+            // 1. Lock UI
+            nameInput.disabled = true;
+            if(emailInput) emailInput.disabled = true;
+            submitBtn.disabled = true;
+            skipBtn.style.display = 'none';
+
+            // 2. Visual Loader
+            submitBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin text-xl"></i>';
+            submitBtn.classList.add('opacity-75', 'cursor-wait');
+
+            // 3. Status Sequence
+            const steps = [
+                "> HASHING IDENTITY...",
+                "> STORING TO SESSION STORAGE...",
+                `> WELCOME, AGENT ${name.toUpperCase()}.`
+            ];
+
+            if(statusEl) {
+                for (const step of steps) {
+                    statusEl.innerText = step;
+                    await new Promise(r => setTimeout(r, 800));
+                }
+                await new Promise(r => setTimeout(r, 500));
+            }
+
+            finish(name, email);
+        };
+
+        submitBtn.onclick = handleSubmit;
+        skipBtn.onclick = () => finish("GUEST_USER", null); // SCENARIO B
+        
+        const handleEnter = (e) => { if (e.key === 'Enter') handleSubmit(); };
+        nameInput.onkeypress = handleEnter;
+        emailInput.onkeypress = handleEnter;
+    });
+}
 
 const loadingStatuses = [
     "> INITIALIZING KERNEL...",
@@ -371,7 +489,7 @@ window.addEventListener('load', () => {
 });
 
 // Fungsi untuk menjalankan animasi loading (bisa dipanggil ulang)
-function startLoadingAnimation() {
+async function startLoadingAnimation() {
     // Reset State UI
     width = 0;
     if(loadingScreen) {
@@ -381,7 +499,17 @@ function startLoadingAnimation() {
     document.body.style.overflow = 'hidden';
     
     // Reset Konten Loading
+    // Hide Loader Content initially for Boot Sequence
     const loaderContent = document.getElementById('loader-content');
+    if(loaderContent) loaderContent.style.opacity = '0';
+
+    // Run Boot Sequence
+    await runBootSequence();
+
+    // Run Gatekeeper Sequence (Stage 2)
+    await runGatekeeperSequence();
+
+    // Show Loader Content (Stage 2 / Progress Bar)
     if(loaderContent) loaderContent.style.opacity = '1';
 
     // Reset System Overlay
@@ -457,6 +585,18 @@ window.replayIntro = function() {
 function finishLoading() {
     loadingScreen.classList.add('loading-finished');
     loadingScreen.classList.add('bg-transparent'); 
+
+    // REVEAL UI ELEMENTS (Fade In)
+    const uiElements = [
+        document.getElementById('main-header'),
+        document.getElementById('mobile-logo'),
+        document.getElementById('mobile-menu-btn'),
+        document.getElementById('floating-lang-toggle')
+    ];
+    
+    uiElements.forEach(el => {
+        if(el) el.classList.remove('opacity-0');
+    });
 
     // Fade out system overlay if visible
     const sysOverlay = document.getElementById('sys-overlay');
@@ -562,49 +702,94 @@ document.querySelectorAll('#mobile-menu a').forEach(anchor => {
 /* =========================================
    4. DYNAMIC NAVBAR SCROLL
    ========================================= */
-const header = document.querySelector('header');
+const header = document.getElementById('main-header');
 const langToggle = document.getElementById('floating-lang-toggle');
-// Gunakan requestAnimationFrame untuk performa scroll yang lebih ringan
+const navItems = document.querySelectorAll('.nav-item');
+const navIndicator = document.getElementById('nav-indicator');
+const sections = document.querySelectorAll('section');
 let lastScrollY = window.scrollY;
-let ticking = false;
 
+// Scroll Logic for Navbar Appearance
 window.addEventListener('scroll', () => {
     const currentScrollY = window.scrollY;
 
-    if (!ticking) {
-        window.requestAnimationFrame(() => {
-            // Navbar Logic (Existing)
-            if (currentScrollY > 50) {
-                if (header) {
-                    header.classList.add('shadow-lg');
-                    header.style.background = 'rgba(9, 9, 16, 0.95)';
-                    header.style.padding = '10px 0';
-                }
-            } else {
-                if (header) {
-                    header.classList.remove('shadow-lg');
-                    header.style.background = 'rgba(9, 9, 16, 0.8)';
-                    header.style.padding = '16px 0';
-                }
-            }
-
-            // Floating Language Toggle Logic (Hide on Scroll Down)
-            if (langToggle) {
-                if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                    // Scroll Down & not at top -> Hide
-                    langToggle.style.transform = 'translateY(-100px)';
-                } else {
-                    // Scroll Up -> Show
-                    langToggle.style.transform = 'translateY(0)';
-                }
-            }
-
-            lastScrollY = currentScrollY;
-            ticking = false;
-        });
-        ticking = true;
+    if (currentScrollY > 50) {
+        header.classList.add('nav-scrolled');
+    } else {
+        header.classList.remove('nav-scrolled');
     }
+
+    // Hide/Show Floating Lang Toggle
+    if (langToggle) {
+        let isNearSectionTop = false;
+        const showThreshold = 300; // Tombol terlihat di 300px pertama setiap section
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            // Cek apakah scroll berada di area atas section (Buffer -150px s/d +300px)
+            if (currentScrollY >= (sectionTop - 150) && currentScrollY <= (sectionTop + showThreshold)) {
+                isNearSectionTop = true;
+            }
+        });
+
+        // Selalu muncul di paling atas halaman
+        if (currentScrollY < 100) isNearSectionTop = true;
+
+        if (isNearSectionTop) {
+            // Animasi Bounce saat muncul (Cubic Bezier Overshoot)
+            langToggle.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease';
+            langToggle.style.transform = 'translateY(0)';
+            langToggle.style.opacity = '1';
+        } else {
+            // Animasi normal saat hilang
+            langToggle.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            langToggle.style.transform = 'translateY(-100px)';
+            langToggle.style.opacity = '0';
+        }
+    }
+    lastScrollY = currentScrollY;
 });
+
+// Active Link & Indicator Logic
+function updateActiveLink() {
+    let current = '';
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (scrollY >= (sectionTop - 250)) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    navItems.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href').includes(current)) {
+            link.classList.add('active');
+            moveIndicator(link);
+        }
+    });
+}
+
+function moveIndicator(element) {
+    if (!navIndicator) return;
+    
+    // Only show indicator if we are in desktop view (nav is visible)
+    const nav = document.getElementById('desktop-nav');
+    if (!nav || window.getComputedStyle(nav).display === 'none') return;
+
+    const width = element.offsetWidth;
+    const left = element.offsetLeft;
+    
+    navIndicator.style.width = `${width}px`;
+    navIndicator.style.left = `${left}px`;
+    navIndicator.style.opacity = '1';
+}
+
+window.addEventListener('scroll', updateActiveLink);
+window.addEventListener('resize', updateActiveLink);
+// Initial call
+setTimeout(updateActiveLink, 100);
 
 /* =========================================
    5. UTILS (Typewriter & Tilt)

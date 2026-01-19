@@ -293,16 +293,68 @@ body {
 .terminal-dot.green { background: #27c93f; }
 
 
-.glass-header {
-    background: rgba(9, 9, 16, 0.6);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
 .text-gradient {
     background: linear-gradient(to right, #00C2FF, #ffffff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+/* =========================================
+   NEW NAVBAR STYLES (FLOATING & ANIMATED)
+   ========================================= */
+
+/* Scrolled State (Floating Pill) */
+#main-header.nav-scrolled {
+    top: 20px;
+    width: 90%;
+    left: 5%;
+    border-radius: 50px;
+}
+
+#main-header.nav-scrolled #header-bg {
+    background-color: rgba(9, 9, 16, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Reset border bottom */
+}
+
+#main-header.nav-scrolled #header-border {
+    opacity: 1;
+    border-radius: 50px;
+}
+
+/* Nav Items */
+.nav-item {
+    position: relative;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #a0a0b0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    border-radius: 99px;
+    z-index: 2;
+}
+
+.nav-item:hover {
+    color: #ffffff;
+}
+
+.nav-item.active {
+    color: #00C2FF;
+    text-shadow: 0 0 10px rgba(0, 194, 255, 0.4);
+}
+
+/* Border Shimmer Animation */
+@keyframes shimmer-border {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.animate-shimmer-border {
+    animation: shimmer-border 4s linear infinite;
 }
 
 /* Typewriter Cursor */
@@ -310,6 +362,29 @@ body {
     content: '|';
     animation: blink 1s step-end infinite;
 }
+
+/* =========================================
+   BOOT SEQUENCE STYLES
+   ========================================= */
+.boot-cursor {
+    animation: blink 1s step-end infinite;
+    color: #00C2FF;
+    text-shadow: 0 0 10px rgba(0, 194, 255, 0.8);
+}
+
+/* Screen Glitch Effect for Transition */
+.glitch-effect {
+    animation: glitch-screen 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+@keyframes glitch-screen {
+    0% { transform: translate(0); filter: invert(0); }
+    20% { transform: translate(-5px, 5px); filter: invert(1); }
+    40% { transform: translate(-5px, -5px); filter: invert(0); }
+    60% { transform: translate(5px, 5px); filter: invert(1); }
+    80% { transform: translate(5px, -5px); filter: invert(0); }
+    100% { transform: translate(0); filter: invert(0); }
+}
+
 @keyframes blink { 50% { opacity: 0; } }
 
 /* Typewriter Cursor for Profile */
@@ -525,104 +600,6 @@ body {
     transition: box-shadow 300ms ease, transform 300ms ease;
 }
 
-/* Slightly boost icon brightness on active */
-.skillsSwiper .swiper-slide-active .group img {
-    filter: none !important;
-    transform: scale(1.08);
-    transition: transform 300ms ease, filter 300ms ease;
-}
-
-/* =========================================
-   NAVBAR & MENU STYLES
-   ========================================= */
-
-/* Enhanced glow animation - balanced */
-@keyframes balanced-glow {
-    0%, 100% {
-        box-shadow: 
-            0 0 20px rgba(0, 194, 255, 0.35),
-            0 0 35px rgba(0, 194, 255, 0.2),
-            inset 0 0 25px rgba(0, 194, 255, 0.08);
-    }
-    50% {
-        box-shadow: 
-            0 0 35px rgba(0, 194, 255, 0.45),
-            0 0 55px rgba(0, 194, 255, 0.3),
-            inset 0 0 35px rgba(0, 194, 255, 0.12);
-    }
-}
-
-.navbar-glow {
-    animation: balanced-glow 2.5s ease-in-out infinite !important;
-    border: 2px solid rgba(0, 194, 255, 0.4) !important;
-    position: relative;
-    overflow: hidden;
-    background: rgba(9, 9, 16, 0.8) !important;
-}
-
-/* Enhanced shimmer layer */
-.navbar-glow::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 200%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-        transparent 0%,
-        rgba(0, 194, 255, 0.15) 50%,
-        transparent 100%);
-    animation: balanced-shimmer 3s linear infinite;
-    pointer-events: none;
-    z-index: 1;
-}
-
-@keyframes balanced-shimmer {
-    0% { left: -100%; }
-    100% { left: 100%; }
-}
-
-.navbar-glow::after {
-    display: none;
-}
-
-/* Nav Links */
-.nav-link {
-    position: relative;
-    z-index: 2;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    transition: all 0.3s ease;
-}
-
-.nav-link::before {
-    display: none;
-}
-
-.nav-link::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: -6px;
-    left: 50%;
-    background: linear-gradient(to right, 
-        rgba(0, 194, 255, 0.9),
-        rgba(0, 194, 255, 0.5));
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
-    box-shadow: 0 0 10px rgba(0, 194, 255, 0.4);
-}
-
-.nav-link:hover::after {
-    width: 100%;
-    box-shadow: 0 0 15px rgba(0, 194, 255, 0.6);
-}
-
-.nav-link:hover {
-    color: #00C2FF !important;
-}
-
 /* Mobile Menu Popup Styling */
 #mobile-menu-overlay {
     position: fixed;
@@ -751,7 +728,6 @@ body {
     border-radius: 50% !important;
     background: linear-gradient(135deg, rgba(0, 194, 255, 0.25), rgba(0, 224, 255, 0.15)) !important;
     border: 1.5px solid rgba(0, 194, 255, 0.4) !important;
-    display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     cursor: pointer !important;
@@ -775,6 +751,7 @@ body {
     z-index: -1;
     pointer-events: none;
 }
+
 @keyframes menuBtnPulse {
     0% { transform: scale(1); opacity: 1; }
     100% { transform: scale(1.6); opacity: 0; }
