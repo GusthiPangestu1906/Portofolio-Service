@@ -411,6 +411,7 @@ window.addEventListener('load', () => {
     initEmailProtection(); // Inisialisasi email
     updateLanguageUI(); // Update UI & Typewriter saat load
     initSystemCheck(); // Jalankan pengecekan sistem
+    initHeroVisuals(); // Inisialisasi efek visual hero baru
 });
 
 // Fungsi untuk menjalankan animasi loading (bisa dipanggil ulang)
@@ -549,6 +550,18 @@ function finishLoading() {
     setTimeout(() => {
         loadingScreen.style.display = 'none';
         document.body.style.overflow = 'auto';
+
+        // --- Auto Open AI Chat after 10s ---
+        // Fitur: Otomatis buka chat jika user diam selama 10 detik
+        if (typeof aiAutoOpenTimer !== 'undefined') {
+            aiAutoOpenTimer = setTimeout(() => {
+                const modal = document.getElementById('ai-modal');
+                // Hanya buka jika belum terbuka
+                if (modal && modal.classList.contains('hidden')) {
+                    if (typeof showAiBadge === 'function') showAiBadge();
+                }
+            }, 10000);
+        }
     }, 1000);
 }
 
@@ -627,6 +640,7 @@ document.querySelectorAll('#mobile-menu a').forEach(anchor => {
    4. DYNAMIC NAVBAR SCROLL
    ========================================= */
 const header = document.getElementById('main-header');
+const scrollIndicator = document.getElementById('scroll-indicator');
 const langToggle = document.getElementById('floating-lang-toggle');
 const navItems = document.querySelectorAll('.nav-item');
 const navIndicator = document.getElementById('nav-indicator');
@@ -641,6 +655,15 @@ window.addEventListener('scroll', () => {
         header.classList.add('nav-scrolled');
     } else {
         header.classList.remove('nav-scrolled');
+    }
+
+    // Hide Scroll Indicator on Scroll
+    if (scrollIndicator) {
+        if (currentScrollY > 50) {
+            scrollIndicator.classList.add('opacity-0');
+        } else {
+            scrollIndicator.classList.remove('opacity-0');
+        }
     }
 
     // Hide/Show Floating Lang Toggle
@@ -693,6 +716,81 @@ function updateActiveLink() {
             moveIndicator(link);
         }
     });
+}
+
+/* =========================================
+   11. HERO VISUAL EFFECTS (NEW CONCEPT)
+   ========================================= */
+function initHeroVisuals() {
+    // 1. Text Scramble Effect (Efek Dekripsi Nama)
+    const title = document.querySelector('.hero-title-scramble');
+    if (title) {
+        const originalText = title.getAttribute('data-original-text') || title.innerText;
+        // Store original text if not stored
+        if(!title.getAttribute('data-original-text')) title.setAttribute('data-original-text', originalText);
+        
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>";
+        let iterations = 0;
+        
+        // Trigger on load
+        const runScramble = () => {
+            iterations = 0;
+            const interval = setInterval(() => {
+                title.innerText = originalText
+                    .split("")
+                    .map((letter, index) => {
+                        if(index < iterations) return originalText[index];
+                        return chars[Math.floor(Math.random() * chars.length)];
+                    })
+                    .join("");
+                
+                if(iterations >= originalText.length) clearInterval(interval);
+                iterations += 1 / 2; // Speed
+            }, 30);
+        };
+        
+        // Jalankan saat halaman siap
+        setTimeout(runScramble, 1000); // Delay sedikit agar tidak tabrakan dengan loading
+        
+        // Re-trigger on hover
+        title.addEventListener('mouseenter', runScramble);
+    }
+
+    // 2. Mouse Parallax for Aurora (Efek Gerak Background)
+    const aurora = document.querySelector('.hero-aurora-layer');
+    if (aurora) {
+        document.addEventListener('mousemove', (e) => {
+            // Kalkulasi posisi mouse relatif terhadap tengah layar
+            const x = (e.clientX / window.innerWidth - 0.5) * 20; // Range gerak -10px s/d 10px
+            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+            
+            // Terapkan transform dengan smooth transition (via CSS default)
+            aurora.style.transform = `translateX(calc(-50% + ${x}px)) translateY(${y}px) scale(1.1)`;
+        });
+    }
+
+    // 3. Image Parallax (Efek 3D pada Foto)
+    const heroImg = document.querySelector('.hero-profile-img');
+    if (heroImg) {
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 15; // Gerakan horizontal
+            const y = (e.clientY / window.innerHeight - 0.5) * 15; // Gerakan vertikal
+            
+            // Gambar bergerak berlawanan arah mouse untuk efek kedalaman
+            heroImg.style.transform = `translateX(${-x}px) translateY(${-y}px)`;
+        });
+    }
+
+    // 4. Giant Text Parallax (Efek Gerak Teks Belakang)
+    const bgText = document.querySelector('.hero-bg-text');
+    if (bgText) {
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 40; // Gerak lebih lebar
+            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+            
+            bgText.style.transform = `translateX(${x}px) translateY(${y}px)`;
+        });
+    }
 }
 
 function moveIndicator(element) {
@@ -974,16 +1072,13 @@ const translations = {
         // Hero Section
         widget_projects_label: "Projects Completed",
         widget_projects_val: "15+ Events Succesfull",
-        widget_role_label: "Current Role",
-        widget_role_val: "LCD Operator",
-        widget_exp_label: "Experience",
-        widget_exp_val: "2+ Years Active",
-        widget_skill_label: "Skill Proficiency",
         hero_badge: "Open for Collaboration",
-        hero_greeting: "Hi, I'm",
-        hero_desc: "Operator LCD Kreatif & Desainer Grafis yang menciptakan pengalaman visual modern untuk acara dan aset branding digital yang kuat.",
-        btn_start: "Mulai Proyek",
-        btn_cv: "Unduh CV",
+        hero_greeting: "Halo, Saya",
+        // UPDATE TEKS KREATIF (INDONESIA)
+        hero_title_highlight: "Realitas Digital.",
+        hero_desc_creative: "Menggabungkan presisi teknis dengan estetika seni. Saya tidak sekadar mendesain; saya merekayasa pengalaman visual imersif yang meninggalkan kesan mendalam.",
+        btn_start: "Mulai Kolaborasi",
+        btn_cv: "Lihat Arsip",
 
         // About Section
         about_creative_badge: "CREATIVE SIDE",
@@ -1096,16 +1191,13 @@ const translations = {
         // Hero Section
         widget_projects_label: "Projects Completed",
         widget_projects_val: "15+ Events Succesfull",
-        widget_role_label: "Current Role",
-        widget_role_val: "LCD Operator",
-        widget_exp_label: "Experience",
-        widget_exp_val: "2+ Years Active",
-        widget_skill_label: "Skill Proficiency",
         hero_badge: "Open for Collaboration",
         hero_greeting: "Hi, I'm",
-        hero_desc: "Creative LCD Operator & Graphic Designer crafting modern visual experiences for events and robust digital branding assets.",
-        btn_start: "Start a Project",
-        btn_cv: "Download CV",
+        // UPDATE TEKS KREATIF (INGGRIS)
+        hero_title_highlight: "Digital Reality.",
+        hero_desc_creative: "Merging technical precision with artistic chaos. I don't just design; I engineer immersive visual experiences that leave a mark.",
+        btn_start: "Initiate Protocol",
+        btn_cv: "Explore Archives",
 
         // About Section
         about_creative_badge: "CREATIVE SIDE",
@@ -1202,7 +1294,8 @@ const translations = {
         footer_loc: "Surabaya, Indonesia",
 
         // Typewriter Words
-        typewriter_words: ["LCD Operator", "Graphic Designer", "Tech Enthusiast", "UI/UX Developer"]
+        // UPDATE KATA-KATA TYPEWRITER BIAR LEBIH KEREN
+        typewriter_words: ["Visual Alchemist", "LCD Operator", "Digital Artisan", "Tech Enthusiast"]
     }
 };
 
@@ -1349,6 +1442,7 @@ function updateTypewriterLanguage() {
 /* =========================================
    7. AI ASSISTANT LOGIC
    ========================================= */
+let aiAutoOpenTimer = null;
 const aiModal = document.getElementById('ai-modal');
 const aiBox = document.getElementById('ai-box');
 const closeAiBtn = document.getElementById('close-ai');
@@ -1359,102 +1453,263 @@ const inputForm = document.getElementById('ai-input-form');
 const userInput = document.getElementById('user-input');
 let userName = localStorage.getItem('celestiq_username');
 
+// --- DRAG TO SCROLL FOR AI OPTIONS (DESKTOP) ---
+if (optionsContainer) {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    // Set initial styles for drag interaction
+    optionsContainer.style.cursor = 'grab';
+    optionsContainer.style.userSelect = 'none';
+
+    optionsContainer.addEventListener('mousedown', (e) => {
+        isDown = true;
+        optionsContainer.style.cursor = 'grabbing';
+        startX = e.pageX - optionsContainer.offsetLeft;
+        scrollLeft = optionsContainer.scrollLeft;
+    });
+    optionsContainer.addEventListener('mouseleave', () => {
+        isDown = false;
+        optionsContainer.style.cursor = 'grab';
+    });
+    optionsContainer.addEventListener('mouseup', () => {
+        isDown = false;
+        optionsContainer.style.cursor = 'grab';
+    });
+    optionsContainer.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - optionsContainer.offsetLeft;
+        const walk = (x - startX) * 2; // Scroll speed
+        optionsContainer.scrollLeft = scrollLeft - walk;
+    });
+}
+
 const aiChatData = {
     id: {
-        greeting: "Halo! Saya Noctua AI, asisten virtual Gusthi. Saya bisa ceritakan profil Gusthi secara singkat. Mau mulai dari mana?",
+        greeting: "Halo! Saya Noctua AI, asisten virtual Gusthi. Saya siap menjawab pertanyaan seputar Gusthi. Topik apa yang ingin kamu bahas?",
         options: [
-            { text: "Siapa Gusthi sebenarnya?", next: "who_is" },
-            { text: "Apa keahlian utamanya?", next: "skills" },
-            { text: "Langsung ke kontak", next: "hire" }
+            { text: "👤 Profil & Latar Belakang", next: "profile_menu" },
+            { text: "🛠️ Skill & Tools", next: "skills_menu" },
+            { text: "💼 Layanan & Jasa", next: "services_menu" },
+            { text: "📞 Kontak", next: "contact_menu" }
         ],
         responses: {
+            // --- PROFILE BRANCH ---
+            profile_menu: {
+                text: "Gusthi adalah seorang mahasiswa Teknik Informatika yang memiliki passion kuat di dunia visual. Apa yang ingin kamu ketahui lebih detail?",
+                options: [
+                    { text: "Siapa Gusthi?", next: "who_is" },
+                    { text: "Pendidikan", next: "education" },
+                    { text: "Pengalaman", next: "experience_info" },
+                    { text: "⬅️ Kembali", next: "init" }
+                ]
+            },
             who_is: {
-                text: "Gusthi adalah mahasiswa Teknik Informatika PENS yang punya passion unik: menggabungkan <strong>Coding</strong> dan <strong>Visual Art</strong>. Sehari-hari dia kuliah, tapi di luar itu dia sering jadi Operator Visual untuk event besar.",
+                text: "Gusthi Pangestu adalah 'Tech-Artist'. Siang hari dia ngoding sebagai mahasiswa PENS, malam hari (atau saat event) dia beraksi sebagai Visual Operator atau Graphic Designer. Kombinasi logika dan estetika.",
                 options: [
-                    { text: "Event apa saja?", next: "experience" },
-                    { text: "Bisa lihat karyanya?", next: "portfolio" }
+                    { text: "Unik juga ya", next: "profile_menu" },
+                    { text: "Lihat karyanya", action: "scroll_projects" }
                 ]
             },
-            experience: {
-                text: "Dia sudah menangani visual untuk 15+ event, termasuk turnamen esports PMCC dan expo kampus MBEX. Dia memastikan tampilan layar panggung selalu memukau.",
+            education: {
+                text: "Saat ini menempuh pendidikan di PENS (Politeknik Elektronika Negeri Surabaya) jurusan Teknik Informatika. Fokus pada Software Development, tapi sering 'belok' ke Multimedia.",
                 options: [
-                    { text: "Keren, lihat buktinya dong", next: "portfolio" },
-                    { text: "Apa tools yang dipakai?", next: "skills" }
+                    { text: "Skill codingnya apa?", next: "skill_tech" },
+                    { text: "Kembali", next: "profile_menu" }
                 ]
             },
-            skills: {
-                text: "Untuk visual panggung, dia jago pakai <strong>OBS Studio</strong>. Untuk desain, dia pakai <strong>Photoshop & Figma</strong>. Dan karena dia anak IT, dia juga bisa bikin website seperti ini!",
+            experience_info: {
+                text: "Sudah menangani 15+ event besar sebagai Operator Visual (OBS) dan Desain Grafis. Mulai dari event kampus, turnamen esports (PMCC), hingga expo.",
                 options: [
-                    { text: "Saya butuh skill itu", next: "hire" },
-                    { text: "Kembali ke awal", next: "init" }
+                    { text: "Lihat buktinya", action: "scroll_projects" },
+                    { text: "Kembali", next: "profile_menu" }
                 ]
             },
-            portfolio: {
-                text: "Semua dokumentasi event dan desainnya ada di halaman ini. Mau saya antarkan ke bagian Portfolio?",
+
+            // --- SKILLS BRANCH ---
+            skills_menu: {
+                text: "Gusthi memiliki skillset hybrid. Mau bahas sisi teknis atau kreatif?",
                 options: [
-                    { text: "Ya, antarkan saya", action: "scroll_projects" },
-                    { text: "Nanti saja, tanya lain", next: "init" }
+                    { text: "🎨 Sisi Kreatif (Design/Visual)", next: "skill_visual" },
+                    { text: "💻 Sisi Teknis (Coding)", next: "skill_tech" },
+                    { text: "⬅️ Kembali", next: "init" }
                 ]
             },
-            hire: {
-                text: "Gusthi selalu terbuka untuk diskusi project baru. Kamu lebih nyaman menghubungi lewat mana?",
+            skill_visual: {
+                text: "Di dunia visual, Gusthi ahli menggunakan **OBS Studio** untuk live production, **Adobe Photoshop & Illustrator** untuk desain grafis, dan **Figma** untuk UI/UX.",
                 options: [
-                    { text: "Email saja", action: "email" },
-                    { text: "LinkedIn", action: "linkedin" },
-                    { text: "Kembali", next: "init" }
+                    { text: "Kalau coding?", next: "skill_tech" },
+                    { text: "Kembali", next: "skills_menu" }
+                ]
+            },
+            skill_tech: {
+                text: "Sebagai anak IT, dia menguasai **HTML, CSS, JavaScript** (seperti website ini!), serta dasar-dasar Backend dan Database. Dia suka membuat web yang interaktif.",
+                options: [
+                    { text: "Keren!", next: "skills_menu" },
+                    { text: "Lihat Project Web", action: "scroll_projects" }
+                ]
+            },
+
+            // --- SERVICES BRANCH ---
+            services_menu: {
+                text: "Gusthi terbuka untuk kolaborasi freelance. Layanan mana yang kamu butuhkan?",
+                options: [
+                    { text: "🖥️ Operator LCD/OBS", next: "srv_obs" },
+                    { text: "✨ Graphic Design", next: "srv_design" },
+                    { text: "⬅️ Kembali", next: "init" }
+                ]
+            },
+            srv_obs: {
+                text: "Jasa Operator Visual meliputi: Manajemen scene OBS, transisi live, playback video, dan setup layar LED/Proyektor agar event terlihat profesional.",
+                options: [
+                    { text: "Saya tertarik", next: "contact_menu" },
+                    { text: "Kembali", next: "services_menu" }
+                ]
+            },
+            srv_design: {
+                text: "Jasa Desain meliputi: Pembuatan Poster, Banner, Feed Instagram, hingga kebutuhan visual branding untuk organisasi atau event.",
+                options: [
+                    { text: "Saya tertarik", next: "contact_menu" },
+                    { text: "Kembali", next: "services_menu" }
+                ]
+            },
+
+            // --- CONTACT BRANCH ---
+            contact_menu: {
+                text: "Siap berkolaborasi? Hubungi Gusthi melalui saluran berikut:",
+                options: [
+                    { text: "📧 Kirim Email", action: "email" },
+                    { text: "🔗 LinkedIn", action: "linkedin" },
+                    { text: "⬅️ Menu Utama", next: "init" }
                 ]
             }
         }
     },
     en: {
-        greeting: "Hello! I'm Noctua AI, Gusthi's virtual assistant. I can tell you a bit about him. Where should we start?",
+        greeting: "Hello! I'm Noctua AI, Gusthi's virtual assistant. I'm ready to answer questions about Gusthi. What topic would you like to discuss?",
         options: [
-            { text: "Who is Gusthi?", next: "who_is" },
-            { text: "What are his skills?", next: "skills" },
-            { text: "Contact info", next: "hire" }
+            { text: "👤 Profile & Background", next: "profile_menu" },
+            { text: "🛠️ Skills & Tools", next: "skills_menu" },
+            { text: "💼 Services", next: "services_menu" },
+            { text: "📞 Contact", next: "contact_menu" }
         ],
         responses: {
+            // --- PROFILE BRANCH ---
+            profile_menu: {
+                text: "Gusthi is an Informatics Engineering student with a strong passion for the visual world. What would you like to know in detail?",
+                options: [
+                    { text: "Who is Gusthi?", next: "who_is" },
+                    { text: "Education", next: "education" },
+                    { text: "Experience", next: "experience_info" },
+                    { text: "⬅️ Back", next: "init" }
+                ]
+            },
             who_is: {
-                text: "Gusthi is an Informatics student at PENS with a unique passion: combining <strong>Coding</strong> and <strong>Visual Art</strong>. By day he studies, but he often works as a Visual Operator for major events.",
+                text: "Gusthi Pangestu is a 'Tech-Artist'. By day he codes as a PENS student, by night (or during events) he acts as a Visual Operator or Graphic Designer. A mix of logic and aesthetics.",
                 options: [
-                    { text: "What kind of events?", next: "experience" },
-                    { text: "Can I see his work?", next: "portfolio" }
+                    { text: "Unique!", next: "profile_menu" },
+                    { text: "See his work", action: "scroll_projects" }
                 ]
             },
-            experience: {
-                text: "He has handled visuals for 15+ events, including the PMCC esports tournament and MBEX campus expo. He ensures the stage screen always looks stunning.",
+            education: {
+                text: "Currently studying at PENS (Electronic Engineering Polytechnic Institute of Surabaya) majoring in Informatics Engineering. Focused on Software Development, but often 'swerves' into Multimedia.",
                 options: [
-                    { text: "Cool, show me proof", next: "portfolio" },
-                    { text: "What tools does he use?", next: "skills" }
+                    { text: "Coding skills?", next: "skill_tech" },
+                    { text: "Back", next: "profile_menu" }
                 ]
             },
-            skills: {
-                text: "For stage visuals, he's an expert in <strong>OBS Studio</strong>. For design, he uses <strong>Photoshop & Figma</strong>. And since he's an IT student, he built this website too!",
+            experience_info: {
+                text: "Has handled 15+ major events as a Visual Operator (OBS) and Graphic Designer. Ranging from campus events, esports tournaments (PMCC), to expos.",
                 options: [
-                    { text: "I need those skills", next: "hire" },
-                    { text: "Back to start", next: "init" }
+                    { text: "Show me proof", action: "scroll_projects" },
+                    { text: "Back", next: "profile_menu" }
                 ]
             },
-            portfolio: {
-                text: "All his event documentation and designs are on this page. Shall I take you to the Portfolio section?",
+
+            // --- SKILLS BRANCH ---
+            skills_menu: {
+                text: "Gusthi has a hybrid skillset. Want to discuss the technical or creative side?",
                 options: [
-                    { text: "Yes, take me there", action: "scroll_projects" },
-                    { text: "Maybe later", next: "init" }
+                    { text: "🎨 Creative Side (Design/Visual)", next: "skill_visual" },
+                    { text: "💻 Technical Side (Coding)", next: "skill_tech" },
+                    { text: "⬅️ Back", next: "init" }
                 ]
             },
-            hire: {
-                text: "Gusthi is always open to discussing new projects. How would you prefer to contact him?",
+            skill_visual: {
+                text: "In the visual world, Gusthi is an expert in **OBS Studio** for live production, **Adobe Photoshop & Illustrator** for graphic design, and **Figma** for UI/UX.",
                 options: [
-                    { text: "Email", action: "email" },
-                    { text: "LinkedIn", action: "linkedin" },
-                    { text: "Back", next: "init" }
+                    { text: "What about coding?", next: "skill_tech" },
+                    { text: "Back", next: "skills_menu" }
+                ]
+            },
+            skill_tech: {
+                text: "As an IT student, he masters **HTML, CSS, JavaScript** (like this website!), as well as Backend and Database basics. He loves creating interactive webs.",
+                options: [
+                    { text: "Cool!", next: "skills_menu" },
+                    { text: "See Web Projects", action: "scroll_projects" }
+                ]
+            },
+
+            // --- SERVICES BRANCH ---
+            services_menu: {
+                text: "Gusthi is open for freelance collaborations. Which service do you need?",
+                options: [
+                    { text: "🖥️ LCD/OBS Operator", next: "srv_obs" },
+                    { text: "✨ Graphic Design", next: "srv_design" },
+                    { text: "⬅️ Back", next: "init" }
+                ]
+            },
+            srv_obs: {
+                text: "Visual Operator services include: OBS scene management, live transitions, video playback, and LED/Projector screen setup for professional-looking events.",
+                options: [
+                    { text: "I'm interested", next: "contact_menu" },
+                    { text: "Back", next: "services_menu" }
+                ]
+            },
+            srv_design: {
+                text: "Design services include: Creation of Posters, Banners, Instagram Feeds, to visual branding needs for organizations or events.",
+                options: [
+                    { text: "I'm interested", next: "contact_menu" },
+                    { text: "Back", next: "services_menu" }
+                ]
+            },
+
+            // --- CONTACT BRANCH ---
+            contact_menu: {
+                text: "Ready to collaborate? Contact Gusthi via the following channels:",
+                options: [
+                    { text: "📧 Send Email", action: "email" },
+                    { text: "🔗 LinkedIn", action: "linkedin" },
+                    { text: "⬅️ Main Menu", next: "init" }
                 ]
             }
         }
     }
 };
 
+function showAiBadge() {
+    const badge = document.getElementById('ai-badge');
+    if (badge) {
+        badge.classList.remove('scale-0');
+        badge.classList.add('scale-100');
+        // Sound effect for attention
+        new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3').play().catch(()=>{});
+    }
+}
+
 function openAI() {
+    // Clear auto-open timer if user opens manually (prevent double trigger)
+    if (aiAutoOpenTimer) clearTimeout(aiAutoOpenTimer);
+
+    // Hide Badge when opened
+    const badge = document.getElementById('ai-badge');
+    if (badge) {
+        badge.classList.remove('scale-100');
+        badge.classList.add('scale-0');
+    }
+
     if (!aiModal) return;
     aiModal.classList.remove('hidden');
     // Trigger reflow
@@ -1496,16 +1751,19 @@ function closeAI() {
 }
 
 function addMessage(text, sender) {
+    // Parse Markdown-style bold (**text**) to HTML <strong>text</strong>
+    const parsedText = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>');
+
     const div = document.createElement('div');
     if (sender === 'ai') {
         div.className = 'flex gap-3';
-        div.innerHTML = `<div class="w-8 h-8 rounded-full bg-primary flex-shrink-0 flex items-center justify-center text-white text-xs"><i class='bx bx-bot'></i></div><div class="bg-white/10 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200 leading-relaxed border border-white/5">${text}</div>`;
+        div.innerHTML = `<div class="w-8 h-8 rounded-full bg-primary flex-shrink-0 flex items-center justify-center text-white text-xs"><i class='bx bx-bot'></i></div><div class="bg-white/10 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200 leading-relaxed border border-white/5">${parsedText}</div>`;
     } else {
         div.className = 'flex gap-3 flex-row-reverse';
-        div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gray-700 flex-shrink-0 flex items-center justify-center text-white text-xs"><i class='bx bx-user'></i></div><div class="bg-primary/20 p-3 rounded-2xl rounded-tr-none text-sm text-white leading-relaxed border border-primary/20">${text}</div>`;
+        div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gray-700 flex-shrink-0 flex items-center justify-center text-white text-xs"><i class='bx bx-user'></i></div><div class="bg-primary/20 p-3 rounded-2xl rounded-tr-none text-sm text-white leading-relaxed border border-primary/20">${parsedText}</div>`;
     }
     chatBody.appendChild(div);
-    chatBody.scrollTop = chatBody.scrollHeight;
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
 }
 
 function addTypingIndicator() {
@@ -1514,7 +1772,7 @@ function addTypingIndicator() {
     div.id = 'typing-indicator';
     div.innerHTML = `<div class="w-8 h-8 rounded-full bg-primary flex-shrink-0 flex items-center justify-center text-white text-xs"><i class='bx bx-bot'></i></div><div class="bg-white/10 p-3 rounded-2xl rounded-tl-none text-sm text-gray-200 leading-relaxed border border-white/5 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span><span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span><span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span></div>`;
     chatBody.appendChild(div);
-    chatBody.scrollTop = chatBody.scrollHeight;
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
 }
 
 function removeTypingIndicator() {
