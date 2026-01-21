@@ -2017,8 +2017,105 @@ function showToast(type, title, message) {
 }
 
 if (contactForm) {
+    // --- RATE LIMIT UI MANAGER ---
+    function updateRateLimitUI() {
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const STORAGE_KEY = 'celestiq_contact_history';
+        const LIMIT = 2;
+        const ONE_MONTH = 30 * 24 * 60 * 60 * 1000; 
+        const now = Date.now();
+
+        let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        // Filter expired
+        history = history.filter(timestamp => (now - timestamp) < ONE_MONTH);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+
+        // Remove existing message
+        const existingMsg = document.getElementById('rate-limit-msg');
+        if (existingMsg) existingMsg.remove();
+
+        if (history.length >= LIMIT) {
+            const oldestTimestamp = history[0];
+            const resetTime = oldestTimestamp + ONE_MONTH;
+            
+            // Disable Button
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed', 'grayscale');
+            
+            // Show Email Suggestion
+            const msgDiv = document.createElement('div');
+            msgDiv.id = 'rate-limit-msg';
+            msgDiv.className = 'text-center mt-3 text-xs text-red-400 animate-pulse font-mono';
+            msgDiv.innerHTML = `Kuota habis. Silakan hubungi via <a href="mailto:gusthipangestu1906@gmail.com" class="underline hover:text-white font-bold">Email</a> saja.`;
+            submitBtn.parentNode.insertBefore(msgDiv, submitBtn.nextSibling);
+
+            // Real-time Countdown
+            if (window.rateLimitInterval) clearInterval(window.rateLimitInterval);
+            
+            const updateTimer = () => {
+                const currentNow = Date.now();
+                const diff = resetTime - currentNow;
+
+                if (diff <= 0) {
+                    clearInterval(window.rateLimitInterval);
+                    updateRateLimitUI(); // Refresh state
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                submitBtn.innerHTML = `<i class='bx bx-time-five'></i> Wait: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+            };
+
+            updateTimer();
+            window.rateLimitInterval = setInterval(updateTimer, 1000);
+        } else {
+             // Restore Button if previously disabled
+             if (submitBtn.disabled && submitBtn.classList.contains('cursor-not-allowed')) {
+                 submitBtn.disabled = false;
+                 submitBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'grayscale');
+                 submitBtn.innerHTML = `Send Message <i class='bx bx-send group-hover:translate-x-1 transition-transform'></i>`;
+             }
+        }
+    }
+
+    // Init UI on Load
+    updateRateLimitUI();
+
     contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
+
+        // --- RATE LIMIT CHECK (2x / Month) ---
+        const STORAGE_KEY = 'celestiq_contact_history';
+        const LIMIT = 2;
+        const ONE_MONTH = 30 * 24 * 60 * 60 * 1000; // 30 Days in ms
+        const now = Date.now();
+
+        let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        // Filter: Hanya simpan timestamp yang kurang dari 30 hari yang lalu
+        history = history.filter(timestamp => (now - timestamp) < ONE_MONTH);
+        
+        if (history.length >= LIMIT) {
+            // Hitung mundur kapan slot tersedia kembali (berdasarkan timestamp terlama)
+            const oldestTimestamp = history[0]; 
+            const resetTime = oldestTimestamp + ONE_MONTH;
+            const diff = resetTime - now;
+
+            // Konversi ke Hari, Jam, Menit
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.ceil((diff % (1000 * 60 * 60)) / (1000 * 60)); // Ceil agar minimal 1 menit
+
+            const waitText = `${days > 0 ? days + ' hari ' : ''}${hours > 0 ? hours + ' jam ' : ''}${minutes} menit`;
+
+            showToast('error', 'Limit Reached', `Kuota habis. Coba lagi dalam: ${waitText}.`);
+            contactForm.classList.add('shake-animation');
+            setTimeout(() => contactForm.classList.remove('shake-animation'), 500);
+            return;
+        }
 
         // --- VALIDASI INPUT (SECURITY & UX) ---
         const formData = new FormData(contactForm);
@@ -2108,6 +2205,13 @@ if (contactForm) {
             if (response.ok) {
                 showToast('success', 'Message Sent!', 'Thank you, I will get back to you soon.');
                 contactForm.reset();
+                
+                // Simpan timestamp pengiriman berhasil
+                history.push(Date.now());
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+                
+                // Update UI (Disable button immediately)
+                updateRateLimitUI();
             } else {
                 throw new Error(result.error || 'Failed to send message');
             }
