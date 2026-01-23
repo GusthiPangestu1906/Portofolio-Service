@@ -570,10 +570,28 @@ body {
     align-items: center;
     gap: 8px;
     box-shadow: 0 0 20px rgba(0, 194, 255, 0.4);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
 }
 .btn-pill-primary:hover {
     box-shadow: 0 0 30px rgba(0, 194, 255, 0.6);
     transform: translateY(-2px);
+}
+.btn-pill-primary:active {
+    transform: scale(0.96);
+}
+/* Shine Effect for Buttons */
+.btn-pill-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: all 0.6s ease;
+    z-index: -1;
+}
+.btn-pill-primary:hover::before {
+    left: 100%;
 }
 
 .btn-pill-outline {
@@ -1242,6 +1260,24 @@ body.locked {
     box-shadow: 0 4px 12px rgba(0, 194, 255, 0.3);
 }
 
+/* Chat Avatar Animation */
+@keyframes chatAvatarPulse {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(0, 194, 255, 0.4);
+        border-color: rgba(0, 194, 255, 0.3);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(0, 194, 255, 0.8);
+        border-color: rgba(0, 194, 255, 0.8);
+        transform: scale(1.05);
+    }
+}
+
+.chat-avatar-glow {
+    animation: chatAvatarPulse 2s infinite ease-in-out;
+}
+
 /* Utility for AI Chat Options */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
@@ -1319,6 +1355,304 @@ body.locked {
 
 .uplink-pulse {
     animation: uplinkPulse 1.5s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+/* =========================================
+   EXPERIENCE SECTION STYLES (ENHANCED UX)
+   ========================================= */
+/* Target card inside experience swiper specifically */
+.experienceSwiper {
+    padding: 20px 10px 50px 10px !important; /* Add padding for hover lift space */
+}
+
+.experienceSwiper .swiper-slide {
+    height: auto; /* Ensure full height for flex stretch */
+    display: flex; /* Make slide a flex container */
+    justify-content: center;
+}
+
+/* Apply to both a specific class and the generic glass-card within this section */
+.experience-card,
+.experienceSwiper .glass-card {
+    position: relative;
+    width: 100%;
+    background: rgba(10, 10, 12, 0.6); /* Lebih gelap & bersih */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Border lebih tipis */
+    border-radius: 24px;
+    padding: 28px; /* Padding optimal */
+    min-height: 260px; /* Tinggi disesuaikan untuk konten teks */
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+    box-shadow: none; /* Hilangkan shadow default agar flat & clean */
+    cursor: pointer; /* Signal clickability */
+}
+
+/* Hover State: Lift & Glow */
+.experience-card:hover,
+.experienceSwiper .glass-card:hover {
+    transform: translateY(-5px);
+    background: rgba(20, 20, 25, 0.8);
+    border-color: rgba(0, 194, 255, 0.3);
+    box-shadow: 
+        0 15px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* Tech Accent Line (Top) */
+.experience-card::before,
+.experienceSwiper .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00C2FF, transparent);
+    opacity: 0;
+    transform: scaleX(0.5);
+    transition: all 0.4s ease;
+}
+
+.experience-card:hover::before,
+.experienceSwiper .glass-card:hover::before {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+/* Content Typography Enhancements */
+.experienceSwiper h3 {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem; /* Sedikit diperkecil agar proporsional */
+    color: #ffffff;
+    margin-bottom: 1rem; /* Ditambah karena sub-judul dihapus */
+    line-height: 1.3;
+}
+
+.experienceSwiper p {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2; /* Tampilkan 2 baris saja (Glance Info) */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: #94a3b8; 
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+}
+
+/* CLEAN UP: Sembunyikan Pattern Background yang Ramai */
+.experienceSwiper .glass-card > div.z-0 {
+    display: none !important;
+}
+
+/* CLEAN UP: Sederhanakan Badge Tahun & Kategori */
+.experienceSwiper .glass-card .flex.justify-between.mb-3 span {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 4px 10px !important;
+    border-radius: 6px !important;
+    color: #94a3b8 !important;
+    font-size: 0.7rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.05em;
+}
+
+/* Footer / Meta Info Styling (if icons exist) */
+/* Sembunyikan ikon tool kecil di kiri bawah yang menambah noise */
+.experienceSwiper .mt-auto > div:first-child {
+    display: none !important;
+}
+
+/* Layout Footer Card: Tombol Read More di kanan */
+.experienceSwiper .mt-auto {
+    justify-content: flex-end !important;
+    width: 100%;
+    margin-top: auto; /* Dorong ke bawah */
+}
+
+/* Ripple Effect for Buttons */
+.ripple-btn {
+    position: relative;
+    overflow: hidden;
+    transform: translate3d(0, 0, 0);
+    cursor: pointer;
+}
+
+.ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Watermark Effect for Experience */
+.experience-watermark {
+    position: absolute;
+    bottom: -20px;
+    right: -10px;
+    font-size: 6rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.02);
+    pointer-events: none;
+}
+
+/* =========================================
+   EXPERIENCE CARD COLOR VARIANTS (HOVER)
+   ========================================= */
+/* Pink Variant (Event) */
+.experienceSwiper .glass-card.hover-pink:hover {
+    border-color: rgba(236, 72, 153, 0.5); /* Pink-500 */
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(236, 72, 153, 0.1);
+}
+.experienceSwiper .glass-card.hover-pink:hover::before { background: linear-gradient(90deg, transparent, #ec4899, transparent); }
+
+/* Blue Variant (Operator/Course) */
+.experienceSwiper .glass-card.hover-blue:hover {
+    border-color: rgba(59, 130, 246, 0.5); /* Blue-500 */
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.1);
+}
+.experienceSwiper .glass-card.hover-blue:hover::before { background: linear-gradient(90deg, transparent, #3b82f6, transparent); }
+
+/* Cyan Variant (Training) */
+.experienceSwiper .glass-card.hover-cyan:hover {
+    border-color: rgba(34, 211, 238, 0.5); /* Cyan-400 */
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(34, 211, 238, 0.1);
+}
+.experienceSwiper .glass-card.hover-cyan:hover::before { background: linear-gradient(90deg, transparent, #22d3ee, transparent); }
+
+/* Yellow Variant (DigiUp) */
+.experienceSwiper .glass-card.hover-yellow:hover {
+    border-color: rgba(250, 204, 21, 0.5); /* Yellow-400 */
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(250, 204, 21, 0.1);
+}
+.experienceSwiper .glass-card.hover-yellow:hover::before { background: linear-gradient(90deg, transparent, #facc15, transparent); }
+
+/* Green Variant (BNSP) */
+.experienceSwiper .glass-card.hover-green:hover {
+    border-color: rgba(74, 222, 128, 0.5); /* Green-400 */
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(74, 222, 128, 0.1);
+}
+.experienceSwiper .glass-card.hover-green:hover::before { background: linear-gradient(90deg, transparent, #4ade80, transparent); }
+
+/* =========================================
+   MOBILE EXPERIENCE UX: FOCUS MODE
+   ========================================= */
+@media (max-width: 640px) {
+    .experienceSwiper .swiper-slide {
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        opacity: 0.5; /* Redupkan kartu samping */
+        transform: scale(0.92); /* Kecilkan kartu samping */
+        filter: blur(1px);
+    }
+    
+    .experienceSwiper .swiper-slide-active {
+        opacity: 1;
+        transform: scale(1); /* Kartu aktif ukuran penuh */
+        filter: blur(0);
+        z-index: 10;
+    }
+
+    /* Active Card Glow */
+    .experienceSwiper .swiper-slide-active .glass-card {
+        border-color: rgba(0, 194, 255, 0.6);
+        box-shadow: 
+            0 15px 30px -5px rgba(0, 0, 0, 0.5),
+            0 0 25px rgba(0, 194, 255, 0.2);
+        background: rgba(20, 25, 35, 0.9);
+    }
+    
+    /* Dynamic Color for Active Card (Mobile) */
+    .experienceSwiper .swiper-slide-active .glass-card.hover-pink {
+        border-color: rgba(236, 72, 153, 0.6);
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(236, 72, 153, 0.2);
+    }
+    .experienceSwiper .swiper-slide-active .glass-card.hover-pink::before {
+        background: linear-gradient(90deg, transparent, #ec4899, transparent);
+    }
+
+    .experienceSwiper .swiper-slide-active .glass-card.hover-blue {
+        border-color: rgba(59, 130, 246, 0.6);
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(59, 130, 246, 0.2);
+    }
+    .experienceSwiper .swiper-slide-active .glass-card.hover-blue::before {
+        background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+    }
+
+    .experienceSwiper .swiper-slide-active .glass-card.hover-cyan {
+        border-color: rgba(34, 211, 238, 0.6);
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(34, 211, 238, 0.2);
+    }
+    .experienceSwiper .swiper-slide-active .glass-card.hover-cyan::before {
+        background: linear-gradient(90deg, transparent, #22d3ee, transparent);
+    }
+
+    .experienceSwiper .swiper-slide-active .glass-card.hover-yellow {
+        border-color: rgba(250, 204, 21, 0.6);
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(250, 204, 21, 0.2);
+    }
+    .experienceSwiper .swiper-slide-active .glass-card.hover-yellow::before {
+        background: linear-gradient(90deg, transparent, #facc15, transparent);
+    }
+
+    .experienceSwiper .swiper-slide-active .glass-card.hover-green {
+        border-color: rgba(74, 222, 128, 0.6);
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(74, 222, 128, 0.2);
+    }
+    .experienceSwiper .swiper-slide-active .glass-card.hover-green::before {
+        background: linear-gradient(90deg, transparent, #4ade80, transparent);
+    }
+
+    /* Show Accent Line */
+    .experienceSwiper .swiper-slide-active .glass-card::before {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+
+    /* Animation: Breathing Glow for Active Card (Agar terlihat hidup) */
+    .experienceSwiper .swiper-slide-active .glass-card {
+        animation: active-card-pulse 3s ease-in-out infinite;
+    }
+    
+    /* Highlight Button automatically on center slide (Color Specific) */
+    .experienceSwiper .swiper-slide-active .glass-card.hover-pink .ripple-btn {
+        animation: btn-turn-on-pink 0.8s ease-out forwards;
+    }
+    .experienceSwiper .swiper-slide-active .glass-card.hover-blue .ripple-btn {
+        animation: btn-turn-on-blue 0.8s ease-out forwards;
+    }
+    .experienceSwiper .swiper-slide-active .glass-card.hover-cyan .ripple-btn {
+        animation: btn-turn-on-cyan 0.8s ease-out forwards;
+    }
+    .experienceSwiper .swiper-slide-active .glass-card.hover-yellow .ripple-btn {
+        animation: btn-turn-on-yellow 0.8s ease-out forwards;
+    }
+    .experienceSwiper .swiper-slide-active .glass-card.hover-green .ripple-btn {
+        animation: btn-turn-on-green 0.8s ease-out forwards;
+    }
+
+    /* Ensure text & icon inside active button are white */
+    .experienceSwiper .swiper-slide-active .ripple-btn span {
+        color: #fff;
+    }
+    
+    .experienceSwiper .swiper-slide-active .ripple-btn i {
+        color: #fff;
+        transform: translateX(4px);
+    }
 }
 
 /* =========================================
@@ -1469,6 +1803,49 @@ body.locked {
 .animate-float-delayed { 
     animation: floatSlow 7s ease-in-out infinite; 
     animation-delay: 2s; /* Biar geraknya gak barengan */
+}
+
+/* Keyframes for Active Card Pulse (Mobile) */
+@keyframes active-card-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+/* Mobile Button Turn-On Animations (Slime/Jelly Effect) */
+@keyframes btn-turn-on-pink {
+    0% { transform: scale(0.6); background-color: transparent; border-color: rgba(255,255,255,0.1); box-shadow: none; }
+    40% { transform: scale(1.15, 0.85); background-color: #ec4899; border-color: #ec4899; box-shadow: 0 0 35px rgba(236,72,153,0.9); }
+    60% { transform: scale(0.95, 1.05); background-color: #ec4899; border-color: #ec4899; box-shadow: 0 0 30px rgba(236,72,153,0.8); }
+    80% { transform: scale(1.05, 0.95); background-color: #ec4899; border-color: #ec4899; box-shadow: 0 0 25px rgba(236,72,153,0.7); }
+    100% { transform: scale(1); background-color: #ec4899; border-color: #ec4899; box-shadow: 0 0 20px rgba(236,72,153,0.6); }
+}
+@keyframes btn-turn-on-blue {
+    0% { transform: scale(0.6); background-color: transparent; border-color: rgba(255,255,255,0.1); box-shadow: none; }
+    40% { transform: scale(1.15, 0.85); background-color: #3b82f6; border-color: #3b82f6; box-shadow: 0 0 35px rgba(59,130,246,0.9); }
+    60% { transform: scale(0.95, 1.05); background-color: #3b82f6; border-color: #3b82f6; box-shadow: 0 0 30px rgba(59,130,246,0.8); }
+    80% { transform: scale(1.05, 0.95); background-color: #3b82f6; border-color: #3b82f6; box-shadow: 0 0 25px rgba(59,130,246,0.7); }
+    100% { transform: scale(1); background-color: #3b82f6; border-color: #3b82f6; box-shadow: 0 0 20px rgba(59,130,246,0.6); }
+}
+@keyframes btn-turn-on-cyan {
+    0% { transform: scale(0.6); background-color: transparent; border-color: rgba(255,255,255,0.1); box-shadow: none; }
+    40% { transform: scale(1.15, 0.85); background-color: #06b6d4; border-color: #06b6d4; box-shadow: 0 0 35px rgba(6,182,212,0.9); }
+    60% { transform: scale(0.95, 1.05); background-color: #06b6d4; border-color: #06b6d4; box-shadow: 0 0 30px rgba(6,182,212,0.8); }
+    80% { transform: scale(1.05, 0.95); background-color: #06b6d4; border-color: #06b6d4; box-shadow: 0 0 25px rgba(6,182,212,0.7); }
+    100% { transform: scale(1); background-color: #06b6d4; border-color: #06b6d4; box-shadow: 0 0 20px rgba(6,182,212,0.6); }
+}
+@keyframes btn-turn-on-yellow {
+    0% { transform: scale(0.6); background-color: transparent; border-color: rgba(255,255,255,0.1); box-shadow: none; }
+    40% { transform: scale(1.15, 0.85); background-color: #eab308; border-color: #eab308; box-shadow: 0 0 35px rgba(234,179,8,0.9); }
+    60% { transform: scale(0.95, 1.05); background-color: #eab308; border-color: #eab308; box-shadow: 0 0 30px rgba(234,179,8,0.8); }
+    80% { transform: scale(1.05, 0.95); background-color: #eab308; border-color: #eab308; box-shadow: 0 0 25px rgba(234,179,8,0.7); }
+    100% { transform: scale(1); background-color: #eab308; border-color: #eab308; box-shadow: 0 0 20px rgba(234,179,8,0.6); }
+}
+@keyframes btn-turn-on-green {
+    0% { transform: scale(0.6); background-color: transparent; border-color: rgba(255,255,255,0.1); box-shadow: none; }
+    40% { transform: scale(1.15, 0.85); background-color: #22c55e; border-color: #22c55e; box-shadow: 0 0 35px rgba(34,197,94,0.9); }
+    60% { transform: scale(0.95, 1.05); background-color: #22c55e; border-color: #22c55e; box-shadow: 0 0 30px rgba(34,197,94,0.8); }
+    80% { transform: scale(1.05, 0.95); background-color: #22c55e; border-color: #22c55e; box-shadow: 0 0 25px rgba(34,197,94,0.7); }
+    100% { transform: scale(1); background-color: #22c55e; border-color: #22c55e; box-shadow: 0 0 20px rgba(34,197,94,0.6); }
 }
 @keyframes rotateCircle {
     from { transform: translate(-50%, -50%) rotate(0deg); }

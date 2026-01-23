@@ -61,8 +61,10 @@ function initSwipers() {
 
         // Experience Carousel
         new Swiper(".experienceSwiper", {
-            slidesPerView: 1,
-            spaceBetween: 30,
+            // Mobile First Configuration (Focus Mode)
+            slidesPerView: 1.15, 
+            centeredSlides: true,
+            spaceBetween: 15,
             loop: true,
             grabCursor: true,
             observer: true,
@@ -71,10 +73,27 @@ function initSwipers() {
                 delay: 4500,
                 disableOnInteraction: false,
             },
+            pagination: {
+                el: ".experienceSwiper .swiper-pagination",
+                clickable: true,
+                dynamicBullets: true,
+            },
             breakpoints: {
-                640: { slidesPerView: 1, spaceBetween: 20 },
-                768: { slidesPerView: 2, spaceBetween: 30 },
-                1024: { slidesPerView: 3, spaceBetween: 30 },
+                640: { 
+                    slidesPerView: 2, 
+                    spaceBetween: 20, 
+                    centeredSlides: false 
+                },
+                768: { 
+                    slidesPerView: 2, 
+                    spaceBetween: 30, 
+                    centeredSlides: false 
+                },
+                1024: { 
+                    slidesPerView: 3, 
+                    spaceBetween: 30, 
+                    centeredSlides: false 
+                },
             },
         });
 
@@ -1123,19 +1142,19 @@ const translations = {
         exp_itds_role: "Creative Design",
         exp_itds_desc: "Merancang identitas visual utama ITDS Insight 2025, memproduksi 15+ aset grafis (Poster, Banner, Feeds) menggunakan Adobe Illustrator yang meningkatkan engagement media sosial HIMIT PENS.",
         
-        exp_mbex_role: "Main Operator Visual",
+        exp_mbex_role: "Visual Operator",
         exp_mbex_desc: "Mengoperasikan visual panggung utama Minat Bakat Expo 2025 menggunakan OBS Studio, mengelola 50+ scene transisi dan multimedia live untuk audiens skala kampus.",
         
         exp_figma_role: "UI/UX Design",
         exp_figma_desc: "Menyelesaikan bootcamp UI/UX intensif, menghasilkan High-Fidelity Prototype aplikasi mobile dengan penerapan Design Thinking dan Auto-Layout di Figma.",
         
-        exp_digiup_role: "Digital Graphic Designer",
+        exp_digiup_role: "Graphic Designer",
         exp_digiup_desc: "Lulus sertifikasi Digital Graphic Designer dengan predikat kompeten, menguasai manipulasi foto advanced dan layouting komersial menggunakan Adobe Photoshop.",
         
-        exp_bnsp_role: "Junior Graphic Designer",
+        exp_bnsp_role: "Junior Designer",
         exp_bnsp_desc: "Tersertifikasi kompetensi nasional (BNSP) skema Junior Graphic Designer, memvalidasi keahlian teknis dalam manajemen warna, tipografi, dan penyiapan file cetak standar industri.",
         
-        exp_gla_role: "Intro to Graphic Design",
+        exp_gla_role: "Graphic Design",
         exp_gla_desc: "Menuntaskan kursus fundamental desain grafis, memperdalam pemahaman teori warna dan komposisi visual untuk kebutuhan branding digital.",
 
         // Portfolio Section
@@ -1242,19 +1261,19 @@ const translations = {
         exp_itds_role: "Creative Design",
         exp_itds_desc: "Fully responsible for the conceptualization and execution of the event's entire visual identity, including the creation of strategic digital assets such as posters, banners, and social media promotional materials to significantly enhance brand awareness and participant engagement.",
         
-        exp_mbex_role: "Main Visual Operator",
+        exp_mbex_role: "Visual Operator",
         exp_mbex_desc: "Served as the Lead Visual Operator for Minat Bakat Expo 2025, managing real-time visual orchestration using OBS Studio to ensure seamless transitions and professional multimedia displays, supporting an immersive audience experience.",
         
         exp_figma_role: "UI/UX Design",
         exp_figma_desc: "Completed intensive training on UI/UX design principles, covering user research, wireframing, and interactive prototyping, while implementing Design Thinking methodologies using Figma software for user-centric design solutions.",
         
-        exp_digiup_role: "Digital Graphic Designer",
+        exp_digiup_role: "Graphic Designer",
         exp_digiup_desc: "Delved into Graphic Design fundamentals through a comprehensive training program, focusing on visual composition, color theory, and typography, along with advanced technical application using Adobe Photoshop to produce industry-quality visual works.",
         
-        exp_bnsp_role: "Junior Graphic Designer",
+        exp_bnsp_role: "Junior Designer",
         exp_bnsp_desc: "Achieved national competency certification from BNSP as a Junior Graphic Designer, validating technical expertise and theoretical understanding in operating industry-standard design software and visual asset management in accordance with professional standards.",
         
-        exp_gla_role: "Intro to Graphic Design",
+        exp_gla_role: "Graphic Design",
         exp_gla_desc: "Completed a fundamental Graphic Design course covering basic visual aesthetics principles and digital image manipulation, strengthening the technical foundation in using Adobe Photoshop for creative needs and visual communication.",
 
         // Portfolio Section
@@ -2225,3 +2244,31 @@ if (contactForm) {
         }
     });
 }
+
+/* =========================================
+   RIPPLE EFFECT HANDLER
+   ========================================= */
+document.addEventListener('click', function(e) {
+    const target = e.target.closest('.ripple-btn');
+    if (target) {
+        const rect = target.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple-effect');
+        
+        // Make it large enough to cover the button
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = `${size}px`;
+        ripple.style.height = `${size}px`;
+        ripple.style.left = `${x - size/2}px`;
+        ripple.style.top = `${y - size/2}px`;
+
+        target.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    }
+});
