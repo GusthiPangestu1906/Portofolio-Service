@@ -1938,6 +1938,33 @@ body.locked {
     transform: scale(1.1);
 }
 
+/* SCANNER ANIMATION */
+.scanning-active #scanner-container {
+    display: block !important;
+}
+
+.scanning-active .scanner-line {
+    animation: scanDown 1.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.scanning-active .scanner-grid {
+    opacity: 1 !important;
+}
+
+@keyframes scanDown {
+    0% { top: 0%; opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+/* FINGERPRINT TARGET AREA */
+#fingerprint-target {
+    touch-action: none; /* Mematikan scroll/zoom browser */
+    -webkit-user-select: none;
+    user-select: none;
+}
+
 /* =========================================
    BIOMETRIC HANDSHAKE STYLES
    ========================================= */

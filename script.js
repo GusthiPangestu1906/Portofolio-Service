@@ -484,6 +484,11 @@ async function startLoadingAnimation() {
     if(progressBar) progressBar.style.width = '0%';
     if(percentageText) percentageText.innerText = '0%';
 
+    // Helper: Detect Mobile Device
+    const isMobile = () => {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+    };
+
     // Mulai Interval Loading
     const interval = setInterval(() => {
         if (width >= 99 && !isPageLoaded) {
@@ -493,8 +498,21 @@ async function startLoadingAnimation() {
 
         if (width >= 100) {
             clearInterval(interval);
-            // NEW FLOW: Fingerprint Scan -> System Diagnosis
-            startFingerprintScan().then(() => {
+            
+            if (isMobile()) {
+                // MOBILE FLOW: Fingerprint Scan -> System Diagnosis
+                startFingerprintScan().then(() => {
+                    if(loaderContent) loaderContent.style.opacity = '0';
+
+                    if(sysOverlay) {
+                        sysOverlay.classList.remove('hidden');
+                        runSystemSequence().then(() => {
+                            finishLoading();
+                        });
+                    }
+                });
+            } else {
+                // DESKTOP FLOW: Langsung ke System Diagnosis (Sesuai Request)
                 if(loaderContent) loaderContent.style.opacity = '0';
 
                 if(sysOverlay) {
@@ -503,7 +521,7 @@ async function startLoadingAnimation() {
                         finishLoading();
                     });
                 }
-            });
+            }
         } else {
             width++;
             if(progressBar) progressBar.style.width = width + '%';
@@ -2292,13 +2310,22 @@ function startFingerprintScan() {
         if(statusText) statusText.innerText = "> BIOMETRIC REQUIRED";
         if(progressBar) progressBar.style.width = '0%';
 
+        // Prevent Context Menu (Klik Kanan/Tahan Lama) di Mobile
+        target.oncontextmenu = function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        };
+
         let holdStart = 0;
         let holdInterval;
         const holdDuration = 1500; // 1.5s hold time
+        let isSuccess = false; // Flag agar tidak double trigger
         
         const onTouchStart = (e) => {
+            if (isSuccess) return;
             // Prevent default to stop scrolling/zooming while scanning
-            if(e.type === 'touchstart') e.preventDefault();
+            if(e.cancelable) e.preventDefault();
             
             // Check finger count (only 1 allowed)
             if (e.touches && e.touches.length > 1) {
@@ -2333,6 +2360,7 @@ function startFingerprintScan() {
         };
 
         const onTouchEnd = () => {
+            if (isSuccess) return;
             clearInterval(holdInterval);
             document.body.classList.remove('scanning-active');
             if(progressBar) progressBar.style.width = '0%';
@@ -2343,6 +2371,7 @@ function startFingerprintScan() {
         };
 
         const success = () => {
+            isSuccess = true;
             clearInterval(holdInterval);
             document.body.classList.remove('scanning-active');
             
@@ -2369,6 +2398,9 @@ function startFingerprintScan() {
             target.removeEventListener('mouseleave', onTouchEnd);
 
             setTimeout(() => {
+                // Sembunyikan UI Scan agar bersih
+                if(instruction) instruction.classList.add('hidden');
+                if(target) target.classList.add('hidden');
                 resolve();
             }, 800);
         };

@@ -101,6 +101,12 @@
         <div id="loader-content" class="flex flex-col items-center justify-center transition-all duration-500">
             <!-- Center HUD -->
             <div class="relative mb-12 flex flex-col items-center justify-center">
+                <!-- Scanner Visuals (Hidden by default) -->
+                <div id="scanner-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 md:w-[550px] md:h-[550px] pointer-events-none hidden z-40 rounded-full overflow-hidden">
+                    <div class="scanner-line w-full h-1 bg-gradient-to-r from-transparent via-[#00C2FF] to-transparent shadow-[0_0_25px_rgba(0,194,255,1)] absolute top-0 opacity-0"></div>
+                    <div class="scanner-grid absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InJnYmEoMCwgMTk0LCAyNTUsIDAuMykiIC8+PC9zdmc+')] opacity-0 transition-opacity duration-300"></div>
+                </div>
+
                 <!-- Outer Rotating Rings -->
                 <div class="absolute w-96 h-96 md:w-[550px] md:h-[550px] rounded-full border border-gray-800 animate-[spin_10s_linear_infinite]"></div>
                 <div class="absolute w-80 h-80 md:w-[450px] md:h-[450px] rounded-full border border-t-primary/50 border-r-transparent border-b-primary/50 border-l-transparent animate-[spin_4s_linear_infinite] tech-ring"></div>
