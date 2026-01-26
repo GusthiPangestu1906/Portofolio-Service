@@ -1931,8 +1931,8 @@ body.locked {
    ========================================= */
 .bio-node {
     position: absolute;
-    width: 90px;
-    height: 90px;
+    width: 80px; /* Sedikit diperkecil untuk mobile */
+    height: 80px;
     border: 2px dashed rgba(0, 194, 255, 0.3);
     border-radius: 50%;
     transform: translate(-50%, -50%);
@@ -1941,6 +1941,12 @@ body.locked {
     justify-content: center;
     transition: all 0.2s ease;
     backdrop-filter: blur(4px);
+    touch-action: none; /* Mencegah browser handling touch */
+}
+
+/* Mobile Responsive Node Size */
+@media (max-width: 640px) {
+    .bio-node { width: 70px; height: 70px; }
 }
 
 .bio-node::before {

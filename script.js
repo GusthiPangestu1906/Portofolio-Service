@@ -2296,6 +2296,7 @@ function startBiometricHandshake() {
         const overlay = document.getElementById('biometric-overlay');
         const container = document.getElementById('bio-nodes-container');
         const progressBar = document.getElementById('bio-progress');
+        const cancelBtn = document.getElementById('bio-cancel-btn');
         
         if (!overlay || !container) {
             resolve(); // Fallback if elements missing
@@ -2305,6 +2306,9 @@ function startBiometricHandshake() {
         // Show Overlay
         overlay.classList.remove('hidden');
         
+        // Force Reflow agar ukuran container terbaca benar sebelum render node
+        void container.offsetWidth;
+        
         // Clear previous nodes
         container.innerHTML = '';
         if(progressBar) {
@@ -2313,47 +2317,56 @@ function startBiometricHandshake() {
             progressBar.classList.add('bg-primary');
         }
         
-        // Generate 3 Random Nodes
+        // Generate 3 Nodes with ERGONOMIC POSITIONING (Triangle Formation)
+        // Agar tidak acak berantakan dan susah dipencet di HP
         const nodes = [];
-        const nodeSize = 90;
-        const padding = 20;
-        const width = container.clientWidth - nodeSize - padding * 2;
-        const height = container.clientHeight - nodeSize - padding * 2;
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        
+        // Posisi Ergonomis untuk 3 Jari (Jempol Kiri, Jempol Kanan, Telunjuk/Tengah)
+        // Node 1: Atas Tengah (Telunjuk)
+        // Node 2: Bawah Kiri (Jempol Kiri)
+        // Node 3: Bawah Kanan (Jempol Kanan)
+        
+        const positions = [
+            { // Top Center
+                top: Math.floor(height * 0.2) + (Math.random() * 40 - 20), 
+                left: width / 2 + (Math.random() * 40 - 20) 
+            },
+            { // Bottom Left
+                top: Math.floor(height * 0.7) + (Math.random() * 40 - 20), 
+                left: Math.floor(width * 0.2) + (Math.random() * 30) 
+            },
+            { // Bottom Right
+                top: Math.floor(height * 0.7) + (Math.random() * 40 - 20), 
+                left: Math.floor(width * 0.8) - (Math.random() * 30) 
+            }
+        ];
 
-        for (let i = 0; i < 3; i++) {
+        positions.forEach((pos, i) => {
             const node = document.createElement('div');
             node.className = 'bio-node';
+            node.style.top = pos.top + 'px';
+            node.style.left = pos.left + 'px';
             
-            // Random Position with simple overlap check
-            let top, left, overlapping;
-            let attempts = 0;
-            do {
-                overlapping = false;
-                top = Math.floor(Math.random() * height) + padding + nodeSize/2;
-                left = Math.floor(Math.random() * width) + padding + nodeSize/2;
-                
-                for (const n of nodes) {
-                    const dx = left - n.left;
-                    const dy = top - n.top;
-                    if (Math.sqrt(dx*dx + dy*dy) < nodeSize + 30) {
-                        overlapping = true;
-                        break;
-                    }
-                }
-                attempts++;
-            } while (overlapping && attempts < 50);
-
-            node.style.top = top + 'px';
-            node.style.left = left + 'px';
-            nodes.push({ element: node, top, left });
+            nodes.push({ element: node, top: pos.top, left: pos.left });
             container.appendChild(node);
-        }
+        });
 
         let activeFingers = 0;
         let holdStartTime = null;
         let holdInterval = null;
         const holdDuration = 3000;
         let isComplete = false;
+
+        // Cancel Handler
+        const handleCancel = () => {
+            if (isComplete) return;
+            clearInterval(holdInterval);
+            overlay.classList.add('hidden');
+            // Jangan resolve(), biarkan user klik tombol manual lagi jika mau
+        };
+        if(cancelBtn) cancelBtn.onclick = handleCancel;
 
         const handleTouch = (e) => {
             if (isComplete) return;
@@ -2365,7 +2378,7 @@ function startBiometricHandshake() {
                 const rect = n.element.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
-                const radius = rect.width / 2 + 30; // Hitbox slightly larger
+                const radius = rect.width / 2 + 40; // Hitbox lebih besar lagi untuk UX mobile
 
                 const isTouched = touches.some(t => {
                     const dx = t.clientX - centerX;
