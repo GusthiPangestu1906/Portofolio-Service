@@ -1926,6 +1926,39 @@ body.locked {
     to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+/* SCANNING ACTIVE STATE (Visual Feedback) */
+.scanning-active .tech-ring {
+    border-color: #00C2FF;
+    box-shadow: 0 0 30px rgba(0, 194, 255, 0.6);
+    animation-duration: 0.5s !important; /* Spin faster when holding */
+}
+
+.scanning-active .logo-pulse {
+    filter: drop-shadow(0 0 50px rgba(0, 194, 255, 1));
+    transform: scale(1.1);
+}
+
+/* SCAN SUCCESS STATE (Green Feedback) */
+.scan-success .tech-ring {
+    border-color: rgba(34, 197, 94, 0.3);
+    border-top-color: #22c55e;
+    border-bottom-color: #22c55e;
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+}
+
+.scan-success .inner-ring {
+    border-right-color: #22c55e !important;
+    border-left-color: #22c55e !important;
+}
+
+.scan-success .glow-center {
+    background-color: rgba(34, 197, 94, 0.2) !important;
+}
+
+.scan-success .logo-pulse {
+    filter: drop-shadow(0 0 50px rgba(34, 197, 94, 0.8));
+}
+
 /* =========================================
    BIOMETRIC HANDSHAKE STYLES
    ========================================= */
