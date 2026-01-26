@@ -1926,6 +1926,18 @@ body.locked {
     to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+/* SCANNING ACTIVE STATE (Visual Feedback) */
+.scanning-active .tech-ring {
+    border-color: #00C2FF;
+    box-shadow: 0 0 30px rgba(0, 194, 255, 0.6);
+    animation-duration: 0.5s !important; /* Spin faster when holding */
+}
+
+.scanning-active .logo-pulse {
+    filter: drop-shadow(0 0 50px rgba(0, 194, 255, 1));
+    transform: scale(1.1);
+}
+
 /* =========================================
    BIOMETRIC HANDSHAKE STYLES
    ========================================= */
