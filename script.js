@@ -390,15 +390,25 @@ async function runSystemSequence() {
         enterBtn.classList.add('uplink-pulse');
 
         enterBtn.onclick = () => {
-            // Simple Enter Logic (Handshake already done at start)
-            enterBtn.classList.remove('uplink-pulse');
-            enterBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> ESTABLISHING CONNECTION...";
-            enterBtn.classList.add('cursor-wait', 'opacity-80');
-            new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3').play().catch(()=>{});
-            
-            setTimeout(() => {
-                resolve();
-            }, 800);
+            // Check for touch capability
+            const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+            if (isTouch) {
+                // Launch Biometric Handshake
+                startBiometricHandshake().then(() => {
+                    resolve();
+                });
+            } else {
+                // Desktop / Fallback Logic
+                enterBtn.classList.remove('uplink-pulse');
+                enterBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> ESTABLISHING CONNECTION...";
+                enterBtn.classList.add('cursor-wait', 'opacity-80');
+                new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3').play().catch(()=>{});
+                
+                setTimeout(() => {
+                    resolve();
+                }, 800);
+            }
         };
     });
 }
@@ -459,6 +469,10 @@ async function startLoadingAnimation() {
     const sysAction = document.getElementById('sys-action-container');
     if(sysAction) sysAction.classList.add('hidden');
     const sysBtn = document.getElementById('sys-enter-btn');
+    
+    // Reset Biometric Overlay
+    const bioOverlay = document.getElementById('biometric-overlay');
+    if(bioOverlay) bioOverlay.classList.add('hidden');
 
     if(sysBtn) {
         sysBtn.innerHTML = `<span class="relative z-10 flex items-center justify-center gap-2 tracking-widest"><i class='bx bx-power-off'></i> INITIALIZE UPLINK</span><div class="absolute inset-0 bg-primary/20 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>`;
@@ -493,17 +507,15 @@ async function startLoadingAnimation() {
 
         if (width >= 100) {
             clearInterval(interval);
-            // NEW FLOW: Fingerprint Scan -> System Diagnosis
-            startFingerprintScan().then(() => {
-                if(loaderContent) loaderContent.style.opacity = '0';
+            
+            if(loaderContent) loaderContent.style.opacity = '0';
 
-                if(sysOverlay) {
-                    sysOverlay.classList.remove('hidden');
-                    runSystemSequence().then(() => {
-                        finishLoading();
-                    });
-                }
-            });
+            if(sysOverlay) {
+                sysOverlay.classList.remove('hidden');
+                runSystemSequence().then(() => {
+                    finishLoading();
+                });
+            }
         } else {
             width++;
             if(progressBar) progressBar.style.width = width + '%';
@@ -2277,108 +2289,171 @@ document.addEventListener('click', function(e) {
 });
 
 /* =========================================
-   SINGLE FINGERPRINT SCAN LOGIC
+   BIOMETRIC HANDSHAKE LOGIC
    ========================================= */
-function startFingerprintScan() {
+function startBiometricHandshake() {
     return new Promise((resolve) => {
-        const instruction = document.getElementById('scan-instruction');
-        const target = document.getElementById('fingerprint-target');
-        const statusText = document.getElementById('loader-status');
-        const progressBar = document.getElementById('progress-bar');
+        const overlay = document.getElementById('biometric-overlay');
+        const container = document.getElementById('bio-nodes-container');
+        const progressBar = document.getElementById('bio-progress');
+        const cancelBtn = document.getElementById('bio-cancel-btn');
         
-        // Show UI
-        if(instruction) instruction.classList.remove('hidden');
-        if(target) target.classList.remove('hidden');
-        if(statusText) statusText.innerText = "> BIOMETRIC REQUIRED";
-        if(progressBar) progressBar.style.width = '0%';
+        if (!overlay || !container) {
+            resolve(); // Fallback if elements missing
+            return;
+        }
 
-        let holdStart = 0;
-        let holdInterval;
-        const holdDuration = 1500; // 1.5s hold time
+        // Show Overlay
+        overlay.classList.remove('hidden');
         
-        const onTouchStart = (e) => {
-            // Prevent default to stop scrolling/zooming while scanning
-            if(e.type === 'touchstart') e.preventDefault();
+        // Force Reflow agar ukuran container terbaca benar sebelum render node
+        void container.offsetWidth;
+        
+        // Clear previous nodes
+        container.innerHTML = '';
+        if(progressBar) {
+            progressBar.style.width = '0%';
+            progressBar.classList.remove('bg-green-500');
+            progressBar.classList.add('bg-primary');
+        }
+        
+        // Generate 3 Nodes with ERGONOMIC POSITIONING (Triangle Formation)
+        // Agar tidak acak berantakan dan susah dipencet di HP
+        const nodes = [];
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        
+        // Posisi Ergonomis untuk 3 Jari (Jempol Kiri, Jempol Kanan, Telunjuk/Tengah)
+        // Node 1: Atas Tengah (Telunjuk)
+        // Node 2: Bawah Kiri (Jempol Kiri)
+        // Node 3: Bawah Kanan (Jempol Kanan)
+        
+        const positions = [
+            { // Top Center
+                top: Math.floor(height * 0.2) + (Math.random() * 40 - 20), 
+                left: width / 2 + (Math.random() * 40 - 20) 
+            },
+            { // Bottom Left
+                top: Math.floor(height * 0.7) + (Math.random() * 40 - 20), 
+                left: Math.floor(width * 0.2) + (Math.random() * 30) 
+            },
+            { // Bottom Right
+                top: Math.floor(height * 0.7) + (Math.random() * 40 - 20), 
+                left: Math.floor(width * 0.8) - (Math.random() * 30) 
+            }
+        ];
+
+        positions.forEach((pos, i) => {
+            const node = document.createElement('div');
+            node.className = 'bio-node';
+            node.style.top = pos.top + 'px';
+            node.style.left = pos.left + 'px';
             
-            // Check finger count (only 1 allowed)
-            if (e.touches && e.touches.length > 1) {
-                if(statusText) {
-                    statusText.innerText = "> ERROR: SINGLE FINGER ONLY";
-                    statusText.classList.add('text-red-500');
+            nodes.push({ element: node, top: pos.top, left: pos.left });
+            container.appendChild(node);
+        });
+
+        let activeFingers = 0;
+        let holdStartTime = null;
+        let holdInterval = null;
+        const holdDuration = 3000;
+        let isComplete = false;
+
+        // Cancel Handler
+        const handleCancel = () => {
+            if (isComplete) return;
+            clearInterval(holdInterval);
+            overlay.classList.add('hidden');
+            // Jangan resolve(), biarkan user klik tombol manual lagi jika mau
+        };
+        if(cancelBtn) cancelBtn.onclick = handleCancel;
+
+        const handleTouch = (e) => {
+            if (isComplete) return;
+            e.preventDefault();
+            const touches = Array.from(e.touches);
+            let currentActive = 0;
+
+            nodes.forEach(n => {
+                const rect = n.element.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const radius = rect.width / 2 + 40; // Hitbox lebih besar lagi untuk UX mobile
+
+                const isTouched = touches.some(t => {
+                    const dx = t.clientX - centerX;
+                    const dy = t.clientY - centerY;
+                    return Math.sqrt(dx*dx + dy*dy) < radius;
+                });
+
+                if (isTouched) {
+                    if (!n.element.classList.contains('active')) n.element.classList.add('active');
+                    currentActive++;
+                } else {
+                    n.element.classList.remove('active');
                 }
-                return;
-            }
+            });
 
-            holdStart = Date.now();
-            if(statusText) {
-                statusText.innerText = "> IDENTIFYING...";
-                statusText.classList.remove('text-red-500');
-                statusText.classList.add('text-primary');
+            if (currentActive > activeFingers) {
+                if (currentActive === 1 && navigator.vibrate) navigator.vibrate(50);
+                if (currentActive === 2 && navigator.vibrate) navigator.vibrate([50, 30, 50]);
+                if (currentActive === 3) {
+                    if(navigator.vibrate) navigator.vibrate(200);
+                    startHold();
+                }
+            } else if (currentActive < activeFingers) {
+                if (activeFingers === 3 && currentActive < 3) failHold();
             }
-            
-            // Visual feedback: Spin rings faster
-            document.body.classList.add('scanning-active');
-            if(navigator.vibrate) navigator.vibrate(50);
+            activeFingers = currentActive;
+        };
 
+        const startHold = () => {
+            if (holdInterval) return;
+            holdStartTime = Date.now();
+            nodes.forEach(n => n.element.classList.add('holding'));
             holdInterval = setInterval(() => {
-                const elapsed = Date.now() - holdStart;
+                const elapsed = Date.now() - holdStartTime;
                 const progress = Math.min((elapsed / holdDuration) * 100, 100);
-                
-                if(progressBar) progressBar.style.width = progress + '%';
-
-                if (elapsed >= holdDuration) {
-                    success();
-                }
-            }, 30);
+                if (progressBar) progressBar.style.width = progress + '%';
+                if (elapsed >= holdDuration) completeHandshake();
+            }, 16);
         };
 
-        const onTouchEnd = () => {
+        const failHold = () => {
+            if (!holdInterval) return;
             clearInterval(holdInterval);
-            document.body.classList.remove('scanning-active');
-            if(progressBar) progressBar.style.width = '0%';
-            if(statusText) {
-                statusText.innerText = "> BIOMETRIC REQUIRED";
-                statusText.classList.remove('text-primary', 'text-red-500');
-            }
+            holdInterval = null;
+            if (progressBar) progressBar.style.width = '0%';
+            if(navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 100]);
+            nodes.forEach(n => {
+                n.element.classList.remove('holding');
+                n.element.classList.add('error');
+                setTimeout(() => n.element.classList.remove('error'), 500);
+            });
         };
 
-        const success = () => {
+        const completeHandshake = () => {
+            isComplete = true;
             clearInterval(holdInterval);
-            document.body.classList.remove('scanning-active');
-            document.body.classList.add('scan-success');
-            
-            if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            
-            if(statusText) {
-                statusText.innerText = "> IDENTITY VERIFIED";
-                statusText.classList.add('text-green-500');
-            }
-            if(instruction) {
-                instruction.innerText = "ACCESS GRANTED";
-                instruction.classList.add('text-green-500');
-            }
-            if(progressBar) {
+            if(navigator.vibrate) navigator.vibrate(500);
+            nodes.forEach(n => {
+                n.element.classList.remove('holding');
+                n.element.classList.add('success');
+            });
+            if (progressBar) {
                 progressBar.style.width = '100%';
+                progressBar.classList.remove('bg-primary');
                 progressBar.classList.add('bg-green-500');
             }
-
-            // Cleanup listeners
-            target.removeEventListener('touchstart', onTouchStart);
-            target.removeEventListener('touchend', onTouchEnd);
-            target.removeEventListener('mousedown', onTouchStart);
-            target.removeEventListener('mouseup', onTouchEnd);
-            target.removeEventListener('mouseleave', onTouchEnd);
-
             setTimeout(() => {
+                overlay.classList.add('hidden');
                 resolve();
-            }, 800);
+            }, 1000);
         };
 
-        // Add listeners
-        target.addEventListener('touchstart', onTouchStart, {passive: false});
-        target.addEventListener('touchend', onTouchEnd);
-        target.addEventListener('mousedown', onTouchStart);
-        target.addEventListener('mouseup', onTouchEnd);
-        target.addEventListener('mouseleave', onTouchEnd);
+        container.addEventListener('touchstart', handleTouch, { passive: false });
+        container.addEventListener('touchmove', handleTouch, { passive: false });
+        container.addEventListener('touchend', handleTouch);
+        container.addEventListener('touchcancel', handleTouch);
     });
 }
