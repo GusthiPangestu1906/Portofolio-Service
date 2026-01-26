@@ -390,15 +390,25 @@ async function runSystemSequence() {
         enterBtn.classList.add('uplink-pulse');
 
         enterBtn.onclick = () => {
-            enterBtn.classList.remove('uplink-pulse');
-            enterBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> ESTABLISHING CONNECTION...";
-            enterBtn.classList.add('cursor-wait', 'opacity-80');
-            // Efek suara klik (opsional)
-            new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3').play().catch(()=>{});
-            
-            setTimeout(() => {
-                resolve();
-            }, 800);
+            // Check for touch capability
+            const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+            if (isTouch) {
+                // Launch Biometric Handshake
+                startBiometricHandshake().then(() => {
+                    resolve();
+                });
+            } else {
+                // Desktop / Fallback Logic
+                enterBtn.classList.remove('uplink-pulse');
+                enterBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> ESTABLISHING CONNECTION...";
+                enterBtn.classList.add('cursor-wait', 'opacity-80');
+                new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3').play().catch(()=>{});
+                
+                setTimeout(() => {
+                    resolve();
+                }, 800);
+            }
         };
     });
 }
@@ -459,6 +469,11 @@ async function startLoadingAnimation() {
     const sysAction = document.getElementById('sys-action-container');
     if(sysAction) sysAction.classList.add('hidden');
     const sysBtn = document.getElementById('sys-enter-btn');
+    
+    // Reset Biometric Overlay
+    const bioOverlay = document.getElementById('biometric-overlay');
+    if(bioOverlay) bioOverlay.classList.add('hidden');
+
     if(sysBtn) {
         sysBtn.innerHTML = `<span class="relative z-10 flex items-center justify-center gap-2 tracking-widest"><i class='bx bx-power-off'></i> INITIALIZE UPLINK</span><div class="absolute inset-0 bg-primary/20 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>`;
         sysBtn.classList.remove('cursor-wait', 'opacity-80', 'animate-pulse', 'uplink-pulse');
@@ -2272,3 +2287,160 @@ document.addEventListener('click', function(e) {
         }, 600);
     }
 });
+
+/* =========================================
+   BIOMETRIC HANDSHAKE LOGIC
+   ========================================= */
+function startBiometricHandshake() {
+    return new Promise((resolve) => {
+        const overlay = document.getElementById('biometric-overlay');
+        const container = document.getElementById('bio-nodes-container');
+        const progressBar = document.getElementById('bio-progress');
+        
+        if (!overlay || !container) {
+            resolve(); // Fallback if elements missing
+            return;
+        }
+
+        // Show Overlay
+        overlay.classList.remove('hidden');
+        
+        // Clear previous nodes
+        container.innerHTML = '';
+        if(progressBar) {
+            progressBar.style.width = '0%';
+            progressBar.classList.remove('bg-green-500');
+            progressBar.classList.add('bg-primary');
+        }
+        
+        // Generate 3 Random Nodes
+        const nodes = [];
+        const nodeSize = 90;
+        const padding = 20;
+        const width = container.clientWidth - nodeSize - padding * 2;
+        const height = container.clientHeight - nodeSize - padding * 2;
+
+        for (let i = 0; i < 3; i++) {
+            const node = document.createElement('div');
+            node.className = 'bio-node';
+            
+            // Random Position with simple overlap check
+            let top, left, overlapping;
+            let attempts = 0;
+            do {
+                overlapping = false;
+                top = Math.floor(Math.random() * height) + padding + nodeSize/2;
+                left = Math.floor(Math.random() * width) + padding + nodeSize/2;
+                
+                for (const n of nodes) {
+                    const dx = left - n.left;
+                    const dy = top - n.top;
+                    if (Math.sqrt(dx*dx + dy*dy) < nodeSize + 30) {
+                        overlapping = true;
+                        break;
+                    }
+                }
+                attempts++;
+            } while (overlapping && attempts < 50);
+
+            node.style.top = top + 'px';
+            node.style.left = left + 'px';
+            nodes.push({ element: node, top, left });
+            container.appendChild(node);
+        }
+
+        let activeFingers = 0;
+        let holdStartTime = null;
+        let holdInterval = null;
+        const holdDuration = 3000;
+        let isComplete = false;
+
+        const handleTouch = (e) => {
+            if (isComplete) return;
+            e.preventDefault();
+            const touches = Array.from(e.touches);
+            let currentActive = 0;
+
+            nodes.forEach(n => {
+                const rect = n.element.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const radius = rect.width / 2 + 30; // Hitbox slightly larger
+
+                const isTouched = touches.some(t => {
+                    const dx = t.clientX - centerX;
+                    const dy = t.clientY - centerY;
+                    return Math.sqrt(dx*dx + dy*dy) < radius;
+                });
+
+                if (isTouched) {
+                    if (!n.element.classList.contains('active')) n.element.classList.add('active');
+                    currentActive++;
+                } else {
+                    n.element.classList.remove('active');
+                }
+            });
+
+            if (currentActive > activeFingers) {
+                if (currentActive === 1 && navigator.vibrate) navigator.vibrate(50);
+                if (currentActive === 2 && navigator.vibrate) navigator.vibrate([50, 30, 50]);
+                if (currentActive === 3) {
+                    if(navigator.vibrate) navigator.vibrate(200);
+                    startHold();
+                }
+            } else if (currentActive < activeFingers) {
+                if (activeFingers === 3 && currentActive < 3) failHold();
+            }
+            activeFingers = currentActive;
+        };
+
+        const startHold = () => {
+            if (holdInterval) return;
+            holdStartTime = Date.now();
+            nodes.forEach(n => n.element.classList.add('holding'));
+            holdInterval = setInterval(() => {
+                const elapsed = Date.now() - holdStartTime;
+                const progress = Math.min((elapsed / holdDuration) * 100, 100);
+                if (progressBar) progressBar.style.width = progress + '%';
+                if (elapsed >= holdDuration) completeHandshake();
+            }, 16);
+        };
+
+        const failHold = () => {
+            if (!holdInterval) return;
+            clearInterval(holdInterval);
+            holdInterval = null;
+            if (progressBar) progressBar.style.width = '0%';
+            if(navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 100]);
+            nodes.forEach(n => {
+                n.element.classList.remove('holding');
+                n.element.classList.add('error');
+                setTimeout(() => n.element.classList.remove('error'), 500);
+            });
+        };
+
+        const completeHandshake = () => {
+            isComplete = true;
+            clearInterval(holdInterval);
+            if(navigator.vibrate) navigator.vibrate(500);
+            nodes.forEach(n => {
+                n.element.classList.remove('holding');
+                n.element.classList.add('success');
+            });
+            if (progressBar) {
+                progressBar.style.width = '100%';
+                progressBar.classList.remove('bg-primary');
+                progressBar.classList.add('bg-green-500');
+            }
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                resolve();
+            }, 1000);
+        };
+
+        container.addEventListener('touchstart', handleTouch, { passive: false });
+        container.addEventListener('touchmove', handleTouch, { passive: false });
+        container.addEventListener('touchend', handleTouch);
+        container.addEventListener('touchcancel', handleTouch);
+    });
+}

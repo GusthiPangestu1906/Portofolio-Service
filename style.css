@@ -1373,7 +1373,8 @@ body.locked {
 
 /* Apply to both a specific class and the generic glass-card within this section */
 .experience-card,
-.experienceSwiper .glass-card {
+.experienceSwiper .glass-card,
+.portfolioSwiper .glass-card {
     position: relative;
     width: 100%;
     background: rgba(10, 10, 12, 0.6); /* Lebih gelap & bersih */
@@ -1381,7 +1382,7 @@ body.locked {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.05); /* Border lebih tipis */
     border-radius: 24px;
-    padding: 28px; /* Padding optimal */
+    /* padding: 28px;  Hapus padding default agar fleksibel untuk portfolio yang punya gambar full */
     min-height: 260px; /* Tinggi disesuaikan untuk konten teks */
     display: flex;
     flex-direction: column;
@@ -1391,9 +1392,15 @@ body.locked {
     cursor: pointer; /* Signal clickability */
 }
 
+/* Padding khusus untuk Experience Card (karena Portfolio punya struktur beda) */
+.experienceSwiper .glass-card {
+    padding: 28px;
+}
+
 /* Hover State: Lift & Glow */
 .experience-card:hover,
-.experienceSwiper .glass-card:hover {
+.experienceSwiper .glass-card:hover,
+.portfolioSwiper .glass-card:hover {
     transform: translateY(-5px);
     background: rgba(20, 20, 25, 0.8);
     border-color: rgba(0, 194, 255, 0.3);
@@ -1403,7 +1410,8 @@ body.locked {
 
 /* Tech Accent Line (Top) */
 .experience-card::before,
-.experienceSwiper .glass-card::before {
+.experienceSwiper .glass-card::before,
+.portfolioSwiper .glass-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1414,10 +1422,12 @@ body.locked {
     opacity: 0;
     transform: scaleX(0.5);
     transition: all 0.4s ease;
+    z-index: 20; /* Pastikan di atas gambar portfolio */
 }
 
 .experience-card:hover::before,
-.experienceSwiper .glass-card:hover::before {
+.experienceSwiper .glass-card:hover::before,
+.portfolioSwiper .glass-card:hover::before {
     opacity: 1;
     transform: scaleX(1);
 }
@@ -1514,52 +1524,82 @@ body.locked {
    EXPERIENCE CARD COLOR VARIANTS (HOVER)
    ========================================= */
 /* Pink Variant (Event) */
-.experienceSwiper .glass-card.hover-pink:hover {
+.experienceSwiper .glass-card.hover-pink:hover,
+.portfolioSwiper .glass-card.hover-pink:hover {
     border-color: rgba(236, 72, 153, 0.5); /* Pink-500 */
     box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(236, 72, 153, 0.1);
 }
-.experienceSwiper .glass-card.hover-pink:hover::before { background: linear-gradient(90deg, transparent, #ec4899, transparent); }
+.experienceSwiper .glass-card.hover-pink:hover::before,
+.portfolioSwiper .glass-card.hover-pink:hover::before { background: linear-gradient(90deg, transparent, #ec4899, transparent); }
 
 /* Blue Variant (Operator/Course) */
-.experienceSwiper .glass-card.hover-blue:hover {
+.experienceSwiper .glass-card.hover-blue:hover,
+.portfolioSwiper .glass-card.hover-blue:hover {
     border-color: rgba(59, 130, 246, 0.5); /* Blue-500 */
     box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.1);
 }
-.experienceSwiper .glass-card.hover-blue:hover::before { background: linear-gradient(90deg, transparent, #3b82f6, transparent); }
+.experienceSwiper .glass-card.hover-blue:hover::before,
+.portfolioSwiper .glass-card.hover-blue:hover::before { background: linear-gradient(90deg, transparent, #3b82f6, transparent); }
 
 /* Cyan Variant (Training) */
-.experienceSwiper .glass-card.hover-cyan:hover {
+.experienceSwiper .glass-card.hover-cyan:hover,
+.portfolioSwiper .glass-card.hover-cyan:hover {
     border-color: rgba(34, 211, 238, 0.5); /* Cyan-400 */
     box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(34, 211, 238, 0.1);
 }
-.experienceSwiper .glass-card.hover-cyan:hover::before { background: linear-gradient(90deg, transparent, #22d3ee, transparent); }
+.experienceSwiper .glass-card.hover-cyan:hover::before,
+.portfolioSwiper .glass-card.hover-cyan:hover::before { background: linear-gradient(90deg, transparent, #22d3ee, transparent); }
 
 /* Yellow Variant (DigiUp) */
-.experienceSwiper .glass-card.hover-yellow:hover {
+.experienceSwiper .glass-card.hover-yellow:hover,
+.portfolioSwiper .glass-card.hover-yellow:hover {
     border-color: rgba(250, 204, 21, 0.5); /* Yellow-400 */
     box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(250, 204, 21, 0.1);
 }
-.experienceSwiper .glass-card.hover-yellow:hover::before { background: linear-gradient(90deg, transparent, #facc15, transparent); }
+.experienceSwiper .glass-card.hover-yellow:hover::before,
+.portfolioSwiper .glass-card.hover-yellow:hover::before { background: linear-gradient(90deg, transparent, #facc15, transparent); }
 
 /* Green Variant (BNSP) */
-.experienceSwiper .glass-card.hover-green:hover {
+.experienceSwiper .glass-card.hover-green:hover,
+.portfolioSwiper .glass-card.hover-green:hover {
     border-color: rgba(74, 222, 128, 0.5); /* Green-400 */
     box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(74, 222, 128, 0.1);
 }
-.experienceSwiper .glass-card.hover-green:hover::before { background: linear-gradient(90deg, transparent, #4ade80, transparent); }
+.experienceSwiper .glass-card.hover-green:hover::before,
+.portfolioSwiper .glass-card.hover-green:hover::before { background: linear-gradient(90deg, transparent, #4ade80, transparent); }
+
+/* Orange Variant (New for Portfolio) */
+.experienceSwiper .glass-card.hover-orange:hover,
+.portfolioSwiper .glass-card.hover-orange:hover {
+    border-color: rgba(249, 115, 22, 0.5); /* Orange-500 */
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(249, 115, 22, 0.1);
+}
+.experienceSwiper .glass-card.hover-orange:hover::before,
+.portfolioSwiper .glass-card.hover-orange:hover::before { background: linear-gradient(90deg, transparent, #f97316, transparent); }
+
+/* Purple Variant (New for Portfolio) */
+.experienceSwiper .glass-card.hover-purple:hover,
+.portfolioSwiper .glass-card.hover-purple:hover {
+    border-color: rgba(168, 85, 247, 0.5); /* Purple-500 */
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(168, 85, 247, 0.1);
+}
+.experienceSwiper .glass-card.hover-purple:hover::before,
+.portfolioSwiper .glass-card.hover-purple:hover::before { background: linear-gradient(90deg, transparent, #a855f7, transparent); }
 
 /* =========================================
    MOBILE EXPERIENCE UX: FOCUS MODE
    ========================================= */
 @media (max-width: 640px) {
-    .experienceSwiper .swiper-slide {
+    .experienceSwiper .swiper-slide,
+    .portfolioSwiper .swiper-slide {
         transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         opacity: 0.5; /* Redupkan kartu samping */
         transform: scale(0.92); /* Kecilkan kartu samping */
         filter: blur(1px);
     }
     
-    .experienceSwiper .swiper-slide-active {
+    .experienceSwiper .swiper-slide-active,
+    .portfolioSwiper .swiper-slide-active {
         opacity: 1;
         transform: scale(1); /* Kartu aktif ukuran penuh */
         filter: blur(0);
@@ -1567,7 +1607,8 @@ body.locked {
     }
 
     /* Active Card Glow */
-    .experienceSwiper .swiper-slide-active .glass-card {
+    .experienceSwiper .swiper-slide-active .glass-card,
+    .portfolioSwiper .swiper-slide-active .glass-card {
         border-color: rgba(0, 194, 255, 0.6);
         box-shadow: 
             0 15px 30px -5px rgba(0, 0, 0, 0.5),
@@ -1576,54 +1617,87 @@ body.locked {
     }
     
     /* Dynamic Color for Active Card (Mobile) */
-    .experienceSwiper .swiper-slide-active .glass-card.hover-pink {
+    .experienceSwiper .swiper-slide-active .glass-card.hover-pink,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-pink {
         border-color: rgba(236, 72, 153, 0.6);
         box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(236, 72, 153, 0.2);
     }
-    .experienceSwiper .swiper-slide-active .glass-card.hover-pink::before {
+    .experienceSwiper .swiper-slide-active .glass-card.hover-pink::before,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-pink::before {
         background: linear-gradient(90deg, transparent, #ec4899, transparent);
     }
 
-    .experienceSwiper .swiper-slide-active .glass-card.hover-blue {
+    .experienceSwiper .swiper-slide-active .glass-card.hover-blue,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-blue {
         border-color: rgba(59, 130, 246, 0.6);
         box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(59, 130, 246, 0.2);
     }
-    .experienceSwiper .swiper-slide-active .glass-card.hover-blue::before {
+    .experienceSwiper .swiper-slide-active .glass-card.hover-blue::before,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-blue::before {
         background: linear-gradient(90deg, transparent, #3b82f6, transparent);
     }
 
-    .experienceSwiper .swiper-slide-active .glass-card.hover-cyan {
+    .experienceSwiper .swiper-slide-active .glass-card.hover-cyan,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-cyan {
         border-color: rgba(34, 211, 238, 0.6);
         box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(34, 211, 238, 0.2);
     }
-    .experienceSwiper .swiper-slide-active .glass-card.hover-cyan::before {
+    .experienceSwiper .swiper-slide-active .glass-card.hover-cyan::before,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-cyan::before {
         background: linear-gradient(90deg, transparent, #22d3ee, transparent);
     }
 
-    .experienceSwiper .swiper-slide-active .glass-card.hover-yellow {
+    .experienceSwiper .swiper-slide-active .glass-card.hover-yellow,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-yellow {
         border-color: rgba(250, 204, 21, 0.6);
         box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(250, 204, 21, 0.2);
     }
-    .experienceSwiper .swiper-slide-active .glass-card.hover-yellow::before {
+    .experienceSwiper .swiper-slide-active .glass-card.hover-yellow::before,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-yellow::before {
         background: linear-gradient(90deg, transparent, #facc15, transparent);
     }
 
-    .experienceSwiper .swiper-slide-active .glass-card.hover-green {
+    .experienceSwiper .swiper-slide-active .glass-card.hover-green,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-green {
         border-color: rgba(74, 222, 128, 0.6);
         box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(74, 222, 128, 0.2);
     }
-    .experienceSwiper .swiper-slide-active .glass-card.hover-green::before {
+    .experienceSwiper .swiper-slide-active .glass-card.hover-green::before,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-green::before {
         background: linear-gradient(90deg, transparent, #4ade80, transparent);
+    }
+    
+    /* Orange & Purple Mobile Active */
+    .experienceSwiper .swiper-slide-active .glass-card.hover-orange,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-orange {
+        border-color: rgba(249, 115, 22, 0.6);
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(249, 115, 22, 0.2);
+    }
+    .experienceSwiper .swiper-slide-active .glass-card.hover-orange::before,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-orange::before {
+        background: linear-gradient(90deg, transparent, #f97316, transparent);
+    }
+
+    .experienceSwiper .swiper-slide-active .glass-card.hover-purple,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-purple {
+        border-color: rgba(168, 85, 247, 0.6);
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(168, 85, 247, 0.2);
+    }
+    .experienceSwiper .swiper-slide-active .glass-card.hover-purple::before,
+    .portfolioSwiper .swiper-slide-active .glass-card.hover-purple::before {
+        background: linear-gradient(90deg, transparent, #a855f7, transparent);
     }
 
     /* Show Accent Line */
-    .experienceSwiper .swiper-slide-active .glass-card::before {
+    .experienceSwiper .swiper-slide-active .glass-card::before,
+    .portfolioSwiper .swiper-slide-active .glass-card::before {
         opacity: 1;
         transform: scaleX(1);
     }
 
     /* Animation: Breathing Glow for Active Card (Agar terlihat hidup) */
-    .experienceSwiper .swiper-slide-active .glass-card {
+    .experienceSwiper .swiper-slide-active .glass-card,
+    .portfolioSwiper .swiper-slide-active .glass-card {
         animation: active-card-pulse 3s ease-in-out infinite;
     }
     
@@ -1851,3 +1925,64 @@ body.locked {
     from { transform: translate(-50%, -50%) rotate(0deg); }
     to { transform: translate(-50%, -50%) rotate(360deg); }
 }
+
+/* =========================================
+   BIOMETRIC HANDSHAKE STYLES
+   ========================================= */
+.bio-node {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border: 2px dashed rgba(0, 194, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+
+.bio-node::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: rgba(0, 194, 255, 0.5);
+    border-radius: 50%;
+    animation: bioPulse 1.5s infinite;
+}
+
+.bio-node.active {
+    border-color: #00C2FF;
+    background: rgba(0, 194, 255, 0.15);
+    box-shadow: 0 0 30px rgba(0, 194, 255, 0.4);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.bio-node.active::before {
+    background: #00C2FF;
+    box-shadow: 0 0 10px #00C2FF;
+}
+
+.bio-node.holding {
+    border-style: solid;
+    animation: bioShake 0.1s infinite;
+}
+
+.bio-node.success {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.2);
+    box-shadow: 0 0 40px rgba(34, 197, 94, 0.6);
+    transform: translate(-50%, -50%) scale(1.2);
+}
+.bio-node.success::before { background: #22c55e; }
+
+.bio-node.error {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.2);
+    box-shadow: 0 0 40px rgba(239, 68, 68, 0.6);
+    animation: shake 0.3s ease-in-out;
+}
+
+@keyframes bioPulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+@keyframes bioShake { 0%, 100% { transform: translate(-50%, -50%) rotate(0deg); } 25% { transform: translate(-51%, -49%) rotate(-2deg); } 75% { transform: translate(-49%, -51%) rotate(2deg); } }
