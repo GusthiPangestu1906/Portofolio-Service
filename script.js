@@ -447,6 +447,10 @@ async function startLoadingAnimation() {
     const loaderContent = document.getElementById('loader-content');
     if(loaderContent) loaderContent.style.opacity = '1';
 
+    // Reset Logo Visibility
+    const logo = document.getElementById('loading-logo');
+    if(logo) logo.classList.remove('opacity-0');
+
     // Reset System Overlay
     const sysOverlay = document.getElementById('sys-overlay');
     if(sysOverlay) {
@@ -2304,6 +2308,10 @@ function startFingerprintScan() {
         const statusText = document.getElementById('loader-status');
         const progressBar = document.getElementById('progress-bar');
         
+        // Hide Logo when scan starts
+        const logo = document.getElementById('loading-logo');
+        if(logo) logo.classList.add('opacity-0');
+
         // Show UI
         if(instruction) instruction.classList.remove('hidden');
         if(target) target.classList.remove('hidden');
@@ -2375,7 +2383,48 @@ function startFingerprintScan() {
             clearInterval(holdInterval);
             document.body.classList.remove('scanning-active');
             
+            // Visual Success Effect on Fingerprint
+            const fpContainer = target.querySelector('.relative');
+            if(fpContainer) {
+                fpContainer.classList.add('ring-success');
+
+                // Generate Green Particles Effect
+                for (let i = 0; i < 30; i++) {
+                    const p = document.createElement('div');
+                    p.classList.add('scan-particle');
+                    
+                    // Random direction & distance
+                    const angle = Math.random() * Math.PI * 2;
+                    const dist = 60 + Math.random() * 80; // Spread distance (60px - 140px)
+                    
+                    p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+                    p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+                    
+                    // Random size & delay
+                    const size = Math.random() * 4 + 2 + 'px';
+                    p.style.width = size;
+                    p.style.height = size;
+                    p.style.animationDelay = Math.random() * 0.2 + 's';
+                    
+                    fpContainer.appendChild(p);
+                    
+                    // Cleanup particle after animation
+                    setTimeout(() => p.remove(), 1000);
+                }
+            }
+
+            const fpSvg = target.querySelector('svg');
+            if(fpSvg) {
+                fpSvg.classList.remove('animate-pulse');
+                fpSvg.classList.add('fingerprint-success');
+            }
+            
             if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            
+            // Play Access Granted Sound
+            const successSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
+            successSound.volume = 0.5;
+            successSound.play().catch(() => {});
             
             if(statusText) {
                 statusText.innerText = "> IDENTITY VERIFIED";
