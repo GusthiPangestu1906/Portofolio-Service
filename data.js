@@ -53,10 +53,16 @@ window.translations = {
         // Education Section
         edu_title: "Riwayat Pendidikan",
         edu_subtitle: "Latar belakang akademik dan kualifikasi formal.",
-        edu_pens_degree: "D4 Teknik Informatika",
+        edu_pens_degree: "Teknik Informatika",
         edu_pens_desc: "Fokus pada Rekayasa Perangkat Lunak, Algoritma, dan Pengembangan Web. Aktif dalam organisasi HIMIT dan kegiatan kemahasiswaan.",
-        edu_sma_degree: "Jurusan MIPA",
-        edu_sma_desc: "Memiliki fondasi kuat dalam matematika dan sains. Lulus dengan nilai memuaskan dan aktif dalam ekstrakurikuler teknologi.",
+        edu_smk_degree: "Teknik Jaringan Akses (TJA)",
+        edu_smk_desc: "Mempelajari infrastruktur jaringan, fiber optik, dan teknologi akses telekomunikasi di SMK Telkom Sidoarjo.",
+        
+        edu_tefa_degree: "SEO Web Specialist",
+        edu_tefa_desc: "Program Teaching Factory kolaborasi dengan Jagoan Hosting. Fokus pada optimasi website, strategi konten, dan analisis trafik web.",
+        
+        edu_intern_degree: "Marketing Communication",
+        edu_intern_desc: "Magang di Performa Optima Group. Bertanggung jawab atas komunikasi pemasaran, branding perusahaan, dan manajemen media sosial.",
 
         // Services Section
         services_title: "Layanan Saya",
@@ -181,10 +187,16 @@ window.translations = {
         // Education Section
         edu_title: "Education History",
         edu_subtitle: "Academic background and formal qualifications.",
-        edu_pens_degree: "Bachelor of Applied Science in Informatics",
+        edu_pens_degree: "Informatics Engineering",
         edu_pens_desc: "Focused on Software Engineering, Algorithms, and Web Development. Active in HIMIT organization and student activities.",
-        edu_sma_degree: "Science Major",
-        edu_sma_desc: "Strong foundation in mathematics and science. Graduated with satisfactory grades and active in technology extracurriculars.",
+        edu_smk_degree: "Access Network Engineering",
+        edu_smk_desc: "Focused on network infrastructure, fiber optics, and telecommunication access technology at SMK Telkom Sidoarjo.",
+        
+        edu_tefa_degree: "SEO Web Specialist",
+        edu_tefa_desc: "Teaching Factory program with Jagoan Hosting. Focused on website optimization, content strategy, and web traffic analysis.",
+        
+        edu_intern_degree: "Marketing Communication",
+        edu_intern_desc: "Internship at Performa Optima Group. Responsible for marketing communication, corporate branding, and social media management.",
 
         // Services Section
         services_title: "My Services",
