@@ -216,6 +216,7 @@
             <nav class="hidden md:flex items-center gap-1 p-1 rounded-full border border-white/0 bg-white/0 transition-all duration-500 relative" id="desktop-nav">
                 <a href="#home" class="nav-item active" data-i18n="nav_home">Home</a>
                 <a href="#about" class="nav-item" data-i18n="nav_about">About</a>
+                <a href="#education" class="nav-item" data-i18n="nav_edu">Education</a>
                 <a href="#experience" class="nav-item" data-i18n="nav_exp">Experience</a>
                 <a href="#portfolio" class="nav-item" data-i18n="nav_projects">Projects</a>
                 <a href="#contact" class="nav-item" data-i18n="nav_contact">Contact</a>
@@ -263,6 +264,7 @@
     <div id="mobile-menu" class="hidden">
         <a href="#home" data-i18n="nav_home">Home</a>
         <a href="#about" data-i18n="nav_about">About</a>
+        <a href="#education" data-i18n="nav_edu">Education</a>
         <a href="#experience" data-i18n="nav_exp">Experience</a>
         <a href="#portfolio" data-i18n="nav_projects">Projects</a>
         <a href="#contact" data-i18n="nav_contact">Contact</a>
@@ -411,6 +413,82 @@
                         
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="py-20 pt-32 relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4" data-i18n="edu_title">Riwayat Pendidikan</h2>
+                <p class="text-gray-400" data-i18n="edu_subtitle">Latar belakang akademik dan kualifikasi formal.</p>
+            </div>
+
+            <div class="swiper educationSwiper" data-aos="fade-up" data-aos-delay="200">
+                <div class="swiper-wrapper">
+                    <!-- Card 1: PENS -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card hover-blue p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full flex flex-col relative border border-white/5">
+                            <!-- SVG Pattern -->
+                            <div class="absolute inset-0 opacity-[0.03] pointer-events-none z-0 group-hover:opacity-10 transition-opacity duration-500">
+                                <svg class="w-full h-full" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                    <path style="animation: waveMove 10s linear infinite;" fill="none" stroke="white" stroke-width="1.5" d="M 0 150 Q 50 100 100 150 T 200 150 T 300 150 T 400 150" opacity="0.6" />
+                                    <path style="animation: waveMove 15s linear infinite;" fill="none" stroke="white" stroke-width="1.5" d="M 0 165 Q 50 115 100 165 T 200 165 T 300 165 T 400 165" opacity="0.4" />
+                                    <path style="animation: waveMove 20s linear infinite;" fill="none" stroke="white" stroke-width="1.5" d="M 0 180 Q 50 130 100 180 T 200 180 T 300 180 T 400 180" opacity="0.2" />
+                                </svg>
+                            </div>
+
+                            <div class="relative z-10 flex flex-col h-full">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div class="flex flex-col gap-2">
+                                        <span class="px-3 py-1 w-fit rounded text-xs font-bold bg-white/5 border border-white/10 text-gray-300 font-mono">2023 - Present</span>
+                                        <span class="text-xs font-bold tracking-widest text-blue-400 uppercase flex items-center gap-1"><i class='bx bxs-graduation'></i> UNIVERSITY</span>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-white/5 border border-white/10 p-2 flex items-center justify-center backdrop-blur-sm shadow-[0_0_15px_rgba(0,0,0,0.2)] group-hover:scale-110 transition-transform duration-300">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Logo_Politeknik_Elektronika_Negeri_Surabaya.png/480px-Logo_Politeknik_Elektronika_Negeri_Surabaya.png" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=PENS&background=random&color=fff&size=100'" alt="PENS" class="w-full h-full object-contain">
+                                    </div>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-2 leading-tight group-hover:text-blue-400 transition-colors" data-i18n="edu_pens_degree">D4 Teknik Informatika</h3>
+                                <p class="text-gray-400 text-sm font-mono mb-4">Politeknik Elektronika Negeri Surabaya</p>
+                                <p class="text-gray-400 text-sm leading-relaxed" data-i18n="edu_pens_desc">
+                                    Fokus pada Rekayasa Perangkat Lunak, Algoritma, dan Pengembangan Web. Aktif dalam organisasi HIMIT dan kegiatan kemahasiswaan.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: SMA -->
+                    <div class="swiper-slide h-auto">
+                        <div class="glass-card hover-cyan p-8 rounded-3xl cursor-pointer overflow-hidden group hover:-translate-y-2 transition-all duration-300 w-full h-full flex flex-col relative border border-white/5">
+                            <!-- SVG Pattern -->
+                            <div class="absolute inset-0 opacity-[0.03] pointer-events-none z-0 group-hover:opacity-10 transition-opacity duration-500">
+                                <svg class="w-full h-full" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                    <path style="animation: waveMove 10s linear infinite;" fill="none" stroke="white" stroke-width="1.5" d="M 0 150 Q 50 100 100 150 T 200 150 T 300 150 T 400 150" opacity="0.6" />
+                                    <path style="animation: waveMove 15s linear infinite;" fill="none" stroke="white" stroke-width="1.5" d="M 0 165 Q 50 115 100 165 T 200 165 T 300 165 T 400 165" opacity="0.4" />
+                                    <path style="animation: waveMove 20s linear infinite;" fill="none" stroke="white" stroke-width="1.5" d="M 0 180 Q 50 130 100 180 T 200 180 T 300 180 T 400 180" opacity="0.2" />
+                                </svg>
+                            </div>
+
+                            <div class="relative z-10 flex flex-col h-full">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div class="flex flex-col gap-2">
+                                        <span class="px-3 py-1 w-fit rounded text-xs font-bold bg-white/5 border border-white/10 text-gray-300 font-mono">2020 - 2023</span>
+                                        <span class="text-xs font-bold tracking-widest text-cyan-400 uppercase flex items-center gap-1"><i class='bx bxs-school'></i> HIGH SCHOOL</span>
+                                    </div>
+                                    <div class="w-12 h-12 rounded-full bg-white/5 border border-white/10 p-2 flex items-center justify-center backdrop-blur-sm shadow-[0_0_15px_rgba(0,0,0,0.2)] group-hover:scale-110 transition-transform duration-300">
+                                        <i class='bx bxs-school text-2xl text-white'></i>
+                                    </div>
+                                </div>
+                                <h3 class="text-2xl font-bold text-white mb-2 leading-tight group-hover:text-cyan-400 transition-colors" data-i18n="edu_sma_degree">Jurusan MIPA</h3>
+                                <p class="text-gray-400 text-sm font-mono mb-4">SMA Negeri (High School)</p>
+                                <p class="text-gray-400 text-sm leading-relaxed" data-i18n="edu_sma_desc">
+                                    Memiliki fondasi kuat dalam matematika dan sains. Lulus dengan nilai memuaskan dan aktif dalam ekstrakurikuler teknologi.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
     </section>
@@ -1077,106 +1155,7 @@
     <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
-    
-    <script>
-        // Override openDetail to include new data fields
-        function openDetail(element) {
-            const descEl = element.querySelector('p');
-            const i18nKey = descEl.getAttribute('data-i18n');
-            
-            // Default: ambil teks yang tampil saat ini
-            let descId = descEl.textContent;
-            let descEn = descEl.textContent;
+    <script src="data.js"></script>
 
-            // Cek kamus translations dari script.js untuk mendapatkan kedua bahasa
-            if (i18nKey && typeof translations !== 'undefined') {
-                if (translations.id && translations.id[i18nKey]) descId = translations.id[i18nKey];
-                if (translations.en && translations.en[i18nKey]) descEn = translations.en[i18nKey];
-            }
-
-            // Cek jika ada override deskripsi detail (custom attribute)
-            const customDetail = element.getAttribute('data-detail-desc');
-
-            // Cek apakah ada atribut data-img (untuk Experience), jika tidak gunakan tag img (untuk Portfolio)
-            let imgSrc = element.getAttribute('data-img');
-            if (!imgSrc) {
-                const imgEl = element.querySelector('img');
-                if (imgEl) imgSrc = imgEl.src;
-            }
-
-            // Deteksi Tipe: Apakah dari section Experience atau Portfolio?
-            const sectionType = element.closest('#experience') ? 'experience' : 'portfolio';
-
-            // Extract Category (Event, Training, Certification, etc.)
-            let category = 'Event';
-            if (sectionType === 'experience') {
-                const catSpan = element.querySelector('span.tracking-widest.uppercase');
-                if (catSpan) category = catSpan.textContent.trim();
-            } else {
-                category = 'Project';
-            }
-
-            const data = {
-                img: imgSrc,
-                role: element.getAttribute('data-role-title'),
-                title: element.querySelector('h3').textContent,
-                link: element.getAttribute('data-link'),
-                year: element.getAttribute('data-year'),
-                organizer: element.getAttribute('data-organizer'),
-                role_real: element.getAttribute('data-role-title'),
-                type: sectionType, // Kirim tipe section ke detail.html
-                category: category,
-                
-                // Simpan kedua versi bahasa (gunakan customDetail jika ada, jika tidak gunakan kamus)
-                desc_id: customDetail || descId,
-                desc_en: customDetail || descEn
-            };
-            localStorage.setItem('celestiq_detail', JSON.stringify(data));
-            window.open('detail.html', '_blank');
-        }
-
-        // Portfolio Filter Logic
-        let originalPortfolioSlides = [];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const wrapper = document.querySelector('.portfolioSwiper .swiper-wrapper');
-            if(wrapper) {
-                // Clone nodes to preserve events and data before Swiper initializes
-                originalPortfolioSlides = Array.from(wrapper.children).map(node => node.cloneNode(true));
-            }
-        });
-
-        function filterPortfolio(category, btn) {
-            // Update UI Buttons
-            document.querySelectorAll('.filter-btn').forEach(b => {
-                b.classList.remove('active', 'bg-primary/10', 'border-primary/50', 'text-white');
-                b.classList.add('bg-white/5', 'border-white/10', 'text-gray-400');
-            });
-            btn.classList.remove('bg-white/5', 'border-white/10', 'text-gray-400');
-            btn.classList.add('active', 'bg-primary/10', 'border-primary/50', 'text-white');
-
-            if (typeof portfolioSwiper !== 'undefined') {
-                const filtered = originalPortfolioSlides.filter(slide => {
-                    if (category === 'all') return true;
-                    const role = slide.querySelector('.glass-card').getAttribute('data-role-title').toLowerCase();
-                    if (category === 'graphic') return role.includes('graphic') || role.includes('pdd') || role.includes('design');
-                    if (category === 'operator') return role.includes('operator') || role.includes('obs');
-                    return false;
-                }).map(slide => {
-                    const clone = slide.cloneNode(true);
-                    clone.classList.add('filter-anim');
-                    return clone;
-                });
-
-                portfolioSwiper.removeAllSlides();
-                portfolioSwiper.appendSlide(filtered);
-                portfolioSwiper.loopDestroy();
-                portfolioSwiper.loopCreate();
-                portfolioSwiper.update();
-                portfolioSwiper.slideTo(0);
-            }
-        }
-    </script>
-    
 </body>
 </html>
