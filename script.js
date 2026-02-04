@@ -3,7 +3,7 @@
    ========================================= */
 
 // Variabel Global untuk menampung instance
-let portfolioSwiper, skillsSwiper, servicesSwiper;
+let portfolioSwiper, skillsSwiper, servicesSwiper, educationSwiper;
 
 // Fungsi inisialisasi Swiper (Dipanggil saat siap)
 function initSwipers() {
@@ -98,7 +98,7 @@ function initSwipers() {
         });
 
         // Education Carousel
-        new Swiper(".educationSwiper", {
+        educationSwiper = new Swiper(".educationSwiper", {
             // Mobile First Configuration
             slidesPerView: 1.15,
             centeredSlides: true,
@@ -422,6 +422,11 @@ async function runSystemSequence() {
         // Add pulse animation to draw attention
         enterBtn.classList.add('uplink-pulse');
 
+        // Auto-trigger fallback (5s) agar tidak stuck jika user diam
+        const autoTrigger = setTimeout(() => {
+            if(enterBtn) enterBtn.click();
+        }, 5000);
+
         enterBtn.onclick = () => {
             // Simple Enter Logic (Handshake already done at start)
             enterBtn.classList.remove('uplink-pulse');
@@ -429,6 +434,7 @@ async function runSystemSequence() {
             enterBtn.classList.add('cursor-wait', 'opacity-80');
             new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3').play().catch(()=>{});
             
+            clearTimeout(autoTrigger);
             setTimeout(() => {
                 resolve();
             }, 800);
@@ -437,12 +443,36 @@ async function runSystemSequence() {
 }
 
 /* =========================================
+   FLIP CARD HANDLER (EDUCATION) - Support click/tap on touch devices
+   ========================================= */
+function initFlipCards() {
+    // Toggle flip on click/tap while ignoring inner interactive elements
+    document.querySelectorAll('.flip-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (e.target.closest('a, button, .ripple-btn')) return;
+            this.classList.toggle('is-flipped');
+        });
+    });
+
+    // Close flipped cards when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.flip-card')) {
+            document.querySelectorAll('.flip-card.is-flipped').forEach(c => c.classList.remove('is-flipped'));
+        }
+    });
+
+    // When education swiper changes slide, reset flipped state
+    if (typeof educationSwiper !== 'undefined' && educationSwiper && typeof educationSwiper.on === 'function') {
+        educationSwiper.on('slideChange', function() {
+            document.querySelectorAll('.flip-card.is-flipped').forEach(c => c.classList.remove('is-flipped'));
+        });
+    }
+}
+
+/* =========================================
    2. SMART LOADING SCREEN LOGIC
    ========================================= */
 const loadingScreen = document.getElementById('loading-screen');
-const percentageText = document.getElementById('loading-percentage');
-const statusText = document.getElementById('loader-status');
-const progressBar = document.getElementById('progress-bar');
 
 // loadingStatuses is now in data.js
 
@@ -453,11 +483,14 @@ let isPageLoaded = false; // Flag penanda halaman sudah load penuh
 window.addEventListener('load', () => {
     isPageLoaded = true;
     initSwipers(); // Inisialisasi slider di background
-    initEmailProtection(); // Inisialisasi email
+    initFlipCards(); // Enable click/tap to flip education cards
     updateLanguageUI(); // Update UI & Typewriter saat load
     initSystemCheck(); // Jalankan pengecekan sistem
     initHeroVisuals(); // Inisialisasi efek visual hero baru
 });
+
+// Fallback check jika page sudah loaded sebelum script jalan (Mencegah Stuck 99%)
+if (document.readyState === 'complete') isPageLoaded = true;
 
 // Fungsi untuk menjalankan animasi loading (bisa dipanggil ulang)
 async function startLoadingAnimation() {
@@ -511,9 +544,6 @@ async function startLoadingAnimation() {
         statusTextEl.classList.remove('text-green-400');
     }
 
-    if(progressBar) progressBar.style.width = '0%';
-    if(percentageText) percentageText.innerText = '0%';
-
     // Helper: Detect Mobile Device
     const isMobile = () => {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
@@ -522,45 +552,24 @@ async function startLoadingAnimation() {
     // Mulai Interval Loading
     const interval = setInterval(() => {
         if (width >= 99 && !isPageLoaded) {
-            if(statusText) statusText.innerText = "> WAITING FOR ASSETS...";
             return; 
         }
 
         if (width >= 100) {
             clearInterval(interval);
             
-            if (isMobile()) {
-                // MOBILE FLOW: Fingerprint Scan -> System Diagnosis
-                startFingerprintScan().then(() => {
-                    if(loaderContent) loaderContent.style.opacity = '0';
+            // DESKTOP & MOBILE FLOW: Langsung ke System Diagnosis
+            if(loaderContent) loaderContent.style.opacity = '0';
 
-                    if(sysOverlay) {
-                        sysOverlay.classList.remove('hidden');
-                        runSystemSequence().then(() => {
-                            finishLoading();
-                        });
-                    }
+            if(sysOverlay) {
+                sysOverlay.classList.remove('hidden');
+                runSystemSequence().then(() => {
+                    finishLoading();
                 });
-            } else {
-                // DESKTOP FLOW: Langsung ke System Diagnosis (Sesuai Request)
-                if(loaderContent) loaderContent.style.opacity = '0';
-
-                if(sysOverlay) {
-                    sysOverlay.classList.remove('hidden');
-                    runSystemSequence().then(() => {
-                        finishLoading();
-                    });
-                }
             }
         } else {
             width++;
-            if(progressBar) progressBar.style.width = width + '%';
-            if(percentageText) percentageText.innerText = width + '%';
 
-            if (width % 15 === 0 && width < 90) {
-                 const randIdx = Math.floor(Math.random() * (loadingStatuses.length - 1));
-                 if(statusText) statusText.innerText = loadingStatuses[randIdx];
-            }
         }
     }, 50); // Diperlambat dari 25ms ke 50ms
 }
@@ -1097,29 +1106,6 @@ if (gl && window.innerWidth > 1024) { // Hanya aktif di layar besar (>1024px)
         requestAnimationFrame(render);
     }
     render();
-}
-
-/* =========================================
-   EMAIL ENCRYPTION LOGIC
-   ========================================= */
-function initEmailProtection() {
-    const emailLink = document.getElementById('email-link');
-    const emailText = document.getElementById('email-text');
-    
-    if (emailLink && emailText) {
-        emailLink.addEventListener('click', function(e) {
-            if (this.getAttribute('href') === 'javascript:void(0)') {
-                e.preventDefault();
-                const user = this.getAttribute('data-user');
-                const domain = this.getAttribute('data-domain');
-                const email = `${user}@${domain}`;
-                this.setAttribute('href', `mailto:${email}`);
-                emailText.innerText = email;
-                emailText.classList.remove('truncate'); 
-                window.location.href = `mailto:${email}`;
-            }
-        });
-    }
 }
 
 /* =========================================
@@ -1917,171 +1903,6 @@ document.addEventListener('click', function(e) {
         }, 600);
     }
 });
-
-/* =========================================
-   SINGLE FINGERPRINT SCAN LOGIC
-   ========================================= */
-function startFingerprintScan() {
-    return new Promise((resolve) => {
-        const instruction = document.getElementById('scan-instruction');
-        const target = document.getElementById('fingerprint-target');
-        const statusText = document.getElementById('loader-status');
-        const progressBar = document.getElementById('progress-bar');
-        
-        // Hide Logo when scan starts
-        const logo = document.getElementById('loading-logo');
-        if(logo) logo.classList.add('opacity-0');
-
-        // Show UI
-        if(instruction) instruction.classList.remove('hidden');
-        if(target) target.classList.remove('hidden');
-        if(statusText) statusText.innerText = "> BIOMETRIC REQUIRED";
-        if(progressBar) progressBar.style.width = '0%';
-
-        // Prevent Context Menu (Klik Kanan/Tahan Lama) di Mobile
-        target.oncontextmenu = function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            return false;
-        };
-
-        let holdStart = 0;
-        let holdInterval;
-        const holdDuration = 1500; // 1.5s hold time
-        let isSuccess = false; // Flag agar tidak double trigger
-        
-        const onTouchStart = (e) => {
-            if (isSuccess) return;
-            // Prevent default to stop scrolling/zooming while scanning
-            if(e.cancelable) e.preventDefault();
-            
-            // Check finger count (only 1 allowed)
-            if (e.touches && e.touches.length > 1) {
-                if(statusText) {
-                    statusText.innerText = "> ERROR: SINGLE FINGER ONLY";
-                    statusText.classList.add('text-red-500');
-                }
-                return;
-            }
-
-            holdStart = Date.now();
-            if(statusText) {
-                statusText.innerText = "> IDENTIFYING...";
-                statusText.classList.remove('text-red-500');
-                statusText.classList.add('text-primary');
-            }
-            
-            // Visual feedback: Spin rings faster
-            document.body.classList.add('scanning-active');
-            if(navigator.vibrate) navigator.vibrate(50);
-
-            holdInterval = setInterval(() => {
-                const elapsed = Date.now() - holdStart;
-                const progress = Math.min((elapsed / holdDuration) * 100, 100);
-                
-                if(progressBar) progressBar.style.width = progress + '%';
-
-                if (elapsed >= holdDuration) {
-                    success();
-                }
-            }, 30);
-        };
-
-        const onTouchEnd = () => {
-            if (isSuccess) return;
-            clearInterval(holdInterval);
-            document.body.classList.remove('scanning-active');
-            if(progressBar) progressBar.style.width = '0%';
-            if(statusText) {
-                statusText.innerText = "> BIOMETRIC REQUIRED";
-                statusText.classList.remove('text-primary', 'text-red-500');
-            }
-        };
-
-        const success = () => {
-            isSuccess = true;
-            clearInterval(holdInterval);
-            document.body.classList.remove('scanning-active');
-            
-            // Visual Success Effect on Fingerprint
-            const fpContainer = target.querySelector('.relative');
-            if(fpContainer) {
-                fpContainer.classList.add('ring-success');
-
-                // Generate Green Particles Effect
-                for (let i = 0; i < 30; i++) {
-                    const p = document.createElement('div');
-                    p.classList.add('scan-particle');
-                    
-                    // Random direction & distance
-                    const angle = Math.random() * Math.PI * 2;
-                    const dist = 60 + Math.random() * 80; // Spread distance (60px - 140px)
-                    
-                    p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
-                    p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
-                    
-                    // Random size & delay
-                    const size = Math.random() * 4 + 2 + 'px';
-                    p.style.width = size;
-                    p.style.height = size;
-                    p.style.animationDelay = Math.random() * 0.2 + 's';
-                    
-                    fpContainer.appendChild(p);
-                    
-                    // Cleanup particle after animation
-                    setTimeout(() => p.remove(), 1000);
-                }
-            }
-
-            const fpSvg = target.querySelector('svg');
-            if(fpSvg) {
-                fpSvg.classList.remove('animate-pulse');
-                fpSvg.classList.add('fingerprint-success');
-            }
-            
-            if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            
-            // Play Access Granted Sound
-            const successSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
-            successSound.volume = 0.5;
-            successSound.play().catch(() => {});
-            
-            if(statusText) {
-                statusText.innerText = "> IDENTITY VERIFIED";
-                statusText.classList.add('text-green-500');
-            }
-            if(instruction) {
-                instruction.innerText = "ACCESS GRANTED";
-                instruction.classList.add('text-green-500');
-            }
-            if(progressBar) {
-                progressBar.style.width = '100%';
-                progressBar.classList.add('bg-green-500');
-            }
-
-            // Cleanup listeners
-            target.removeEventListener('touchstart', onTouchStart);
-            target.removeEventListener('touchend', onTouchEnd);
-            target.removeEventListener('mousedown', onTouchStart);
-            target.removeEventListener('mouseup', onTouchEnd);
-            target.removeEventListener('mouseleave', onTouchEnd);
-
-            setTimeout(() => {
-                // Sembunyikan UI Scan agar bersih
-                if(instruction) instruction.classList.add('hidden');
-                if(target) target.classList.add('hidden');
-                resolve();
-            }, 800);
-        };
-
-        // Add listeners
-        target.addEventListener('touchstart', onTouchStart, {passive: false});
-        target.addEventListener('touchend', onTouchEnd);
-        target.addEventListener('mousedown', onTouchStart);
-        target.addEventListener('mouseup', onTouchEnd);
-        target.addEventListener('mouseleave', onTouchEnd);
-    });
-}
 
 /* =========================================
    12. PORTFOLIO FILTER LOGIC
