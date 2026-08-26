@@ -1,5 +1,3 @@
-import { Language } from '@/types/portfolio';
-
 export interface NavLink {
   href: string;
   label: {

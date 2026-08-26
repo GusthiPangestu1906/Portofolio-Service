@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { PortfolioData, Language } from '@/types/portfolio';
+import { PortfolioData } from '@/types/portfolio';
 import { X, Terminal, Send, ShieldCheck, RefreshCw } from 'lucide-react';
 
 interface CelestiqTerminalModalProps {
   isOpen: boolean;
   onClose: () => void;
   data: PortfolioData;
-  lang: Language;
+  lang?: string;
 }
 
 interface LogEntry {
@@ -20,7 +20,6 @@ export const CelestiqTerminalModal: React.FC<CelestiqTerminalModalProps> = ({
   isOpen,
   onClose,
   data,
-  lang,
 }) => {
   const [booting, setBooting] = useState(true);
   const [logs, setLogs] = useState<LogEntry[]>([]);
